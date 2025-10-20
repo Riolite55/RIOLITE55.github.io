@@ -199,15 +199,14 @@
         .message-bubble.agent .content hr { border: none; border-top: 1px solid var(--border-color); margin: 1em 0; }
         .message-bubble.agent .content strong { color: var(--text-dark); }
 
-        .chat-input-area { padding-top: 15px; border-top: 1px solid var(--border-color); }
-        .chat-input-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; position: relative; }
-        #chatInput { flex: 1; background: transparent; border: none; outline: none; color: var(--text-dark); font-size: 1rem; padding: 10px 0; }
+        .chat-input-area { padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 15px; }
+        .chat-input-controls { display: flex; align-items: center; gap: 15px; }
+        #chatInput { flex-grow: 1; background: transparent; border: none; outline: none; color: var(--text-dark); font-size: 1rem; padding: 10px 0; }
         #chatInput::placeholder { color: var(--text-light); opacity: 0.7; }
         .chat-input-controls button { background: none; border: none; color: var(--text-light); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; }
         .chat-input-controls button:hover { color: var(--primary-blue); }
         .send-btn { background-color: var(--primary-blue) !important; width: 40px; height: 40px; border-radius: 50%; color: white !important; }
         .send-btn:hover { background-color: #008a7e !important; }
-        #changePersonaBtn { padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
 
         .summary-section, .placeholder-page, .agenda-container {
             flex: 1;
@@ -311,34 +310,14 @@
         .persona-details h4 { margin: 0 0 5px 0; color: var(--text-dark); }
         .persona-details p { margin: 0; font-size: 0.9rem; color: var(--text-light); opacity: 0.8; }
 
-        .modal-pills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 10px 0;
-        }
-        .modal-topic-pill {
-            background: var(--container-bg-light);
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .modal-topic-pill:hover {
-            background: var(--primary-blue);
-            color: var(--text-dark);
-            border-color: var(--primary-blue);
-        }
-        #meetings-modal-list .meeting-item {
-            cursor: pointer; /* Make it obvious it's clickable */
-            transition: background-color 0.2s;
-        }
-        #meetings-modal-list .meeting-item:hover {
-            background-color: rgba(0, 169, 157, 0.1);
-        }
+        .modal-pills-container { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 0; }
+        .modal-topic-pill { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+        .modal-topic-pill:hover { background: var(--primary-blue); color: var(--text-dark); border-color: var(--primary-blue); }
+        
+        #meetings-modal-list .meeting-item { cursor: pointer; transition: background-color 0.2s; background: var(--container-bg-light); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-blue); }
+        #meetings-modal-list .meeting-item:hover { background-color: rgba(0, 169, 157, 0.1); }
+        #meetings-modal-list .meeting-title { font-weight: 600; color: var(--text-dark); }
+        #meetings-modal-list .meeting-time { font-size: 0.9em; opacity: 0.8; }
         #meetings-modal-list .dropdown-header { font-size: 0.9rem; text-transform: uppercase; opacity: 0.7; padding: 15px 0 5px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
 
 
@@ -392,10 +371,10 @@
                 justify-content: flex-start;
              }
 
-            .page-content { padding: 0; gap: 0; }
+            .page-content { padding: 0; gap: 0; flex-grow: 1; height: calc(100vh - 73px); }
             .chat-section-container {
                 width: 100%;
-                height: calc(100vh - 73px); /* Full height minus header */
+                height: 100%;
                 border-radius: 0;
                 padding: 1rem;
                 max-height: none;
@@ -648,9 +627,9 @@
     </div>
     
     <div id="meetingsModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" id="focus-modal-content">
             <span class="close-button">&times;</span>
-            <h2 id="meetings-modal-title">Related Meetings</h2>
+            <h2 id="meetings-modal-title">Discuss a Topic</h2>
             <div id="meetings-modal-list">
                 <!-- Meeting items will be injected here --></div>
         </div>
