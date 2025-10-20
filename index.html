@@ -16,6 +16,7 @@
             --border-color: rgba(255, 255, 255, 0.2);
             --container-bg: rgba(0, 30, 60, 0.4);
             --container-bg-light: rgba(255, 255, 255, 0.1);
+            --vh: 1vh;
         }
 
         body {
@@ -345,6 +346,10 @@
             .persona-display { display: none; }
         }
         @media (max-width: 768px) {
+             body {
+                height: 100vh;
+                height: calc(var(--vh, 1vh) * 100);
+            }
             .header { padding: 15px 20px; }
             .header-left span, .header-right .welcome-text { display: none; }
             .mobile-menu-btn { display: block; }
@@ -371,13 +376,12 @@
                 justify-content: flex-start;
              }
 
-            .page-content { padding: 0; gap: 0; flex-grow: 1; height: calc(100vh - 73px); }
+            .page-content { padding: 0; gap: 0; flex-grow: 1; height: calc(100% - 73px); }
             .chat-section-container {
                 width: 100%;
                 height: 100%;
                 border-radius: 0;
                 padding: 1rem;
-                padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Add padding for home bar */
                 max-height: none;
                 box-sizing: border-box;
             }
@@ -386,6 +390,13 @@
             }
             .chat-interaction-area {
                 height: 100%;
+            }
+            .chat-input-area {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            #chatInput {
+                padding-top: 20px;
+                padding-bottom: 20px;
             }
              #topics-page, #agenda-page, .placeholder-page {
                 padding: 20px;
@@ -402,10 +413,6 @@
             }
             #meetings-modal-list .meeting-time {
                 font-size: 0.8rem;
-            }
-            #chatInput {
-                padding-top: 15px;
-                padding-bottom: 15px;
             }
         }
     </style>
@@ -430,9 +437,9 @@
             <button class="nav-button active" data-target="agent-page"><i class="fas fa-robot"></i> AEO Agent</button>
             <button class="nav-button" data-target="topics-page"><i class="fas fa-th-large"></i> Focus Areas</button>
             <button class="nav-button" data-target="agenda-page"><i class="fas fa-calendar-alt"></i> Agenda</button>
-            <button class="nav-button hide-on-mobile" data-target="tools-page"><i class="fas fa-cogs"></i> AI Tools</button>
-            <button class="nav-button hide-on-mobile" data-target="compose-page"><i class="fas fa-pen-alt"></i> Compose</button>
-            <button class="nav-button hide-on-mobile" data-target="templates-page"><i class="fas fa-file-alt"></i> Templates</button>
+            <button class="nav-button" data-target="tools-page"><i class="fas fa-cogs"></i> AI Tools</button>
+            <button class="nav-button" data-target="compose-page"><i class="fas fa-pen-alt"></i> Compose</button>
+            <button class="nav-button" data-target="templates-page"><i class="fas fa-file-alt"></i> Templates</button>
         </nav>
     </div>
 
