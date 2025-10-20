@@ -341,6 +341,10 @@
             background-color: var(--primary-blue);
             color: var(--text-dark);
         }
+        
+        #focus-modal-content .dropdown-header { font-size: 0.9rem; text-transform: uppercase; opacity: 0.7; padding: 15px 10px 5px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
+        #focus-modal-content a { display: block; color: var(--text-light); text-decoration: none; padding: 12px 15px; border-radius: 8px; transition: background-color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #focus-modal-content a:hover { background-color: var(--container-bg-light); }
 
         @media (max-width: 1200px) {
             .page-content { flex-direction: column; }
@@ -444,12 +448,7 @@
                 <div class="chat-input-area">
                     <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
                     <div class="chat-input-controls">
-                         <div class="chat-action-dropdown">
-                            <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
-                            <div id="chat-action-menu" class="dropdown-menu">
-                                <!-- Dynamic content will be injected here -->
-                            </div>
-                        </div>
+                        <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
                         <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
                         <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
                     </div>
@@ -648,9 +647,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const personaData = [
-                { id: 'hakim', name: 'Hakim Nüruddin', title: 'AI Executive Office Agent', largeImg: 'https://hams.ai/images/ai-voice-agent.png', smallImg: 'https://hams.ai/images/ai-voice-agent.png', description: 'Your strategic partner. Provides high-level summaries, executive advice, and focuses on strategic alignment.', systemPrompt: 'You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia... Be concise, professional, and insightful. Provide strategic advice and summaries.' },
-                { id: 'layla', name: 'Layla Al-Farsi', title: 'AI Analyst', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', description: 'Your data expert. Dives deep into data, identifies trends, and provides detailed analytical insights.', systemPrompt: 'You are Layla Al-Farsi, an AI Analyst for HRSD... Focus on data, metrics, and provide detailed analytical insights with supporting evidence.' },
-                { id: 'omar', name: 'Omar Mansour', title: 'AI Coordinator', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', description: 'Your operational specialist. Manages schedules, coordinates between departments, and provides logistical support.', systemPrompt: 'You are Omar Mansour, an AI Coordinator for HRSD... Focus on logistics, scheduling, action items, and ensuring operational smoothness.' }
+                { id: 'hakim', name: 'Hakim Nüruddin', title: 'AI Executive Office Agent', largeImg: 'https://hams.ai/images/ai-voice-agent.png', smallImg: 'https://hams.ai/images/ai-voice-agent.png', description: 'As your strategic partner, I provide high-level summaries, executive advice, and focus on strategic alignment for your key decisions.', systemPrompt: 'You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia... Be concise, professional, and insightful. Provide strategic advice and summaries.' },
+                { id: 'layla', name: 'Layla Al-Farsi', title: 'AI Analyst', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', description: 'As your data expert, I dive deep into data, identify trends, and provide detailed analytical insights to support your objectives.', systemPrompt: 'You are Layla Al-Farsi, an AI Analyst for HRSD... Focus on data, metrics, and provide detailed analytical insights with supporting evidence.' },
+                { id: 'omar', name: 'Omar Mansour', title: 'AI Coordinator', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', description: 'As your operational specialist, I manage schedules, coordinate between departments, and provide logistical support to ensure operational smoothness.', systemPrompt: 'You are Omar Mansour, an AI Coordinator for HRSD... Focus on logistics, scheduling, action items, and ensuring operational smoothness.' }
             ];
             let currentPersonaId = 'hakim';
             let chatHistory = [];
@@ -678,7 +677,6 @@
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
             const navTabsContainer = document.querySelector('.nav-tabs-container');
             const chatActionBtn = document.getElementById('chat-action-btn');
-            const chatActionMenu = document.getElementById('chat-action-menu');
             
             // --- Persona Functions ---
             function updatePersonaUI(personaId, isInitialLoad = false) {
@@ -1012,8 +1010,8 @@
                 if (event.target === meetingsModal) closeModal(meetingsModal);
 
                 // Close dropdown if clicking outside
-                if(chatActionMenu && !chatActionBtn.contains(event.target) && !chatActionMenu.contains(event.target)) {
-                    chatActionMenu.classList.remove('active');
+                if(chatActionBtn && meetingsModal && !chatActionBtn.contains(event.target) && !meetingsModal.contains(event.target)) {
+                    closeModal(meetingsModal);
                 }
             });
             sendBtn.addEventListener('click', handleSendMessage);
@@ -1091,9 +1089,15 @@
                 navTabsContainer.classList.toggle('active');
             });
             
-            // --- Chat Action Dropdown Logic ---
-            function populateChatActionMenu() {
-                chatActionMenu.innerHTML = '';
+            chatActionBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openModal(meetingsModal);
+                const topicTitle = "All Focus Areas & Meetings";
+                const list = document.getElementById('meetings-modal-list');
+                const title = document.getElementById('meetings-modal-title');
+                list.innerHTML = '';
+                title.textContent = `Discuss a Topic`;
+
                 let content = '<div class="dropdown-header">Discuss a Focus Area</div>';
                 document.querySelectorAll('.topic-card').forEach(card => {
                     const title = card.querySelector('.topic-title').textContent;
@@ -1106,22 +1110,16 @@
                     const title = event.dataset.eventTitle;
                     content += `<a href="#" class="chat-action-item" data-prompt="What should I know about the meeting: ${title}?">${title}</a>`;
                 });
-                chatActionMenu.innerHTML = content;
+                list.innerHTML = content;
                 
-                document.querySelectorAll('.chat-action-item').forEach(item => {
+                list.querySelectorAll('.chat-action-item').forEach(item => {
                     item.addEventListener('click', (e) => {
                         e.preventDefault();
                         chatInput.value = item.dataset.prompt;
                         handleSendMessage();
-                        chatActionMenu.classList.remove('active');
+                        closeModal(meetingsModal);
                     });
                 });
-            }
-
-            chatActionBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                populateChatActionMenu();
-                chatActionMenu.classList.toggle('active');
             });
 
 
