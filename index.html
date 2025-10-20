@@ -209,14 +209,6 @@
         .send-btn:hover { background-color: #008a7e !important; }
         #changePersonaBtn { padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
 
-        .chat-action-dropdown { position: relative; }
-        .chat-action-dropdown .dropdown-menu { display: none; position: absolute; bottom: 120%; left: 0; background: var(--container-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; min-width: 250px; z-index: 100; }
-        .chat-action-dropdown .dropdown-menu.active { display: block; }
-        .dropdown-menu .dropdown-header { font-size: 0.8rem; text-transform: uppercase; opacity: 0.7; padding: 5px 10px; }
-        .dropdown-menu a { display: block; color: var(--text-light); text-decoration: none; padding: 8px 10px; border-radius: 5px; transition: background-color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .dropdown-menu a:hover { background-color: var(--container-bg-light); }
-        .dropdown-divider { height: 1px; background-color: var(--border-color); margin: 8px 0; }
-
         .summary-section, .placeholder-page, .agenda-container {
             flex: 1;
             background: var(--container-bg);
@@ -295,10 +287,7 @@
         .topic-actions { display: flex; gap: 10px; padding-top: 15px; }
         .topic-actions button { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-light); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .topic-actions button:hover { background-color: var(--primary-blue); color: var(--text-dark); }
-        #meetings-modal-list .meeting-item { background: var(--container-bg-light); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-blue); }
-        #meetings-modal-list .meeting-title { font-weight: 600; color: var(--text-dark); }
-        #meetings-modal-list .meeting-time { font-size: 0.9em; opacity: 0.8; }
-
+        
         /* --- Modal Styles --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -322,6 +311,36 @@
         .persona-details h4 { margin: 0 0 5px 0; color: var(--text-dark); }
         .persona-details p { margin: 0; font-size: 0.9rem; color: var(--text-light); opacity: 0.8; }
 
+        .modal-pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 0;
+        }
+        .modal-topic-pill {
+            background: var(--container-bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .modal-topic-pill:hover {
+            background: var(--primary-blue);
+            color: var(--text-dark);
+            border-color: var(--primary-blue);
+        }
+        #meetings-modal-list .meeting-item {
+            cursor: pointer; /* Make it obvious it's clickable */
+            transition: background-color 0.2s;
+        }
+        #meetings-modal-list .meeting-item:hover {
+            background-color: rgba(0, 169, 157, 0.1);
+        }
+        #meetings-modal-list .dropdown-header { font-size: 0.9rem; text-transform: uppercase; opacity: 0.7; padding: 15px 0 5px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
+
 
         #ask-agent-btn {
             position: absolute;
@@ -341,10 +360,6 @@
             background-color: var(--primary-blue);
             color: var(--text-dark);
         }
-        
-        #focus-modal-content .dropdown-header { font-size: 0.9rem; text-transform: uppercase; opacity: 0.7; padding: 15px 10px 5px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
-        #focus-modal-content a { display: block; color: var(--text-light); text-decoration: none; padding: 12px 15px; border-radius: 8px; transition: background-color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        #focus-modal-content a:hover { background-color: var(--container-bg-light); }
 
         @media (max-width: 1200px) {
             .page-content { flex-direction: column; }
@@ -1008,11 +1023,6 @@
                 if (event.target === personaModal) closeModal(personaModal);
                 if (event.target === eventModal) closeModal(eventModal);
                 if (event.target === meetingsModal) closeModal(meetingsModal);
-
-                // Close dropdown if clicking outside
-                if(chatActionBtn && meetingsModal && !chatActionBtn.contains(event.target) && !meetingsModal.contains(event.target)) {
-                    closeModal(meetingsModal);
-                }
             });
             sendBtn.addEventListener('click', handleSendMessage);
             chatInput.addEventListener('keydown', (event) => {
@@ -1092,23 +1102,32 @@
             chatActionBtn?.addEventListener('click', (e) => {
                 e.stopPropagation();
                 openModal(meetingsModal);
-                const topicTitle = "All Focus Areas & Meetings";
                 const list = document.getElementById('meetings-modal-list');
                 const title = document.getElementById('meetings-modal-title');
                 list.innerHTML = '';
                 title.textContent = `Discuss a Topic`;
 
                 let content = '<div class="dropdown-header">Discuss a Focus Area</div>';
+                content += '<div class="modal-pills-container">';
                 document.querySelectorAll('.topic-card').forEach(card => {
-                    const title = card.querySelector('.topic-title').textContent;
-                    content += `<a href="#" class="chat-action-item" data-prompt="Let's discuss the focus area: ${title}">${title}</a>`;
+                    const topicTitle = card.querySelector('.topic-title').textContent;
+                    content += `<div class="modal-topic-pill chat-action-item" data-prompt="Let's discuss the focus area: ${topicTitle}">${topicTitle}</div>`;
                 });
+                content += '</div>';
 
-                content += '<div class="dropdown-divider"></div>';
+
                 content += '<div class="dropdown-header">Discuss a Meeting</div>';
                 document.querySelectorAll('.event').forEach(event => {
-                    const title = event.dataset.eventTitle;
-                    content += `<a href="#" class="chat-action-item" data-prompt="What should I know about the meeting: ${title}?">${title}</a>`;
+                    const eventTitle = event.dataset.eventTitle;
+                    const eventTime = event.dataset.eventTime;
+                    const eventDate = new Date(event.dataset.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+                    content += `
+                        <div class="meeting-item chat-action-item" data-prompt="What should I know about the meeting: ${eventTitle}?">
+                            <div class="meeting-title">${eventTitle}</div>
+                            <div class="meeting-time">${eventDate} - ${eventTime}</div>
+                        </div>
+                    `;
                 });
                 list.innerHTML = content;
                 
