@@ -95,6 +95,8 @@
         .header-right button:hover {
             color: var(--primary-blue);
         }
+        
+        .mobile-menu-btn { display: none; } /* Hidden on desktop */
 
         .nav-tabs-container {
             display: flex;
@@ -337,17 +339,34 @@
             .persona-display { display: none; }
         }
         @media (max-width: 768px) {
-            .header { padding: 15px 20px; flex-direction: column; gap: 10px; }
-            .nav-tabs-container { padding: 5px 10px; top: 125px; }
-            .page-content { padding: 20px; gap: 20px; }
-            .chat-section-container, .summary-section, .placeholder-page, .agenda-container { padding: 15px; max-height: none; }
+            .header { padding: 15px 20px; }
+            .header-left span, .header-right .welcome-text { display: none; }
+            .mobile-menu-btn { display: block; }
+            
+            .nav-tabs-container {
+                display: none;
+            }
+
+            .page-content { padding: 0; gap: 0; }
+            .chat-section-container {
+                width: 100%;
+                height: calc(100vh - 73px); /* Full height minus header */
+                border-radius: 0;
+                padding: 1rem;
+                max-height: none;
+                box-sizing: border-box;
+            }
+             .persona-display, .summary-section {
+                display: none;
+            }
+            .chat-interaction-area {
+                height: 100%;
+            }
+             #topics-page, #agenda-page, .placeholder-page {
+                padding: 20px;
+                width: auto;
+            }
             .calendar-grid { grid-template-columns: 1fr; } /* Stack days vertically on mobile */
-            .nav-tabs .nav-button.hide-on-mobile {
-                display: none;
-            }
-            .header-right .user-profile .welcome-text {
-                display: none;
-            }
         }
     </style>
 </head>
@@ -362,13 +381,14 @@
                 <span class="welcome-text">Welcome Ahmad</span>
                 <img src="https://placehold.co/40x40/28a745/ffffff?text=A" alt="User Avatar">
             </div>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
         </div>
     </header>
 
     <div class="nav-tabs-container">
         <nav class="nav-tabs">
             <button class="nav-button active" data-target="agent-page"><i class="fas fa-robot"></i> AEO Agent</button>
-            <button class="nav-button" data-target="topics-page"><i class="fas fa-th-large"></i> Main Focus Areas</button>
+            <button class="nav-button" data-target="topics-page"><i class="fas fa-th-large"></i> Focus Areas</button>
             <button class="nav-button" data-target="agenda-page"><i class="fas fa-calendar-alt"></i> Agenda</button>
             <button class="nav-button hide-on-mobile" data-target="tools-page"><i class="fas fa-cogs"></i> AI Tools</button>
             <button class="nav-button hide-on-mobile" data-target="compose-page"><i class="fas fa-pen-alt"></i> Compose</button>
@@ -1031,4 +1051,5 @@
     </script>
 </body>
 </html>
+
 
