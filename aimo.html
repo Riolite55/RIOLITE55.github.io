@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRSD AI Executive Office</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary-blue: #00A99D; /* Lighter teal from logo */
+            --dark-teal: #004F58;   /* Darker teal from logo */
+            --text-light: #e0e0e0;
+            --text-dark: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.2);
+            --container-bg: rgba(0, 30, 60, 0.4);
+            --container-bg-light: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-teal);
+            color: var(--text-light);
+            background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 79, 88, 0.1) 0%, rgba(0, 79, 88, 0.8) 70%, #00282d 100%);
+            z-index: -1;
+        }
+
+        .header, .nav-tabs-container {
+            background-color: transparent;
+            backdrop-filter: blur(15px);
+            position: sticky;
+            z-index: 900;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            border-bottom: 1px solid var(--border-color);
+            top: 0;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-left img.hrsd-logo {
+            height: 50px;
+            width: auto;
+        }
+        .header-left span { font-weight: 500; font-size: 1.2rem; }
+
+        .header-right .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-right .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-blue);
+        }
+
+        .header-right .user-profile span { font-weight: 500; }
+        .header-right button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .header-right button:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-tabs-container {
+            display: flex;
+            justify-content: center;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border-color);
+            top: 83px; /* Adjust based on header height */
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tabs button {
+            background: none;
+            border: none;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+        }
+
+        .nav-tabs button.active {
+            color: var(--text-dark);
+            background-color: var(--primary-blue);
+            font-weight: 500;
+            box-shadow: 0 0 15px rgba(0, 169, 157, 0.5);
+        }
+
+        .nav-tabs button:hover:not(.active) {
+            background-color: var(--container-bg-light);
+            border-color: var(--border-color);
+        }
+
+        .page-content {
+            display: flex;
+            flex-grow: 1;
+            padding: 30px 40px;
+            gap: 30px;
+            overflow-y: auto;
+        }
+
+        .chat-section-container {
+            flex: 2;
+            display: flex;
+            gap: 30px;
+            background: var(--container-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            min-width: 0;
+            max-height: 80vh; /* Set a max height */
+        }
+        
+        .persona-display {
+            flex: 0 0 280px;
+            text-align: center;
+        }
+        
+        #mainPersonaImage {
+            width: 100%;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            aspect-ratio: 1 / 1.1;
+            object-fit: cover;
+        }
+        
+        .persona-info { margin-top: 15px; }
+        #mainPersonaName { margin: 0; font-size: 1.3rem; font-weight: 600; color: var(--text-dark); }
+        .persona-info p { margin: 5px 0 0; color: var(--primary-blue); font-weight: 500; }
+        
+        .chat-interaction-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .chat-header-greeting { padding-bottom: 15px; }
+        .chat-header-greeting h2 { margin: 0; font-weight: 600; color: var(--text-dark); }
+        .chat-messages { flex: 1; overflow-y: auto; padding-right: 10px; }
+
+        .message-bubble { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
+        .message-bubble.user { justify-content: flex-end; }
+        .message-bubble .avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
+        .message-bubble .content { padding: 12px 18px; border-radius: 15px; max-width: 80%; font-size: 0.95rem; line-height: 1.6; border: 1px solid transparent; }
+        .message-bubble.user .content { background-color: var(--primary-blue); color: #fff; border-bottom-right-radius: 5px; }
+        .message-bubble.agent .content { background-color: rgba(0, 0, 0, 0.2); border-color: var(--border-color); color: var(--text-light); border-bottom-left-radius: 5px; }
+
+        /* Styles for rendered markdown content in chat */
+        .message-bubble.agent .content h3 { color: var(--primary-blue); margin-top: 1em; margin-bottom: 0.5em; }
+        .message-bubble.agent .content h4 { color: var(--text-dark); margin-top: 1em; margin-bottom: 0.5em; }
+        .message-bubble.agent .content p { margin-top: 0.5em; margin-bottom: 0.5em; }
+        .message-bubble.agent .content ul, .message-bubble.agent .content ol { padding-left: 20px; }
+        .message-bubble.agent .content li { margin-bottom: 0.5em; }
+        .message-bubble.agent .content hr { border: none; border-top: 1px solid var(--border-color); margin: 1em 0; }
+        .message-bubble.agent .content strong { color: var(--text-dark); }
+
+        .chat-input-area { padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .chat-input-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        #chatInput { flex: 1; background: transparent; border: none; outline: none; color: var(--text-dark); font-size: 1rem; padding: 10px 0; }
+        #chatInput::placeholder { color: var(--text-light); opacity: 0.7; }
+        .chat-input-controls button { background: none; border: none; color: var(--text-light); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; }
+        .chat-input-controls button:hover { color: var(--primary-blue); }
+        .send-btn { background-color: var(--primary-blue) !important; width: 40px; height: 40px; border-radius: 50%; color: white !important; }
+        .send-btn:hover { background-color: #008a7e !important; }
+        #changePersonaBtn { padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+
+        .summary-section, .placeholder-page, .agenda-container {
+            flex: 1;
+            background: var(--container-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 300px;
+            max-height: 80vh; /* Set a max height */
+        }
+        .summary-header { display: flex; justify-content: space-between; align-items: center; }
+        .summary-header h3 { margin: 0; font-size: 1.2rem; color: var(--text-dark); font-weight: 500; }
+        .summary-header button { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+        .summary-header button:hover { background-color: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
+        .summary-content { font-size: 0.95rem; line-height: 1.7; color: var(--text-light); overflow-y: auto; flex: 1; }
+        .summary-content h4 { color: var(--primary-blue); margin-top: 20px; margin-bottom: 8px; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .summary-content h4:first-child { margin-top: 0; }
+        .summary-content ul { list-style-type: none; padding-left: 15px; margin-top: 10px; }
+        .summary-content ul li { position: relative; padding-left: 20px; margin-bottom: 8px; }
+        .summary-content ul li::before { content: '▶'; position: absolute; left: 0; top: 0; color: var(--primary-blue); font-size: 0.8em; }
+        .summary-content ul li strong { color: var(--text-dark); }
+        
+        .typing-indicator { display: flex; align-items: center; }
+        .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--primary-blue); border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+        .placeholder-page h2 { color: var(--primary-blue); text-align: center; }
+        .placeholder-page p { text-align: center; font-size: 1.1rem; }
+        
+        /* --- Agenda / Calendar Styles --- */
+        .agenda-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .agenda-header h2 { margin: 0; font-weight: 500; }
+        .view-switcher button { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+        .view-switcher button.active { background-color: var(--primary-blue); color: var(--text-dark); border-color: var(--primary-blue); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
+        .day-column { border-right: 1px solid var(--border-color); padding: 5px; }
+        .day-column:last-child { border-right: none; }
+        .day-column.weekend { background-color: rgba(0, 0, 0, 0.2); border-radius: 5px; }
+        .day-header { text-align: center; font-weight: 500; padding-bottom: 5px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .day-header .day-name { font-size: 0.8em; opacity: 0.7; }
+        .day-header .day-number { font-size: 1.2em; }
+        .event { background: rgba(0, 169, 157, 0.2); border-left: 3px solid var(--primary-blue); padding: 10px; border-radius: 4px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
+        .event:hover { background: rgba(0, 169, 157, 0.4); }
+        .event-time { font-size: 0.8em; opacity: 0.8; margin-bottom: 4px; }
+        .event-title { font-weight: 500; color: var(--text-dark); }
+        .event-milestone { background: rgba(255, 193, 7, 0.2); border-left-color: #ffc107; }
+        .day-view-container { display: flex; flex-direction: column; }
+        .time-slot { display: flex; border-bottom: 1px dashed var(--border-color); padding: 15px 0; }
+        .time-label { flex: 0 0 80px; text-align: right; padding-right: 15px; font-size: 0.9em; opacity: 0.7; }
+        .time-events { flex: 1; }
+        .month-view-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
+        .month-day { border: 1px solid var(--border-color); text-align: right; padding: 5px; opacity: 0.5; }
+        .month-day.current-month { opacity: 1; }
+        .month-day.has-event { background: rgba(0, 169, 157, 0.1); }
+        .month-day .day-number { font-weight: 500; }
+        
+        /* --- Topics Page Styles --- */
+        .topics-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; }
+        .topic-card { background: var(--container-bg-light); border-radius: 15px; border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease; }
+        .topic-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); border-color: var(--primary-blue); }
+        .topic-icon { font-size: 2rem; color: var(--primary-blue); margin-bottom: 15px; }
+        .topic-title { color: var(--text-dark); margin: 0 0 10px 0; font-size: 1.2rem; }
+        .topic-description { font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+        .topic-kpis { display: flex; gap: 20px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .kpi-item { text-align: center; }
+        .kpi-value { display: block; font-size: 1.8rem; font-weight: 600; color: var(--primary-blue); }
+        .kpi-label { font-size: 0.8rem; opacity: 0.8; }
+        .topic-actions { display: flex; gap: 10px; padding-top: 15px; }
+        .topic-actions button { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-light); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .topic-actions button:hover { background-color: var(--primary-blue); color: var(--text-dark); }
+        #meetings-modal-list .meeting-item { background: var(--container-bg-light); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-blue); }
+        #meetings-modal-list .meeting-title { font-weight: 600; color: var(--text-dark); }
+        #meetings-modal-list .meeting-time { font-size: 0.9em; opacity: 0.8; }
+
+        /* --- Modal Styles --- */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content { background: var(--container-bg); border: 1px solid var(--border-color); backdrop-filter: blur(20px); padding: 30px; border-radius: 15px; width: 500px; max-width: 90%; text-align: left; position: relative; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-button { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-button:hover { color: #fff; }
+        .modal-content h2 { margin-top: 0; color: var(--primary-blue); margin-bottom: 25px; text-align: center; }
+        #event-modal-title { font-size: 1.5rem; color: var(--text-dark); margin: 0 0 5px 0; text-align: left; }
+        #event-modal-time { color: var(--primary-blue); font-weight: 500; margin-bottom: 15px; text-align: left; }
+        #event-modal-details { margin-bottom: 20px; line-height: 1.6; text-align: left;}
+        .event-actions { display: flex; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 20px; }
+        .event-actions button { flex: 1; background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+        .event-actions button:hover { background-color: var(--primary-blue); color: var(--text-dark); }
+        .persona-options { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; }
+        .persona-option { cursor: pointer; border: 3px solid transparent; border-radius: 50%; transition: all 0.2s ease-in-out; position: relative; }
+        .persona-option img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; display: block; }
+        .persona-option:hover { transform: scale(1.05); }
+        .persona-option.selected { border-color: var(--primary-blue); box-shadow: 0 0 15px rgba(0, 169, 157, 0.5); }
+        .persona-option span { display: block; margin-top: 10px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; }
+
+        @media (max-width: 1200px) {
+            .page-content { flex-direction: column; }
+            .persona-display { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; flex-direction: column; gap: 10px; }
+            .nav-tabs-container { padding: 5px 10px; top: 125px; }
+            .page-content { padding: 20px; gap: 20px; }
+            .chat-section-container, .summary-section, .placeholder-page, .agenda-container { padding: 15px; max-height: none; }
+            .calendar-grid { grid-template-columns: 1fr; } /* Stack days vertically on mobile */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <img src="https://www.hrsd.gov.sa/assets/logo.svg" alt="HRSD Logo" class="hrsd-logo">
+            <span>| AI Executive Office</span>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <span>Welcome Ahmad</span>
+                <img src="https://placehold.co/40x40/28a745/ffffff?text=A" alt="User Avatar">
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-tabs-container">
+        <nav class="nav-tabs">
+            <button class="nav-button active" data-target="agent-page"><i class="fas fa-robot"></i> AEO Agent</button>
+            <button class="nav-button" data-target="topics-page"><i class="fas fa-th-large"></i> Main Focus Areas</button>
+            <button class="nav-button" data-target="agenda-page"><i class="fas fa-calendar-alt"></i> Agenda</button>
+            <button class="nav-button" data-target="tools-page"><i class="fas fa-cogs"></i> AI Tools</button>
+            <button class="nav-button" data-target="compose-page"><i class="fas fa-pen-alt"></i> Compose</button>
+            <button class="nav-button" data-target="templates-page"><i class="fas fa-file-alt"></i> Templates</button>
+        </nav>
+    </div>
+
+    <main id="agent-page" class="page-content">
+        <section class="chat-section-container">
+            <div class="persona-display">
+                <img id="mainPersonaImage" src="https://hams.ai/images/ai-voice-agent.png" alt="AI Persona">
+                <div class="persona-info">
+                    <h3 id="mainPersonaName">Hakim Nüruddin</h3>
+                    <p>AI Executive Office Agent</p>
+                </div>
+            </div>
+            <div class="chat-interaction-area">
+                <div class="chat-header-greeting">
+                    <h2>Welcome your Highness</h2>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message-bubble agent">
+                        <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar>
+                        <div class="content">As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
+                    <div class="chat-input-controls">
+                        <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i>Change Persona</button>
+                        <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="summary-section">
+            <div class="summary-header">
+                <h3>Context & Details</h3>
+                <button><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
+            </div>
+            <div class="summary-content" id="summary-content">
+                 <h4>Current Focus</h4>
+                <p>Awaiting your instructions. The summary panel will dynamically update with context from our conversation.</p>
+            </div>
+        </section>
+    </main>
+    
+    <div id="topics-page" class="page-content" style="display: none;">
+        <div class="topics-container" style="width: 100%;">
+            <!-- Topic Card 1 --><div class="topic-card" data-topic-id="labor-market">
+                <div class="topic-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Strengthening Labor Market</h3>
+                    <p class="topic-description">Developing policies to create an attractive, inclusive, and safe labor market that empowers Saudi nationals and aligns with global standards.</p>
+                </div>
+                <div class="topic-kpis">
+                    <div class="kpi-item">
+                        <span class="kpi-value">4</span>
+                        <span class="kpi-label">Strategic KPIs</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-value">7</span>
+                        <span class="kpi-label">Related Initiatives</span>
+                    </div>
+                </div>
+                <div class="topic-actions">
+                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                </div>
+            </div>
+            <!-- Topic Card 2 --><div class="topic-card" data-topic-id="empowerment">
+                 <div class="topic-icon"><i class="fas fa-users"></i></div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Empowering Society & Individuals</h3>
+                    <p class="topic-description">Enhancing social development, empowering individuals and communities, and promoting self-reliance through targeted programs and support.</p>
+                </div>
+                 <div class="topic-kpis">
+                    <div class="kpi-item">
+                        <span class="kpi-value">5</span>
+                        <span class="kpi-label">Strategic KPIs</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-value">9</span>
+                        <span class="kpi-label">Related Initiatives</span>
+                    </div>
+                </div>
+                <div class="topic-actions">
+                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                </div>
+            </div>
+            <!-- Topic Card 3 --><div class="topic-card" data-topic-id="non-profit">
+                 <div class="topic-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Enabling the Non-Profit Sector</h3>
+                    <p class="topic-description">Fostering the growth and impact of the non-profit sector to expand its contribution to the economy and social development.</p>
+                </div>
+                 <div class="topic-kpis">
+                    <div class="kpi-item">
+                        <span class="kpi-value">3</span>
+                        <span class="kpi-label">Strategic KPIs</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-value">4</span>
+                        <span class="kpi-label">Related Initiatives</span>
+                    </div>
+                </div>
+                <div class="topic-actions">
+                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                </div>
+            </div>
+            <!-- Topic Card 4 --><div class="topic-card" data-topic-id="strategic-partnerships">
+                 <div class="topic-icon"><i class="fas fa-handshake"></i></div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Strategic Partnerships</h3>
+                    <p class="topic-description">Building effective and sustainable partnerships with public, private, and non-profit entities to achieve shared national goals.</p>
+                </div>
+                 <div class="topic-kpis">
+                    <div class="kpi-item">
+                        <span class="kpi-value">2</span>
+                        <span class="kpi-label">Strategic KPIs</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-value">6</span>
+                        <span class="kpi-label">Related Initiatives</span>
+                    </div>
+                </div>
+                <div class="topic-actions">
+                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="agenda-page" class="page-content" style="display: none;">
+        <div class="agenda-container" style="width: 100%;">
+            <div class="agenda-header">
+                <h2>October 2025</h2>
+                <div class="view-switcher">
+                    <button class="agenda-view-btn" data-view="day">Day</button>
+                    <button class="agenda-view-btn active" data-view="week">Week</button>
+                    <button class="agenda-view-btn" data-view="month">Month</button>
+                </div>
+            </div>
+            
+            <div id="day-view" class="agenda-view" style="display: none;">
+                <div class="day-view-container">
+                    <div class="time-slot"><div class="time-label">09:00 AM</div><div class="time-events"><div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 - 10:30 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market"> <div class="event-time">09:00 - 10:30 AM</div> <div class="event-title">Labor Market Policy Review</div> </div></div></div>
+                    <div class="time-slot"><div class="time-label">11:00 AM</div><div class="time-events"><div class="event" data-event-title="Social Development Fund Update" data-event-time="11:00 AM - 12:00 PM" data-event-details="Meeting to review the performance of initiatives funded by the Social Development Fund." data-topic="empowerment"> <div class="event-time">11:00 AM - 12:00 PM</div> <div class="event-title">Social Development Fund Update</div> </div></div></div>
+                    <div class="time-slot"><div class="time-label">02:00 PM</div><div class="time-events"><div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="End of Day" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit"> <div class="event-time">End of Day</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div></div>
+                </div>
+            </div>
+            
+            <div id="week-view" class="agenda-view">
+                <div class="calendar-grid">
+                    <!-- Sunday --><div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
+                    <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
+                    <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
+                    <!-- Wednesday --><div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
+                    <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
+                    <!-- Friday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
+                    <!-- Saturday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
+                </div>
+            </div>
+            
+            <div id="month-view" class="agenda-view" style="display: none;">
+                 <div class="month-view-grid">
+                    <!-- Simplified month view for October 2025 --><div class="month-day">28</div><div class="month-day">29</div><div class="month-day">30</div>
+                    <div class="month-day current-month">1</div><div class="month-day current-month">2</div><div class="month-day current-month">3</div><div class="month-day current-month">4</div>
+                    <div class="month-day current-month">5</div><div class="month-day current-month">6</div><div class="month-day current-month">7</div><div class="month-day current-month">8</div><div class="month-day current-month">9</div><div class="month-day current-month">10</div><div class="month-day current-month">11</div>
+                    <div class="month-day current-month">12</div><div class="month-day current-month">13</div><div class="month-day current-month">14</div><div class="month-day current-month">15</div><div class="month-day current-month">16</div><div class="month-day current-month">17</div><div class="month-day current-month">18</div>
+                    <div class="month-day current-month">19</div><div class="month-day current-month has-event"><div class="day-number">20</div></div><div class="month-day current-month has-event"><div class="day-number">21</div></div><div class="month-day current-month"><div class="day-number">22</div></div><div class="month-day current-month has-event"><div class="day-number">23</div></div><div class="month-day current-month"><div class="day-number">24</div></div><div class="month-day current-month"><div class="day-number">25</div></div>
+                    <div class="month-day current-month"><div class="day-number">26</div></div><div class="month-day current-month"><div class="day-number">27</div></div><div class="month-day current-month"><div class="day-number">28</div></div><div class="month-day current-month"><div class="day-number">29</div></div><div class="month-day current-month"><div class="day-number">30</div></div><div class="month-day current-month"><div class="day-number">31</div></div>
+                    <div class="month-day">1</div>
+                 </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="tools-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-cogs"></i> AI Tools</h2> <p>This area provides access to a suite of specialized AI tools, such as data analysis dashboards, report generation wizards, and predictive modeling interfaces.</p> </div> </div>
+    <div id="compose-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-pen-alt"></i> Compose</h2> <p>Use this section to draft emails, reports, and other documents with AI assistance. The agent can help with tone, clarity, and content generation.</p> </div> </div>
+    <div id="templates-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-file-alt"></i> Templates</h2> <p>Access a library of pre-built templates for various documents, including meeting minutes, project proposals, and executive summaries, to streamline your workflow.</p> </div> </div>
+
+    <div id="personaModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Choose Your AI Agent</h2>
+            <div class="persona-options" id="personaOptions"></div>
+        </div>
+    </div>
+    
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="event-modal-title">Event Title</h3>
+            <p id="event-modal-time">Event Time</p>
+            <p id="event-modal-details">Event Details</p>
+            <div class="event-actions">
+                <button id="summarize-event-btn"><i class="fas fa-align-left"></i> Summarize</button>
+                <button id="prepare-event-btn"><i class="fas fa-clipboard-check"></i> Consult for Preparation</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="meetingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="meetings-modal-title">Related Meetings</h2>
+            <div id="meetings-modal-list">
+                <!-- Meeting items will be injected here --></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const personaData = [
+                { id: 'hakim', name: 'Hakim Nüruddin', title: 'AI Executive Office Agent', largeImg: 'https://hams.ai/images/ai-voice-agent.png', smallImg: 'https://hams.ai/images/ai-voice-agent.png' },
+                { id: 'layla', name: 'Layla Al-Farsi', title: 'AI Analyst', largeImg: 'https://images.unsplash.com/photo-1610116306796-6eea9f443b7a?q=80&w=800&auto=format&fit=crop', smallImg: 'https://images.unsplash.com/photo-1610116306796-6eea9f443b7a?q=80&w=100&h=100&auto=format&fit=crop' },
+                { id: 'omar', name: 'Omar Mansour', title: 'AI Coordinator', largeImg: 'https://images.unsplash.com/photo-1599665313491-4244a30a108a?q=80&w=800&auto=format&fit=crop', smallImg: 'https://images.unsplash.com/photo-1599665313491-4244a30a108a?q=80&w=100&h=100&auto=format&fit=crop' },
+                { id: 'sara', name: 'Sara Khan', title: 'AI Support', largeImg: 'https://images.unsplash.com/photo-1601049286469-6331a337b545?q=80&w=800&auto=format&fit=crop', smallImg: 'https://images.unsplash.com/photo-1601049286469-6331a337b545?q=80&w=100&h=100&auto=format&fit=crop' }
+            ];
+            let currentPersonaId = 'hakim';
+            let chatHistory = [];
+
+            // --- Element Cache ---
+            const mainPersonaImage = document.getElementById('mainPersonaImage');
+            const mainPersonaName = document.getElementById('mainPersonaName');
+            const mainPersonaTitle = document.querySelector('.persona-info p');
+            const personaModal = document.getElementById("personaModal");
+            const eventModal = document.getElementById("eventModal");
+            const meetingsModal = document.getElementById("meetingsModal");
+            const changePersonaBtn = document.getElementById('changePersonaBtn');
+            const closeModalBtns = document.querySelectorAll('.close-button');
+            const personaOptionsContainer = document.getElementById('personaOptions');
+            const navButtons = document.querySelectorAll('.nav-button');
+            const pages = document.querySelectorAll('.page-content');
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('send-btn');
+            const chatMessages = document.getElementById('chatMessages');
+            const agendaViewBtns = document.querySelectorAll('.agenda-view-btn');
+            const agendaViews = document.querySelectorAll('.agenda-view');
+            
+            // --- Persona Functions ---
+            function updatePersonaUI(personaId) {
+                const persona = personaData.find(p => p.id === personaId);
+                if (!persona) return;
+
+                if(mainPersonaImage) mainPersonaImage.src = persona.largeImg;
+                if(mainPersonaName) mainPersonaName.textContent = persona.name;
+                if(mainPersonaTitle) mainPersonaTitle.textContent = persona.title;
+                
+                document.querySelectorAll('[data-persona-avatar]').forEach(img => {
+                    img.src = persona.smallImg;
+                });
+                currentPersonaId = personaId;
+            }
+
+            function renderPersonaOptions() {
+                personaOptionsContainer.innerHTML = '';
+                personaData.forEach(persona => {
+                    const div = document.createElement('div');
+                    div.className = `persona-option ${persona.id === currentPersonaId ? 'selected' : ''}`;
+                    div.innerHTML = `<img src="${persona.smallImg}" alt="${persona.name}"><span>${persona.name}</span>`;
+                    
+                    div.addEventListener('click', () => {
+                        updatePersonaUI(persona.id);
+                        document.querySelector('.persona-option.selected')?.classList.remove('selected');
+                        div.classList.add('selected');
+                        setTimeout(() => closeModal(personaModal), 200); 
+                    });
+                    personaOptionsContainer.appendChild(div);
+                });
+            }
+
+            function openModal(modal) {
+                 if (modal === personaModal) renderPersonaOptions();
+                 modal.style.display = "flex";
+            }
+            function closeModal(modal) { modal.style.display = "none"; }
+
+            // --- Navigation ---
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    pages.forEach(page => { page.style.display = page.id === targetId ? 'flex' : 'none'; });
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+
+            // --- Agenda & Topics Functions ---
+            agendaViewBtns.forEach(button => {
+                button.addEventListener('click', () => {
+                    const viewId = button.dataset.view + '-view';
+                    agendaViews.forEach(view => { view.style.display = view.id === viewId ? 'block' : 'none'; });
+                    agendaViewBtns.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+
+            function openEventModal(title, time, details) {
+                document.getElementById('event-modal-title').textContent = title;
+                document.getElementById('event-modal-time').textContent = time;
+                document.getElementById('event-modal-details').textContent = details;
+                
+                const summarizeBtn = document.getElementById('summarize-event-btn');
+                const prepareBtn = document.getElementById('prepare-event-btn');
+                
+                const newSummarizeBtn = summarizeBtn.cloneNode(true);
+                summarizeBtn.parentNode.replaceChild(newSummarizeBtn, summarizeBtn);
+                const newPrepareBtn = prepareBtn.cloneNode(true);
+                prepareBtn.parentNode.replaceChild(newPrepareBtn, prepareBtn);
+
+                newSummarizeBtn.addEventListener('click', () => {
+                    const prompt = `Please provide a brief summary for my upcoming event: "${title}".`;
+                    takeActionFromAgenda(prompt);
+                });
+                newPrepareBtn.addEventListener('click', () => {
+                    const prompt = `What preparations do I need for my event: "${title}"? Please consult and advise.`;
+                    takeActionFromAgenda(prompt);
+                });
+
+                openModal(eventModal);
+            }
+
+            function takeActionFromAgenda(prompt) {
+                closeModal(eventModal);
+                document.querySelector('.nav-button[data-target="agent-page"]').click(); // Switch to agent view
+                chatInput.value = prompt;
+                handleSendMessage();
+            }
+
+            function openMeetingsModal(topicId, topicTitle) {
+                const list = document.getElementById('meetings-modal-list');
+                const title = document.getElementById('meetings-modal-title');
+                list.innerHTML = '';
+                title.textContent = `Meetings Related to "${topicTitle}"`;
+
+                const relatedEvents = document.querySelectorAll(`.event[data-topic="${topicId}"]`);
+                
+                if (relatedEvents.length > 0) {
+                    relatedEvents.forEach(eventEl => {
+                        const item = document.createElement('div');
+                        item.className = 'meeting-item';
+                        item.innerHTML = `
+                            <div class="meeting-title">${eventEl.dataset.eventTitle}</div>
+                            <div class="meeting-time">${eventEl.dataset.eventTime}</div>
+                        `;
+                        list.appendChild(item);
+                    });
+                } else {
+                    list.innerHTML = '<p>No scheduled meetings for this topic.</p>';
+                }
+                
+                openModal(meetingsModal);
+            }
+
+            function takeActionFromTopic(prompt) {
+                closeModal(meetingsModal);
+                document.querySelector('.nav-button[data-target="agent-page"]').click();
+                chatInput.value = prompt;
+                handleSendMessage();
+            }
+            
+            // --- Chat Functions ---
+            function displayMessage(sender, text) {
+                const persona = personaData.find(p => p.id === currentPersonaId);
+                const avatarSrc = sender === 'user' 
+                    ? 'https://placehold.co/40x40/28a745/ffffff?text=A' 
+                    : persona.smallImg;
+
+                const messageBubble = document.createElement('div');
+                messageBubble.className = `message-bubble ${sender}`;
+                
+                let content = text;
+                if(sender === 'agent') {
+                    content = marked.parse(text);
+                }
+
+                messageBubble.innerHTML = `
+                    <img src="${avatarSrc}" alt="${sender} Avatar" class="avatar" ${sender === 'agent' ? 'data-persona-avatar' : ''}>
+                    <div class="content">${content}</div>
+                `;
+                chatMessages.appendChild(messageBubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const typingBubble = document.createElement('div');
+                typingBubble.id = 'typing-indicator';
+                typingBubble.className = 'message-bubble agent';
+                 const persona = personaData.find(p => p.id === currentPersonaId);
+
+                typingBubble.innerHTML = `
+                    <img src="${persona.smallImg}" alt="Agent Avatar" class="avatar" data-persona-avatar>
+                    <div class="content">
+                       <div class="typing-indicator">
+                            <span></span><span></span><span></span>
+                       </div>
+                    </div>
+                `;
+                chatMessages.appendChild(typingBubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove();
+            }
+
+            async function handleSendMessage() {
+                const userMessage = chatInput.value.trim();
+                if (!userMessage) return;
+
+                displayMessage('user', userMessage);
+                chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+                chatInput.value = '';
+                showTypingIndicator();
+
+                await sendMessageToGemini(userMessage);
+            }
+            
+            // --- Gemini API Call ---
+            async function sendMessageToGemini(message) {
+                 const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; // Keep this empty.
+                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                
+                const agendaContext = `Current Agenda for the week of Oct 20, 2025:
+                - Monday 20th: 09:00 AM Digital Transformation Sync (details: Strategic sync with the digital transformation team to review Q3 progress.). EOD Milestone for Project Phoenix Phase 1 completion (details: Project Phoenix Phase 1 is due for completion. Review sign-off documents.).
+                - Tuesday 21st: 10:00 AM Vision 2030 Workshop (details: Workshop with department heads to brainstorm new initiatives for Vision 2030 alignment.).
+                - Thursday 23rd: 02:00 PM Quarterly Report Review (details: Final review of the quarterly report before submission to the council.).`;
+
+                const payload = {
+                    contents: chatHistory,
+                     systemInstruction: {
+                        parts: [{ text: `You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia. Your user is a high-level executive ("Your Highness"). Be concise, professional, and insightful. Provide strategic advice and summaries. Current date is Monday, October 20, 2025. ${agendaContext}` }]
+                    },
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    const agentResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    removeTypingIndicator();
+
+                    if (agentResponse) {
+                        displayMessage('agent', agentResponse);
+                        chatHistory.push({ role: 'model', parts: [{ text: agentResponse }] });
+                    } else {
+                        displayMessage('agent', "I apologize, but I couldn't process that request. Please try again.");
+                    }
+                } catch (error) {
+                    console.error('Error fetching from Gemini API:', error);
+                    removeTypingIndicator();
+                    displayMessage('agent', "I'm experiencing technical difficulties at the moment. Please try again later.");
+                }
+            }
+            
+            // --- Event Listeners ---
+            changePersonaBtn?.addEventListener('click', () => openModal(personaModal));
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeModal(personaModal);
+                    closeModal(eventModal);
+                    closeModal(meetingsModal);
+                });
+            });
+            window.addEventListener('click', (event) => {
+                if (event.target === personaModal) closeModal(personaModal);
+                if (event.target === eventModal) closeModal(eventModal);
+                if (event.target === meetingsModal) closeModal(meetingsModal);
+            });
+            sendBtn.addEventListener('click', handleSendMessage);
+            chatInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    handleSendMessage();
+                }
+            });
+
+
+            document.querySelectorAll('.event').forEach(eventEl => {
+                eventEl.addEventListener('click', () => {
+                    const title = eventEl.dataset.eventTitle;
+                    const time = eventEl.dataset.eventTime;
+                    const details = eventEl.dataset.eventDetails;
+                    openEventModal(title, time, details);
+                });
+            });
+
+            document.querySelectorAll('.topic-action-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.dataset.action;
+                    const card = button.closest('.topic-card');
+                    const topicId = card.dataset.topicId;
+                    const topicTitle = card.querySelector('.topic-title').textContent;
+
+                    if (action === 'meetings') {
+                        openMeetingsModal(topicId, topicTitle);
+                    } else if (action === 'deeper') {
+                        const prompt = `Can you dig deeper into the topic of "${topicTitle}" for me? Provide key details and current status.`;
+                        takeActionFromTopic(prompt);
+                    } else if (action === 'references') {
+                        const prompt = `Please pull up the latest references and documents from my team regarding "${topicTitle}".`;
+                        takeActionFromTopic(prompt);
+                    }
+                });
+            });
+
+            // --- Initial Setup ---
+            updatePersonaUI(currentPersonaId);
+            document.querySelector('.agenda-view-btn[data-view="week"]').click();
+        });
+    </script>
+</body>
+</html>
+
