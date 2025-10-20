@@ -52,7 +52,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 25px 40px;
+            padding: 15px 40px;
             border-bottom: 1px solid var(--border-color);
             top: 0;
         }
@@ -64,10 +64,10 @@
         }
 
         .header-left img.hrsd-logo {
-            height: 35px;
+            height: 50px;
             width: auto;
         }
-        .header-left span { font-weight: 500; font-size: 0.9rem; }
+        .header-left span { font-weight: 500; font-size: 1.2rem; }
 
         .header-right .user-profile {
             display: flex;
@@ -76,8 +76,8 @@
         }
 
         .header-right .user-profile img {
-            width: 25px;
-            height: 25px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             border: 2px solid var(--primary-blue);
         }
@@ -231,6 +231,9 @@
         .summary-content ul li { position: relative; padding-left: 20px; margin-bottom: 8px; }
         .summary-content ul li::before { content: '▶'; position: absolute; left: 0; top: 0; color: var(--primary-blue); font-size: 0.8em; }
         .summary-content ul li strong { color: var(--text-dark); }
+        .key-topics-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+        .key-topic-pill { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .key-topic-pill:hover { background: var(--primary-blue); color: var(--text-dark); border-color: var(--primary-blue); }
         
         .typing-indicator { display: flex; align-items: center; }
         .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--primary-blue); border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
@@ -335,10 +338,16 @@
         }
         @media (max-width: 768px) {
             .header { padding: 15px 20px; flex-direction: column; gap: 10px; }
-            .nav-tabs-container { padding: 5px 10px; top: 106px; }
+            .nav-tabs-container { padding: 5px 10px; top: 125px; }
             .page-content { padding: 20px; gap: 20px; }
             .chat-section-container, .summary-section, .placeholder-page, .agenda-container { padding: 15px; max-height: none; }
             .calendar-grid { grid-template-columns: 1fr; } /* Stack days vertically on mobile */
+            .nav-tabs .nav-button.hide-on-mobile {
+                display: none;
+            }
+            .header-right .user-profile .welcome-text {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -350,6 +359,7 @@
         </div>
         <div class="header-right">
             <div class="user-profile">
+                <span class="welcome-text">Welcome Ahmad</span>
                 <img src="https://placehold.co/40x40/28a745/ffffff?text=A" alt="User Avatar">
             </div>
         </div>
@@ -357,10 +367,12 @@
 
     <div class="nav-tabs-container">
         <nav class="nav-tabs">
-            <button class="nav-button active" data-target="agent-page"><i class="fas fa-robot"></i> AEO Agents</button>
-            <button class="nav-button" data-target="topics-page"><i class="fas fa-th-large"></i> Focus Areas</button>
+            <button class="nav-button active" data-target="agent-page"><i class="fas fa-robot"></i> AEO Agent</button>
+            <button class="nav-button" data-target="topics-page"><i class="fas fa-th-large"></i> Main Focus Areas</button>
             <button class="nav-button" data-target="agenda-page"><i class="fas fa-calendar-alt"></i> Agenda</button>
-            <button class="nav-button" data-target="tools-page"><i class="fas fa-cogs"></i> AI Tools</button>
+            <button class="nav-button hide-on-mobile" data-target="tools-page"><i class="fas fa-cogs"></i> AI Tools</button>
+            <button class="nav-button hide-on-mobile" data-target="compose-page"><i class="fas fa-pen-alt"></i> Compose</button>
+            <button class="nav-button hide-on-mobile" data-target="templates-page"><i class="fas fa-file-alt"></i> Templates</button>
         </nav>
     </div>
 
@@ -399,13 +411,8 @@
                 <button><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
             </div>
             <div class="summary-content" id="summary-content">
-                        <h4>Next Up: Social Development Fund Update</h4>
-                        <p>Meeting to review the performance of initiatives funded by the Social Development Fund.</p>
-                        <div class="key-topics-pills">
-                            <div class="key-topic-pill" data-topic="Launch Strategy">Launch Strategy</div>
-                            <div class="key-topic-pill" data-topic="Media Coordination">Media Coordination</div>
-                        </div>
-                    <h4>Later Today</h4><p><strong>Milestone: Non-Profit Portal Launch</strong> (End of Day)</p><p><strong>Milestone: Non-Profit Portal Launch</strong> (EOD)</p></div>
+                <!-- Content will be dynamically generated by JS -->
+            </div>
         </section>
     </main>
     
@@ -515,19 +522,19 @@
             
             <div id="day-view" class="agenda-view" style="display: none;">
                 <div class="day-view-container">
-                    <div class="time-slot"><div class="time-label">09:00 AM</div><div class="time-events"><div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 - 10:30 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market"> <div class="event-time">09:00 - 10:30 AM</div> <div class="event-title">Labor Market Policy Review</div> </div></div></div>
-                    <div class="time-slot"><div class="time-label">11:00 AM</div><div class="time-events"><div class="event" data-event-title="Social Development Fund Update" data-event-time="11:00 AM - 12:00 PM" data-event-details="Meeting to review the performance of initiatives funded by the Social Development Fund." data-topic="empowerment"> <div class="event-time">11:00 AM - 12:00 PM</div> <div class="event-title">Social Development Fund Update</div> </div></div></div>
-                    <div class="time-slot"><div class="time-label">02:00 PM</div><div class="time-events"><div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="End of Day" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit"> <div class="event-time">End of Day</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div></div>
+                    <div class="time-slot"><div class="time-label">09:00 AM</div><div class="time-events"><div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 - 10:30 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 - 10:30 AM</div> <div class="event-title">Labor Market Policy Review</div> </div></div></div>
+                    <div class="time-slot"><div class="time-label">11:00 AM</div><div class="time-events"><div class="event" data-event-title="Social Development Fund Update" data-event-time="11:00 AM - 12:00 PM" data-event-details="Meeting to review the performance of initiatives funded by the Social Development Fund." data-topic="empowerment" data-date="2025-10-20"> <div class="event-time">11:00 AM - 12:00 PM</div> <div class="event-title">Social Development Fund Update</div> </div></div></div>
+                    <div class="time-slot"><div class="time-label">02:00 PM</div><div class="time-events"><div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="End of Day" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">End of Day</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div></div>
                 </div>
             </div>
             
             <div id="week-view" class="agenda-view">
                 <div class="calendar-grid">
                     <!-- Sunday --><div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
-                    <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
-                    <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
+                    <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
+                    <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
                     <!-- Wednesday --><div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
-                    <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
+                    <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
                     <!-- Friday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
                     <!-- Saturday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
                 </div>
@@ -590,8 +597,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const personaData = [
                 { id: 'hakim', name: 'Hakim Nüruddin', title: 'AI Executive Office Agent', largeImg: 'https://hams.ai/images/ai-voice-agent.png', smallImg: 'https://hams.ai/images/ai-voice-agent.png', description: 'Your strategic partner. Provides high-level summaries, executive advice, and focuses on strategic alignment.', systemPrompt: 'You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia... Be concise, professional, and insightful. Provide strategic advice and summaries.' },
-                { id: 'layla', name: 'Layla Al-Gamdi', title: 'Data Analyst Agent', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', description: 'Your data expert. Dives deep into data, identifies trends, and provides detailed analytical insights.', systemPrompt: 'You are Layla Al-Farsi, an Data Analyst Agent for HRSD... Focus on data, metrics, and provide detailed analytical insights with supporting evidence.' },
-                { id: 'omar', name: 'Omar Mansour', title: 'Coordination Agent', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', description: 'Your operational specialist. Manages schedules, coordinates between departments, and provides logistical support.', systemPrompt: 'You are Omar Mansour, an Coordination Agent for HRSD... Focus on logistics, scheduling, action items, and ensuring operational smoothness.' }
+                { id: 'layla', name: 'Layla Al-Farsi', title: 'AI Analyst', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', description: 'Your data expert. Dives deep into data, identifies trends, and provides detailed analytical insights.', systemPrompt: 'You are Layla Al-Farsi, an AI Analyst for HRSD... Focus on data, metrics, and provide detailed analytical insights with supporting evidence.' },
+                { id: 'omar', name: 'Omar Mansour', title: 'AI Coordinator', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', description: 'Your operational specialist. Manages schedules, coordinates between departments, and provides logistical support.', systemPrompt: 'You are Omar Mansour, an AI Coordinator for HRSD... Focus on logistics, scheduling, action items, and ensuring operational smoothness.' }
             ];
             let currentPersonaId = 'hakim';
             let chatHistory = [];
@@ -615,6 +622,7 @@
             const agendaViewBtns = document.querySelectorAll('.agenda-view-btn');
             const agendaViews = document.querySelectorAll('.agenda-view');
             const askAgentBtn = document.getElementById('ask-agent-btn');
+            const summaryContent = document.getElementById('summary-content');
             
             // --- Persona Functions ---
             function updatePersonaUI(personaId, isInitialLoad = false) {
@@ -640,7 +648,7 @@
             }
 
             function displayNewPersonaGreeting(persona) {
-                 let greeting = `As-salāmu 'alaykum. I am ${persona.name}, your ${persona.title}. How may I assist you?`;
+                 let greeting = `As-salāmu 'alaykum. I am ${persona.name}. ${persona.description} How may I be of service to your Highness today?`;
                  displayMessage('agent', greeting);
             }
 
@@ -862,6 +870,74 @@
                 }
             }
             
+            // --- Dynamic Agenda Panel ---
+            function updateTodaysAgendaPanel() {
+                const now = new Date('2025-10-20T13:08:00+03:00'); // Simulating Monday 1:08 PM for demo
+                const todayStr = now.toISOString().split('T')[0];
+
+                const allEvents = Array.from(document.querySelectorAll('.event'));
+                const todaysEvents = allEvents.filter(eventEl => eventEl.dataset.date === todayStr);
+
+                const upcomingEvents = todaysEvents.filter(eventEl => {
+                    const eventTimeStr = eventEl.dataset.eventTime;
+                    let eventHour = 99; 
+                    if (eventTimeStr.includes('AM') || eventTimeStr.includes('PM')) {
+                        eventHour = parseInt(eventTimeStr.split(':')[0]);
+                        if (eventTimeStr.includes('PM') && eventHour !== 12) eventHour += 12;
+                    } else if (eventTimeStr === 'EOD') {
+                        eventHour = 17; // 5 PM
+                    }
+                    return now.getHours() < eventHour;
+                });
+
+                if (upcomingEvents.length > 0) {
+                    const nextEvent = upcomingEvents[0];
+                    const nextEventTitle = nextEvent.dataset.eventTitle;
+                    const nextEventDetails = nextEvent.dataset.eventDetails;
+
+                    const laterEvents = upcomingEvents.slice(1);
+                    
+                    summaryContent.innerHTML = `
+                        <h4>Next Up: ${nextEventTitle}</h4>
+                        <p>${nextEventDetails}</p>
+                        <div class="key-topics-pills">
+                            <div class="key-topic-pill" data-topic="Launch Strategy">Launch Strategy</div>
+                            <div class="key-topic-pill" data-topic="Media Coordination">Media Coordination</div>
+                        </div>
+                    `;
+
+                    if(laterEvents.length > 0) {
+                        summaryContent.innerHTML += '<h4>Later Today</h4>';
+                        laterEvents.forEach(eventEl => {
+                            summaryContent.innerHTML += `<p><strong>${eventEl.dataset.eventTitle}</strong> (${eventEl.dataset.eventTime})</p>`;
+                        });
+                    }
+
+                    summaryContent.querySelectorAll('.key-topic-pill').forEach(pill => {
+                        pill.addEventListener('click', () => {
+                            const prompt = `Elaborate on the topic "${pill.dataset.topic}" regarding the "${nextEventTitle}".`;
+                            takeActionFromAgenda(prompt);
+                        });
+                    });
+
+                } else {
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(now.getDate() + 1);
+                    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                    const tomorrowsFirstEvent = allEvents.find(eventEl => eventEl.dataset.date === tomorrowStr);
+                    
+                    if(tomorrowsFirstEvent){
+                         summaryContent.innerHTML = `<h4>Today's Agenda Complete</h4>
+                            <p>Your focus can shift to preparing for tomorrow.</p>
+                            <h4>Up Next Tomorrow: ${tomorrowsFirstEvent.dataset.eventTitle}</h4>
+                            <p>${tomorrowsFirstEvent.dataset.eventDetails}</p>
+                         `;
+                    } else {
+                         summaryContent.innerHTML = `<h4>Current Focus</h4><p>Your agenda for today is complete. No events scheduled for tomorrow.</p>`;
+                    }
+                }
+            }
+
             // --- Event Listeners ---
             changePersonaBtn?.addEventListener('click', () => openModal(personaModal));
             closeModalBtns.forEach(btn => {
@@ -913,6 +989,8 @@
             });
 
             document.addEventListener('mouseup', (e) => {
+                const askAgentBtn = document.getElementById('ask-agent-btn');
+                if (!askAgentBtn) return;
                 // Don't show the button if we're selecting text inside an input
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     askAgentBtn.style.display = 'none';
@@ -927,9 +1005,11 @@
                 }
             });
 
-            document.addEventListener('mousedown', () => {
-                // Hide the button when the user clicks somewhere else
-                if (window.getSelection().toString().trim().length === 0) {
+            document.addEventListener('mousedown', (e) => {
+                const askAgentBtn = document.getElementById('ask-agent-btn');
+                if (!askAgentBtn) return;
+                // Hide the button when the user clicks somewhere else, but not on the button itself
+                if (e.target.id !== 'ask-agent-btn') {
                     askAgentBtn.style.display = 'none';
                 }
             });
@@ -945,11 +1025,10 @@
 
             // --- Initial Setup ---
             updatePersonaUI(currentPersonaId, true);
+            updateTodaysAgendaPanel();
             document.querySelector('.agenda-view-btn[data-view="week"]').click();
         });
     </script>
 </body>
 </html>
-
-
 
