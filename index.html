@@ -160,7 +160,7 @@
         }
         
         .persona-display {
-            flex: 0 0 280px;
+            flex: 0 0 180px;
             text-align: center;
         }
         
@@ -289,7 +289,7 @@
         /* --- Modal Styles --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .modal-content { background: var(--container-bg); border: 1px solid var(--border-color); backdrop-filter: blur(20px); padding: 30px; border-radius: 15px; width: 500px; max-width: 90%; text-align: left; position: relative; animation: slideIn 0.3s; }
+        .modal-content { background: var(--container-bg); border: 1px solid var(--border-color); backdrop-filter: blur(20px); padding: 30px; border-radius: 15px; width: 650px; max-width: 90%; text-align: left; position: relative; animation: slideIn 0.3s; }
         @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close-button { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
         .close-button:hover { color: #fff; }
@@ -300,12 +300,34 @@
         .event-actions { display: flex; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 20px; }
         .event-actions button { flex: 1; background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
         .event-actions button:hover { background-color: var(--primary-blue); color: var(--text-dark); }
-        .persona-options { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; }
-        .persona-option { cursor: pointer; border: 3px solid transparent; border-radius: 50%; transition: all 0.2s ease-in-out; position: relative; }
-        .persona-option img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; display: block; }
-        .persona-option:hover { transform: scale(1.05); }
-        .persona-option.selected { border-color: var(--primary-blue); box-shadow: 0 0 15px rgba(0, 169, 157, 0.5); }
-        .persona-option span { display: block; margin-top: 10px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; }
+        
+        .persona-options { display: flex; flex-direction: column; gap: 15px; }
+        .persona-option { display: flex; align-items: center; gap: 20px; cursor: pointer; border: 2px solid transparent; border-radius: 10px; padding: 15px; background: var(--container-bg-light); transition: all 0.2s ease-in-out; }
+        .persona-option:hover { background-color: rgba(0, 169, 157, 0.2); }
+        .persona-option.selected { border-color: var(--primary-blue); box-shadow: 0 0 15px rgba(0, 169, 157, 0.3); background-color: rgba(0, 169, 157, 0.1); }
+        .persona-option img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
+        .persona-details h4 { margin: 0 0 5px 0; color: var(--text-dark); }
+        .persona-details p { margin: 0; font-size: 0.9rem; color: var(--text-light); opacity: 0.8; }
+
+
+        #ask-agent-btn {
+            position: absolute;
+            display: none;
+            background: var(--container-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            z-index: 1001;
+            transition: all 0.2s ease;
+        }
+        #ask-agent-btn:hover {
+            background-color: var(--primary-blue);
+            color: var(--text-dark);
+        }
 
         @media (max-width: 1200px) {
             .page-content { flex-direction: column; }
@@ -351,7 +373,7 @@
                 <img id="mainPersonaImage" src="https://hams.ai/images/ai-voice-agent.png" alt="AI Persona">
                 <div class="persona-info">
                     <h3 id="mainPersonaName">Hakim Nüruddin</h3>
-                    <p>AI Executive Office Agent</p>
+                    <p id="mainPersonaTitle">AI Executive Office Agent</p>
                 </div>
             </div>
             <div class="chat-interaction-area">
@@ -380,8 +402,12 @@
                 <button><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
             </div>
             <div class="summary-content" id="summary-content">
-                 <h4>Current Focus</h4>
-                <p>Awaiting your instructions. The summary panel will dynamically update with context from our conversation.</p>
+                 <h4>Next Up: Milestone - Non-Profit Portal Launch</h4>
+                <p>The official launch of the new national portal for non-profit organizations is scheduled for the end of today. Key preparation items include final review of launch communications and coordination with the media team.</p>
+                <ul>
+                    <li><strong>Action Item:</strong> Review and approve the final press release draft.</li>
+                    <li><strong>Check Point:</strong> Confirm that the technical team has completed all pre-launch system checks.</li>
+                </ul>
             </div>
         </section>
     </main>
@@ -559,23 +585,25 @@
                 <!-- Meeting items will be injected here --></div>
         </div>
     </div>
+    
+    <div id="ask-agent-btn"><i class="fas fa-comment-dots"></i> Ask Agent</div>
 
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const personaData = [
-                { id: 'hakim', name: 'Hakim Nüruddin', title: 'AI Executive Office Agent', largeImg: 'https://hams.ai/images/ai-voice-agent.png', smallImg: 'https://hams.ai/images/ai-voice-agent.png' },
-                { id: 'layla', name: 'Layla Al-Farsi', title: 'AI Analyst', largeImg: 'https://images.unsplash.com/photo-1610116306796-6eea9f443b7a?q=80&w=800&auto=format&fit=crop', smallImg: 'https://images.unsplash.com/photo-1610116306796-6eea9f443b7a?q=80&w=100&h=100&auto=format&fit=crop' },
-                { id: 'omar', name: 'Omar Mansour', title: 'AI Coordinator', largeImg: 'https://images.unsplash.com/photo-1599665313491-4244a30a108a?q=80&w=800&auto=format&fit=crop', smallImg: 'https://images.unsplash.com/photo-1599665313491-4244a30a108a?q=80&w=100&h=100&auto=format&fit=crop' },
-                { id: 'sara', name: 'Sara Khan', title: 'AI Support', largeImg: 'https://images.unsplash.com/photo-1601049286469-6331a337b545?q=80&w=800&auto=format&fit=crop', smallImg: 'https://images.unsplash.com/photo-1601049286469-6331a337b545?q=80&w=100&h=100&auto=format&fit=crop' }
+                { id: 'hakim', name: 'Hakim Nüruddin', title: 'AI Executive Office Agent', largeImg: 'https://hams.ai/images/ai-voice-agent.png', smallImg: 'https://hams.ai/images/ai-voice-agent.png', description: 'Your strategic partner. Provides high-level summaries, executive advice, and focuses on strategic alignment.', systemPrompt: 'You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia... Be concise, professional, and insightful. Provide strategic advice and summaries.' },
+                { id: 'layla', name: 'Layla Al-Farsi', title: 'AI Analyst', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', description: 'Your data expert. Dives deep into data, identifies trends, and provides detailed analytical insights.', systemPrompt: 'You are Layla Al-Farsi, an AI Analyst for HRSD... Focus on data, metrics, and provide detailed analytical insights with supporting evidence.' },
+                { id: 'omar', name: 'Omar Mansour', title: 'AI Coordinator', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', description: 'Your operational specialist. Manages schedules, coordinates between departments, and provides logistical support.', systemPrompt: 'You are Omar Mansour, an AI Coordinator for HRSD... Focus on logistics, scheduling, action items, and ensuring operational smoothness.' }
             ];
             let currentPersonaId = 'hakim';
             let chatHistory = [];
+            let selectedText = '';
 
             // --- Element Cache ---
             const mainPersonaImage = document.getElementById('mainPersonaImage');
             const mainPersonaName = document.getElementById('mainPersonaName');
-            const mainPersonaTitle = document.querySelector('.persona-info p');
+            const mainPersonaTitle = document.getElementById('mainPersonaTitle');
             const personaModal = document.getElementById("personaModal");
             const eventModal = document.getElementById("eventModal");
             const meetingsModal = document.getElementById("meetingsModal");
@@ -589,9 +617,10 @@
             const chatMessages = document.getElementById('chatMessages');
             const agendaViewBtns = document.querySelectorAll('.agenda-view-btn');
             const agendaViews = document.querySelectorAll('.agenda-view');
+            const askAgentBtn = document.getElementById('ask-agent-btn');
             
             // --- Persona Functions ---
-            function updatePersonaUI(personaId) {
+            function updatePersonaUI(personaId, isInitialLoad = false) {
                 const persona = personaData.find(p => p.id === personaId);
                 if (!persona) return;
 
@@ -602,7 +631,20 @@
                 document.querySelectorAll('[data-persona-avatar]').forEach(img => {
                     img.src = persona.smallImg;
                 });
+                
+                const oldPersonaId = currentPersonaId;
                 currentPersonaId = personaId;
+
+                if (!isInitialLoad && oldPersonaId !== currentPersonaId) {
+                    chatHistory = [];
+                    chatMessages.innerHTML = '';
+                    displayNewPersonaGreeting(persona);
+                }
+            }
+
+            function displayNewPersonaGreeting(persona) {
+                 let greeting = `As-salāmu 'alaykum. I am ${persona.name}, your ${persona.title}. How may I assist you?`;
+                 displayMessage('agent', greeting);
             }
 
             function renderPersonaOptions() {
@@ -610,13 +652,17 @@
                 personaData.forEach(persona => {
                     const div = document.createElement('div');
                     div.className = `persona-option ${persona.id === currentPersonaId ? 'selected' : ''}`;
-                    div.innerHTML = `<img src="${persona.smallImg}" alt="${persona.name}"><span>${persona.name}</span>`;
+                    div.innerHTML = `
+                        <img src="${persona.smallImg}" alt="${persona.name}">
+                        <div class="persona-details">
+                            <h4>${persona.name} - ${persona.title}</h4>
+                            <p>${persona.description}</p>
+                        </div>
+                    `;
                     
                     div.addEventListener('click', () => {
                         updatePersonaUI(persona.id);
-                        document.querySelector('.persona-option.selected')?.classList.remove('selected');
-                        div.classList.add('selected');
-                        setTimeout(() => closeModal(personaModal), 200); 
+                        closeModal(personaModal);
                     });
                     personaOptionsContainer.appendChild(div);
                 });
@@ -779,11 +825,14 @@
                 - Monday 20th: 09:00 AM Digital Transformation Sync (details: Strategic sync with the digital transformation team to review Q3 progress.). EOD Milestone for Project Phoenix Phase 1 completion (details: Project Phoenix Phase 1 is due for completion. Review sign-off documents.).
                 - Tuesday 21st: 10:00 AM Vision 2030 Workshop (details: Workshop with department heads to brainstorm new initiatives for Vision 2030 alignment.).
                 - Thursday 23rd: 02:00 PM Quarterly Report Review (details: Final review of the quarterly report before submission to the council.).`;
+                
+                const persona = personaData.find(p => p.id === currentPersonaId);
+                const systemPromptText = persona ? persona.systemPrompt : 'You are a helpful assistant.';
 
                 const payload = {
                     contents: chatHistory,
                      systemInstruction: {
-                        parts: [{ text: `You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia. Your user is a high-level executive ("Your Highness"). Be concise, professional, and insightful. Provide strategic advice and summaries. Current date is Monday, October 20, 2025. ${agendaContext}` }]
+                        parts: [{ text: `${systemPromptText} Your user is a high-level executive ("Your Highness"). Current date is Monday, October 20, 2025. ${agendaContext}` }]
                     },
                 };
 
@@ -866,11 +915,44 @@
                 });
             });
 
+            document.addEventListener('mouseup', (e) => {
+                // Don't show the button if we're selecting text inside an input
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    askAgentBtn.style.display = 'none';
+                    return;
+                }
+                const text = window.getSelection().toString().trim();
+                if (text.length > 0) {
+                    selectedText = text;
+                    askAgentBtn.style.left = `${e.pageX + 5}px`;
+                    askAgentBtn.style.top = `${e.pageY + 5}px`;
+                    askAgentBtn.style.display = 'block';
+                }
+            });
+
+            document.addEventListener('mousedown', () => {
+                // Hide the button when the user clicks somewhere else
+                if (window.getSelection().toString().trim().length === 0) {
+                    askAgentBtn.style.display = 'none';
+                }
+            });
+            
+            askAgentBtn.addEventListener('click', () => {
+                if (selectedText) {
+                    const prompt = `Please provide more details about the following: "${selectedText}"`;
+                    takeActionFromAgenda(prompt); // Re-use this function to switch view and send message
+                    selectedText = '';
+                }
+                askAgentBtn.style.display = 'none';
+            });
+
             // --- Initial Setup ---
-            updatePersonaUI(currentPersonaId);
+            updatePersonaUI(currentPersonaId, true);
             document.querySelector('.agenda-view-btn[data-view="week"]').click();
         });
     </script>
 </body>
 </html>
+
+
 
