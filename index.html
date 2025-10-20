@@ -377,6 +377,7 @@
                 height: 100%;
                 border-radius: 0;
                 padding: 1rem;
+                padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Add padding for home bar */
                 max-height: none;
                 box-sizing: border-box;
             }
@@ -391,6 +392,21 @@
                 width: auto;
             }
             .calendar-grid { grid-template-columns: 1fr; } /* Stack days vertically on mobile */
+            
+            .modal-topic-pill {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            #meetings-modal-list .meeting-title {
+                font-size: 0.9rem;
+            }
+            #meetings-modal-list .meeting-time {
+                font-size: 0.8rem;
+            }
+            #chatInput {
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
         }
     </style>
 </head>
@@ -874,7 +890,7 @@
             
             // --- Gemini API Call ---
             async function sendMessageToGemini(message) {
-                 const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; // Keep this empty.
+                 const apiKey = ""; // Keep this empty.
                  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 
                 const agendaContext = `Current Agenda for the week of Oct 20, 2025:
