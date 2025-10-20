@@ -200,7 +200,7 @@
         .message-bubble.agent .content strong { color: var(--text-dark); }
 
         .chat-input-area { padding-top: 15px; border-top: 1px solid var(--border-color); }
-        .chat-input-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .chat-input-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; position: relative; }
         #chatInput { flex: 1; background: transparent; border: none; outline: none; color: var(--text-dark); font-size: 1rem; padding: 10px 0; }
         #chatInput::placeholder { color: var(--text-light); opacity: 0.7; }
         .chat-input-controls button { background: none; border: none; color: var(--text-light); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; }
@@ -208,6 +208,14 @@
         .send-btn { background-color: var(--primary-blue) !important; width: 40px; height: 40px; border-radius: 50%; color: white !important; }
         .send-btn:hover { background-color: #008a7e !important; }
         #changePersonaBtn { padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+
+        .chat-action-dropdown { position: relative; }
+        .chat-action-dropdown .dropdown-menu { display: none; position: absolute; bottom: 120%; left: 0; background: var(--container-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; min-width: 250px; z-index: 100; }
+        .chat-action-dropdown .dropdown-menu.active { display: block; }
+        .dropdown-menu .dropdown-header { font-size: 0.8rem; text-transform: uppercase; opacity: 0.7; padding: 5px 10px; }
+        .dropdown-menu a { display: block; color: var(--text-light); text-decoration: none; padding: 8px 10px; border-radius: 5px; transition: background-color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dropdown-menu a:hover { background-color: var(--container-bg-light); }
+        .dropdown-divider { height: 1px; background-color: var(--border-color); margin: 8px 0; }
 
         .summary-section, .placeholder-page, .agenda-container {
             flex: 1;
@@ -345,7 +353,25 @@
             
             .nav-tabs-container {
                 display: none;
+                position: fixed;
+                top: 73px;
+                left: 0;
+                right: 0;
+                height: auto;
+                background: var(--dark-teal);
             }
+            .nav-tabs-container.active {
+                display: flex;
+            }
+            .nav-tabs {
+                flex-direction: column;
+                width: 100%;
+                padding: 10px;
+                gap: 0;
+            }
+             .nav-tabs button {
+                justify-content: flex-start;
+             }
 
             .page-content { padding: 0; gap: 0; }
             .chat-section-container {
@@ -418,7 +444,13 @@
                 <div class="chat-input-area">
                     <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
                     <div class="chat-input-controls">
-                        <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i>Change Persona</button>
+                         <div class="chat-action-dropdown">
+                            <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
+                            <div id="chat-action-menu" class="dropdown-menu">
+                                <!-- Dynamic content will be injected here -->
+                            </div>
+                        </div>
+                        <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
                         <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -643,6 +675,10 @@
             const agendaViews = document.querySelectorAll('.agenda-view');
             const askAgentBtn = document.getElementById('ask-agent-btn');
             const summaryContent = document.getElementById('summary-content');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navTabsContainer = document.querySelector('.nav-tabs-container');
+            const chatActionBtn = document.getElementById('chat-action-btn');
+            const chatActionMenu = document.getElementById('chat-action-menu');
             
             // --- Persona Functions ---
             function updatePersonaUI(personaId, isInitialLoad = false) {
@@ -706,6 +742,9 @@
                     pages.forEach(page => { page.style.display = page.id === targetId ? 'flex' : 'none'; });
                     navButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
+                    if (navTabsContainer.classList.contains('active')) {
+                        navTabsContainer.classList.remove('active');
+                    }
                 });
             });
 
@@ -971,6 +1010,11 @@
                 if (event.target === personaModal) closeModal(personaModal);
                 if (event.target === eventModal) closeModal(eventModal);
                 if (event.target === meetingsModal) closeModal(meetingsModal);
+
+                // Close dropdown if clicking outside
+                if(chatActionMenu && !chatActionBtn.contains(event.target) && !chatActionMenu.contains(event.target)) {
+                    chatActionMenu.classList.remove('active');
+                }
             });
             sendBtn.addEventListener('click', handleSendMessage);
             chatInput.addEventListener('keydown', (event) => {
@@ -1043,6 +1087,44 @@
                 askAgentBtn.style.display = 'none';
             });
 
+            mobileMenuBtn.addEventListener('click', () => {
+                navTabsContainer.classList.toggle('active');
+            });
+            
+            // --- Chat Action Dropdown Logic ---
+            function populateChatActionMenu() {
+                chatActionMenu.innerHTML = '';
+                let content = '<div class="dropdown-header">Discuss a Focus Area</div>';
+                document.querySelectorAll('.topic-card').forEach(card => {
+                    const title = card.querySelector('.topic-title').textContent;
+                    content += `<a href="#" class="chat-action-item" data-prompt="Let's discuss the focus area: ${title}">${title}</a>`;
+                });
+
+                content += '<div class="dropdown-divider"></div>';
+                content += '<div class="dropdown-header">Discuss a Meeting</div>';
+                document.querySelectorAll('.event').forEach(event => {
+                    const title = event.dataset.eventTitle;
+                    content += `<a href="#" class="chat-action-item" data-prompt="What should I know about the meeting: ${title}?">${title}</a>`;
+                });
+                chatActionMenu.innerHTML = content;
+                
+                document.querySelectorAll('.chat-action-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        chatInput.value = item.dataset.prompt;
+                        handleSendMessage();
+                        chatActionMenu.classList.remove('active');
+                    });
+                });
+            }
+
+            chatActionBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                populateChatActionMenu();
+                chatActionMenu.classList.toggle('active');
+            });
+
+
             // --- Initial Setup ---
             updatePersonaUI(currentPersonaId, true);
             updateTodaysAgendaPanel();
@@ -1051,5 +1133,4 @@
     </script>
 </body>
 </html>
-
 
