@@ -430,6 +430,7 @@
             min-width: 300px;
             max-height: 80vh;
             box-shadow: var(--shadow-lg);
+            overflow: hidden;
         }
         .summary-header { display: flex; justify-content: space-between; align-items: center; }
         .summary-header h3 { margin: 0; font-size: 1.3rem; color: var(--text-dark); font-weight: 600; }
@@ -538,6 +539,9 @@
         
         .agenda-view {
             display: none;
+            flex-grow: 1;
+            min-height: 0;
+            overflow-y: auto;
         }
         
         .agenda-view.active {
@@ -550,12 +554,20 @@
             flex-direction: column;
             gap: 15px;
         }
+
+        #month-view.active {
+            display: flex !important;
+            flex-direction: column;
+        }
         
         .month-calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 5px;
             margin-top: 15px;
+            flex-grow: 1;
+            min-height: 0;
+            grid-template-rows: auto repeat(6, 1fr);
         }
         
         .month-day-header {
@@ -567,9 +579,13 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
+        .month-day-header.weekend {
+            background-color: rgba(0, 0, 0, 0.15);
+            border-radius: 5px 5px 0 0;
+        }
         
         .month-day-cell {
-            aspect-ratio: 1;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 8px;
@@ -577,13 +593,19 @@
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         
         .month-day-cell:hover {
             background: rgba(0, 169, 157, 0.2);
-            transform: scale(1.05);
+            transform: scale(1.02);
             border-color: var(--primary-blue);
+        }
+
+        .month-day-cell.weekend {
+            background-color: rgba(0, 0, 0, 0.15);
         }
         
         .month-day-cell.today {
@@ -592,21 +614,26 @@
             box-shadow: 0 0 15px rgba(0, 169, 157, 0.3);
         }
         
-        .month-day-cell.other-month {
+        .month-day-cell.other-month,
+        .month-day-cell.disabled-day {
             opacity: 0.3;
             pointer-events: none;
+            background: transparent;
         }
         
         .month-day-number {
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin-bottom: 5px;
+            flex-shrink: 0;
         }
         
         .month-day-events {
             display: flex;
             flex-direction: column;
             gap: 3px;
+            flex-grow: 1;
+            overflow: hidden;
         }
         
         .month-event-dot {
@@ -815,7 +842,7 @@
             text-align: left; 
             position: relative; 
             animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            max-height: 70vh; 
+            max-height: 80vh; 
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
@@ -861,14 +888,15 @@
         #event-modal-title { font-size: 1.5rem; color: var(--text-dark); margin: 0 0 5px 0; text-align: left; }
         #event-modal-time { color: var(--primary-blue); font-weight: 500; margin-bottom: 15px; text-align: left; }
         #event-modal-details { margin-bottom: 20px; line-height: 1.6; text-align: left;}
-        .event-actions { 
+        .event-actions, .day-actions { 
             display: flex; 
+            flex-direction: column;
             gap: 12px; 
             border-top: 1px solid var(--border-color); 
             padding-top: 20px;
             margin-top: 10px;
         }
-        .event-actions button { 
+        .event-actions button, .day-actions button { 
             flex: 1; 
             background: var(--container-bg-light); 
             border: 1px solid var(--border-color); 
@@ -884,7 +912,7 @@
             gap: 8px;
             font-weight: 500;
         }
-        .event-actions button:hover { 
+        .event-actions button:hover, .day-actions button:hover { 
             background: linear-gradient(135deg, var(--primary-blue), #008a7e);
             color: var(--text-dark);
             border-color: transparent;
@@ -951,7 +979,7 @@
             align-items: center;
             gap: 5px;
         }
-        .key-topic-pill:hover, .modal-topic-pill:hover { 
+        .key-topic-pill:hover, .modal-topic-pill:hover, .modal-topic-pill.active { 
             background: linear-gradient(135deg, var(--primary-blue), #008a7e);
             color: var(--text-dark);
             border-color: var(--primary-blue);
@@ -992,7 +1020,7 @@
             opacity: 0.8;
             color: var(--primary-blue);
         }
-        #meetings-modal-list .dropdown-header { 
+        #meetings-modal-list .dropdown-header, #dayActionModal .dropdown-header { 
             font-size: 0.85rem; 
             text-transform: uppercase; 
             opacity: 0.7; 
@@ -1640,6 +1668,24 @@
             <div id="meetings-modal-list"></div>
         </div>
     </div>
+
+    <div id="dayActionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="day-action-title">Actions for Date</h2>
+            <div id="day-action-focus-areas">
+                 <div class="dropdown-header">Select a Focus Area</div>
+                 <div class="modal-pills-container" id="day-action-pills">
+                    <!-- Pills will be populated by JS -->
+                 </div>
+            </div>
+            <div class="day-actions">
+                <button data-action="check"><i class="fas fa-calendar-check"></i> Check Availability</button>
+                <button data-action="media"><i class="fas fa-bullhorn"></i> Coordinate with Media Team</button>
+                <button data-action="consulting"><i class="fas fa-users-cog"></i> Summon Consulting Team</button>
+            </div>
+        </div>
+    </div>
     
     <div id="ask-agent-btn"><i class="fas fa-comment-dots"></i> Ask Agent</div>
 
@@ -1661,6 +1707,7 @@
             const personaModal = document.getElementById("personaModal");
             const eventModal = document.getElementById("eventModal");
             const meetingsModal = document.getElementById("meetingsModal");
+            const dayActionModal = document.getElementById("dayActionModal");
             const changePersonaBtn = document.getElementById('changePersonaBtn');
             const closeModalBtns = document.querySelectorAll('.close-button');
             const personaOptionsContainer = document.getElementById('personaOptions');
@@ -1775,18 +1822,19 @@
 
                 newSummarizeBtn.addEventListener('click', () => {
                     const prompt = `Please provide a brief summary for my upcoming event: "${title}".`;
-                    takeActionFromAgenda(prompt);
+                    switchToAgentAndSendPrompt(prompt);
                 });
                 newPrepareBtn.addEventListener('click', () => {
                     const prompt = `What preparations do I need for my event: "${title}"? Please consult and advise.`;
-                    takeActionFromAgenda(prompt);
+                    switchToAgentAndSendPrompt(prompt);
                 });
 
                 openModal(eventModal);
             }
 
-            function takeActionFromAgenda(prompt) {
+            function switchToAgentAndSendPrompt(prompt) {
                 closeModal(eventModal);
+                closeModal(dayActionModal);
                 document.querySelector('.nav-button[data-target="agent-page"]').click();
                 chatInput.value = prompt;
                 handleSendMessage();
@@ -1882,13 +1930,8 @@
             }
             
             async function sendMessageToGemini(message) {
-                const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; // Keep this empty.
+                 const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; // Keep this empty.
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                
-                const agendaContext = `Current Agenda for the week of Oct 20, 2025:
-                - Monday 20th: 09:00 AM Digital Transformation Sync (details: Strategic sync with the digital transformation team to review Q3 progress.). EOD Milestone for Project Phoenix Phase 1 completion (details: Project Phoenix Phase 1 is due for completion. Review sign-off documents.).
-                - Tuesday 21st: 10:00 AM Vision 2030 Workshop (details: Workshop with department heads to brainstorm new initiatives for Vision 2030 alignment.).
-                - Thursday 23rd: 02:00 PM Quarterly Report Review (details: Final review of the quarterly report before submission to the council.).`;
                 
                 const persona = personaData.find(p => p.id === currentPersonaId);
                 const systemPromptText = persona ? persona.systemPrompt : 'You are a helpful assistant.';
@@ -1896,7 +1939,7 @@
                 const payload = {
                     contents: chatHistory,
                      systemInstruction: {
-                         parts: [{ text: `${systemPromptText} Your user is a high-level executive ("Your Highness"). Current date is Monday, October 20, 2025. ${agendaContext}` }]
+                         parts: [{ text: `${systemPromptText} Your user is a high-level executive ("Your Highness"). The current date and time is ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Riyadh' })}.` }]
                     },
                 };
 
@@ -1974,7 +2017,7 @@
                     summaryContent.querySelectorAll('.key-topic-pill').forEach(pill => {
                         pill.addEventListener('click', () => {
                             const prompt = `Elaborate on the topic "${pill.dataset.topic}" regarding the "${nextEventTitle}".`;
-                            takeActionFromAgenda(prompt);
+                            switchToAgentAndSendPrompt(prompt);
                         });
                     });
 
@@ -2009,12 +2052,14 @@
                     closeModal(personaModal);
                     closeModal(eventModal);
                     closeModal(meetingsModal);
+                    closeModal(dayActionModal);
                 });
             });
             window.addEventListener('click', (event) => {
                 if (event.target === personaModal) closeModal(personaModal);
                 if (event.target === eventModal) closeModal(eventModal);
                 if (event.target === meetingsModal) closeModal(meetingsModal);
+                if (event.target === dayActionModal) closeModal(dayActionModal);
             });
             sendBtn.addEventListener('click', handleSendMessage);
             chatInput.addEventListener('keydown', (event) => {
@@ -2069,7 +2114,7 @@
             askAgentBtn.addEventListener('click', () => {
                 if (selectedText) {
                     const prompt = `Please provide more details about the following: "${selectedText}"`;
-                    takeActionFromAgenda(prompt);
+                    switchToAgentAndSendPrompt(prompt);
                     selectedText = '';
                 }
                 askAgentBtn.style.display = 'none';
@@ -2185,6 +2230,8 @@
 
                 const year = today.getFullYear();
                 const month = today.getMonth();
+                const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
 
                 const firstDayOfMonth = new Date(year, month, 1);
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -2193,8 +2240,9 @@
                 monthGrid.innerHTML = ''; // Clear previous content
 
                 // Add day headers
-                ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
-                    monthGrid.innerHTML += `<div class="month-day-header">${day}</div>`;
+                ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach((day, index) => {
+                    const isWeekend = index === 5 || index === 6; // Friday or Saturday
+                    monthGrid.innerHTML += `<div class="month-day-header ${isWeekend ? 'weekend' : ''}">${day}</div>`;
                 });
 
                 // Add padding for days before the 1st
@@ -2204,10 +2252,19 @@
 
                 // Add days of the month
                 for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    const dayOfWeek = date.getDay(); // 0=Sun, 6=Sat
                     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                    const isPast = date < todayDateOnly;
+                    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
                     
-                    let cellHtml = `<div class="month-day-cell ${isToday ? 'today' : ''}" data-date="${dateStr}">
+                    let cellClasses = 'month-day-cell';
+                    if (isToday) cellClasses += ' today';
+                    if (isPast) cellClasses += ' disabled-day';
+                    if (isWeekend) cellClasses += ' weekend';
+                    
+                    let cellHtml = `<div class="${cellClasses}" data-date="${dateStr}">
                                         <div class="month-day-number">${day}</div>
                                         <div class="month-day-events">`;
 
@@ -2222,21 +2279,86 @@
                     monthGrid.innerHTML += cellHtml;
                 }
                  // Add click handlers to cells
-                 monthGrid.querySelectorAll('.month-day-cell[data-date]').forEach(cell => {
-                    const date = cell.dataset.date;
-                    if (eventsByDate.has(date)) {
-                        cell.addEventListener('click', () => {
-                            const eventsOnDay = eventsByDate.get(date);
-                            // For now, just open the first event. A more complex UI could show a list.
-                            const firstEvent = eventsOnDay[0];
+                 monthGrid.querySelectorAll('.month-day-cell:not(.disabled-day, .other-month)').forEach(cell => {
+                    const dateStr = cell.dataset.date;
+                    cell.addEventListener('click', () => {
+                        if (eventsByDate.has(dateStr)) {
+                            const firstEvent = eventsByDate.get(dateStr)[0];
                             openEventModal(
                                 firstEvent.dataset.eventTitle,
                                 firstEvent.dataset.eventTime,
                                 firstEvent.dataset.eventDetails
                             );
-                        });
-                    }
+                        } else {
+                            openDayActionModal(dateStr);
+                        }
+                    });
                 });
+            }
+
+            function openDayActionModal(dateStr) {
+                const date = new Date(dateStr + 'T00:00:00');
+                const titleEl = document.getElementById('day-action-title');
+                const pillsContainer = document.getElementById('day-action-pills');
+                const actionsContainer = document.querySelector('#dayActionModal .day-actions');
+                titleEl.textContent = `Actions for ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+
+                // Populate focus areas
+                pillsContainer.innerHTML = '';
+                 document.querySelectorAll('.topic-card').forEach(card => {
+                    const topicTitle = card.querySelector('.topic-title').textContent;
+                    const pill = document.createElement('div');
+                    pill.className = 'modal-topic-pill';
+                    pill.textContent = topicTitle;
+                    pill.dataset.topic = topicTitle;
+                    pillsContainer.appendChild(pill);
+                });
+
+                // Handle pill selection
+                let selectedTopic = '';
+                pillsContainer.querySelectorAll('.modal-topic-pill').forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        pillsContainer.querySelectorAll('.modal-topic-pill').forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                        selectedTopic = pill.dataset.topic;
+                    });
+                });
+                
+                // Clear old listeners and add new ones
+                const newActionsContainer = actionsContainer.cloneNode(true);
+                actionsContainer.parentNode.replaceChild(newActionsContainer, actionsContainer);
+
+                newActionsContainer.querySelectorAll('button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        if (!selectedTopic) {
+                            alert("Please select a focus area first.");
+                            return;
+                        }
+
+                        const action = button.dataset.action;
+                        let prompt = '';
+                        const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+
+                        switch(action) {
+                            case 'check':
+                                prompt = `Draft an email to check stakeholders' availability for a meeting on ${formattedDate} regarding "${selectedTopic}".`;
+                                break;
+                            case 'media':
+                                prompt = `Draft an email to the media team to coordinate potential media coverage for an initiative related to "${selectedTopic}" around ${formattedDate}.`;
+                                break;
+                            case 'consulting':
+                                 prompt = `Draft an email to summon the consulting team for a high-priority meeting on ${formattedDate} to discuss "${selectedTopic}". Emphasize urgency.`;
+                                break;
+                        }
+
+                        if(prompt) {
+                            switchToAgentAndSendPrompt(prompt);
+                        }
+                    });
+                });
+                
+
+                openModal(dayActionModal);
             }
             
             function renderTodayView() {
