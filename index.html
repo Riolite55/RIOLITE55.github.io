@@ -537,22 +537,18 @@
         }
         
         .agenda-view {
-            display: none;
+            display: none !important;
         }
         
         .agenda-view.active {
-            display: block;
+            display: block !important;
         }
         
-        #today-view {
-            display: flex;
+        #today-view.active,
+        #month-view.active {
+            display: flex !important;
             flex-direction: column;
             gap: 15px;
-        }
-        
-        #month-view {
-            display: flex;
-            flex-direction: column;
         }
         
         .month-calendar-grid {
@@ -1148,16 +1144,63 @@
                 padding: 0;
                 width: 100%;
                 box-sizing: border-box;
-                overflow: hidden;
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: 100%;
             }
             
             .topics-container {
                 padding: 15px;
                 grid-template-columns: 1fr;
+                height: auto;
+                width: 100%;
+                box-sizing: border-box;
             }
             
             .topic-card {
                 margin-bottom: 15px;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 15px;
+            }
+            
+            .topic-icon {
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+            
+            .topic-title {
+                font-size: 1.1rem;
+            }
+            
+            .topic-description {
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+            
+            .topic-kpis {
+                gap: 15px;
+                margin-bottom: 15px;
+                padding: 15px 0;
+            }
+            
+            .kpi-value {
+                font-size: 1.5rem;
+            }
+            
+            .kpi-label {
+                font-size: 0.7rem;
+            }
+            
+            .topic-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .topic-actions button {
+                width: 100%;
+                box-sizing: border-box;
             }
             
             .agenda-container {
@@ -1268,7 +1311,8 @@
                 align-items: center;
                 justify-content: center;
                 margin: 2px auto;
-                max-width: 45px;
+                width: 40px;
+                height: 40px;
                 transition: all 0.3s;
                 font-weight: 500;
             }
@@ -1289,12 +1333,13 @@
                 font-weight: bold;
                 border: 2px solid var(--primary-blue);
                 box-shadow: 0 0 15px rgba(0, 169, 157, 0.3);
+                background: rgba(0, 169, 157, 0.15);
             }
             
             #mobile-month-grid .day-cell.has-event::after { 
                 content: '';
                 position: absolute;
-                bottom: 4px;
+                bottom: 2px;
                 left: 50%;
                 transform: translateX(-50%);
                 width: 5px;
@@ -1306,6 +1351,10 @@
             
             #mobile-month-grid .day-cell.selected.has-event::after {
                 background-color: white;
+            }
+            
+            #mobile-month-grid .day-cell.today.has-event::after {
+                background-color: var(--primary-blue);
             }
             
             .month-calendar-grid {
@@ -1833,7 +1882,7 @@
             
             async function sendMessageToGemini(message) {
                 const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; // Keep this empty.
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 
                 const agendaContext = `Current Agenda for the week of Oct 20, 2025:
                 - Monday 20th: 09:00 AM Digital Transformation Sync (details: Strategic sync with the digital transformation team to review Q3 progress.). EOD Milestone for Project Phoenix Phase 1 completion (details: Project Phoenix Phase 1 is due for completion. Review sign-off documents.).
