@@ -141,13 +141,21 @@
             background-color: var(--container-bg-light);
             border-color: var(--border-color);
         }
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
 
         .page-content {
-            display: flex;
+            display: none; /* Hidden by default */
             flex-grow: 1;
             padding: 30px 40px;
             gap: 30px;
-            overflow-y: auto;
+        }
+        .page-content.active {
+            display: flex;
         }
 
         .chat-section-container {
@@ -250,7 +258,6 @@
         /* --- Agenda / Calendar Styles --- */
         .agenda-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
         .agenda-header h2 { margin: 0; font-weight: 500; }
-        .view-switcher { display: none; } /* Hide on desktop for simplicity now */
         .desktop-calendar { display: block; }
         .mobile-calendar { display: none; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
@@ -342,6 +349,8 @@
              body {
                 height: 100vh;
                 height: calc(var(--vh, 1vh) * 100);
+                display: flex;
+                flex-direction: column;
             }
             .header { padding: 15px 20px; }
             .header-left span, .header-right .welcome-text { display: none; }
@@ -369,7 +378,12 @@
                 justify-content: flex-start;
              }
 
-            .page-content { padding: 0; gap: 0; flex-grow: 1; height: calc(100% - 73px); }
+            .main-container {
+                flex-grow: 1;
+                display: flex;
+            }
+
+            .page-content { padding: 0; gap: 0; flex-grow: 1; height: 100%; }
             .chat-section-container {
                 width: 100%;
                 height: 100%;
@@ -394,6 +408,7 @@
              #topics-page, #agenda-page, .placeholder-page {
                 padding: 20px;
                 width: auto;
+                box-sizing: border-box;
             }
             
             .modal-topic-pill {
@@ -444,177 +459,179 @@
         </nav>
     </div>
 
-    <main id="agent-page" class="page-content">
-        <section class="chat-section-container">
-            <div class="persona-display">
-                <img id="mainPersonaImage" src="https://hams.ai/images/ai-voice-agent.png" alt="AI Persona">
-                <div class="persona-info">
-                    <h3 id="mainPersonaName">Hakim Nüruddin</h3>
-                    <p id="mainPersonaTitle">AI Executive Office Agent</p>
-                </div>
-            </div>
-            <div class="chat-interaction-area">
-                <div class="chat-header-greeting">
-                    <h2>Welcome your Highness</h2>
-                </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message-bubble agent">
-                        <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar>
-                        <div class="content">As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
+    <div class="main-container">
+        <main id="agent-page" class="page-content active">
+            <section class="chat-section-container">
+                <div class="persona-display">
+                    <img id="mainPersonaImage" src="https://hams.ai/images/ai-voice-agent.png" alt="AI Persona">
+                    <div class="persona-info">
+                        <h3 id="mainPersonaName">Hakim Nüruddin</h3>
+                        <p id="mainPersonaTitle">AI Executive Office Agent</p>
                     </div>
                 </div>
-                <div class="chat-input-area">
-                    <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
-                    <div class="chat-input-controls">
-                        <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
-                        <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
-                        <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
+                <div class="chat-interaction-area">
+                    <div class="chat-header-greeting">
+                        <h2>Welcome your Highness</h2>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message-bubble agent">
+                            <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar>
+                            <div class="content">As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
+                        <div class="chat-input-controls">
+                            <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
+                            <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
+                            <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="summary-section">
-            <div class="summary-header">
-                <h3>Today's Agenda</h3>
-                <button><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
-            </div>
-            <div class="summary-content" id="summary-content">
-                <!-- Content will be dynamically generated by JS -->
-            </div>
-        </section>
-    </main>
-    
-    <div id="topics-page" class="page-content" style="display: none;">
-        <div class="topics-container" style="width: 100%;">
-            <!-- Topic Card 1 --><div class="topic-card" data-topic-id="labor-market">
-                <div class="topic-icon"><i class="fas fa-briefcase"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Strengthening Labor Market</h3>
-                    <p class="topic-description">Developing policies to create an attractive, inclusive, and safe labor market that empowers Saudi nationals and aligns with global standards.</p>
+            <section class="summary-section">
+                <div class="summary-header">
+                    <h3>Today's Agenda</h3>
+                    <button><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
                 </div>
-                <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">4</span>
-                        <span class="kpi-label">Strategic KPIs</span>
+                <div class="summary-content" id="summary-content">
+                    <!-- Content will be dynamically generated by JS -->
+                </div>
+            </section>
+        </main>
+        
+        <div id="topics-page" class="page-content">
+            <div class="topics-container" style="width: 100%;">
+                <!-- Topic Card 1 --><div class="topic-card" data-topic-id="labor-market">
+                    <div class="topic-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Strengthening Labor Market</h3>
+                        <p class="topic-description">Developing policies to create an attractive, inclusive, and safe labor market that empowers Saudi nationals and aligns with global standards.</p>
                     </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">7</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                    <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">4</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">7</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
                     </div>
-                </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
-                </div>
-            </div>
-            <!-- Topic Card 2 --><div class="topic-card" data-topic-id="empowerment">
-                 <div class="topic-icon"><i class="fas fa-users"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Empowering Society & Individuals</h3>
-                    <p class="topic-description">Enhancing social development, empowering individuals and communities, and promoting self-reliance through targeted programs and support.</p>
-                </div>
-                 <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">5</span>
-                        <span class="kpi-label">Strategic KPIs</span>
-                    </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">9</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
                     </div>
                 </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
-                </div>
-            </div>
-            <!-- Topic Card 3 --><div class="topic-card" data-topic-id="non-profit">
-                 <div class="topic-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Enabling the Non-Profit Sector</h3>
-                    <p class="topic-description">Fostering the growth and impact of the non-profit sector to expand its contribution to the economy and social development.</p>
-                </div>
-                 <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">3</span>
-                        <span class="kpi-label">Strategic KPIs</span>
+                <!-- Topic Card 2 --><div class="topic-card" data-topic-id="empowerment">
+                     <div class="topic-icon"><i class="fas fa-users"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Empowering Society & Individuals</h3>
+                        <p class="topic-description">Enhancing social development, empowering individuals and communities, and promoting self-reliance through targeted programs and support.</p>
                     </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">4</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">5</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">9</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
                     </div>
-                </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
-                </div>
-            </div>
-            <!-- Topic Card 4 --><div class="topic-card" data-topic-id="strategic-partnerships">
-                 <div class="topic-icon"><i class="fas fa-handshake"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Strategic Partnerships</h3>
-                    <p class="topic-description">Building effective and sustainable partnerships with public, private, and non-profit entities to achieve shared national goals.</p>
-                </div>
-                 <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">2</span>
-                        <span class="kpi-label">Strategic KPIs</span>
-                    </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">6</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
                     </div>
                 </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                <!-- Topic Card 3 --><div class="topic-card" data-topic-id="non-profit">
+                     <div class="topic-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Enabling the Non-Profit Sector</h3>
+                        <p class="topic-description">Fostering the growth and impact of the non-profit sector to expand its contribution to the economy and social development.</p>
+                    </div>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">3</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">4</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
+                </div>
+                <!-- Topic Card 4 --><div class="topic-card" data-topic-id="strategic-partnerships">
+                     <div class="topic-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Strategic Partnerships</h3>
+                        <p class="topic-description">Building effective and sustainable partnerships with public, private, and non-profit entities to achieve shared national goals.</p>
+                    </div>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">2</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">6</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="agenda-page" class="page-content">
-        <div class="agenda-container" style="width: 100%;">
-            <div class="desktop-calendar">
-                <div class="agenda-header">
-                    <h2>October 2025</h2>
-                    <div class="view-switcher">
-                        <button class="agenda-view-btn" data-view="day">Day</button>
-                        <button class="agenda-view-btn active" data-view="week">Week</button>
-                        <button class="agenda-view-btn" data-view="month">Month</button>
+        <div id="agenda-page" class="page-content">
+            <div class="agenda-container" style="width: 100%;">
+                <div class="desktop-calendar">
+                    <div class="agenda-header">
+                        <h2>October 2025</h2>
+                        <div class="view-switcher">
+                            <button class="agenda-view-btn" data-view="day">Day</button>
+                            <button class="agenda-view-btn active" data-view="week">Week</button>
+                            <button class="agenda-view-btn" data-view="month">Month</button>
+                        </div>
+                    </div>
+                    <div id="week-view" class="agenda-view">
+                        <div class="calendar-grid">
+                            <!-- Sunday --><div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
+                            <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
+                            <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
+                            <!-- Wednesday --><div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
+                            <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
+                            <!-- Friday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
+                            <!-- Saturday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
+                        </div>
                     </div>
                 </div>
-                <div id="week-view" class="agenda-view">
-                    <div class="calendar-grid">
-                        <!-- Sunday --><div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
-                        <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
-                        <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
-                        <!-- Wednesday --><div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
-                        <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
-                        <!-- Friday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
-                        <!-- Saturday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
+                <div class="mobile-calendar">
+                     <div class="agenda-header">
+                        <h2 id="mobile-calendar-title">October 2025</h2>
                     </div>
+                    <div id="mobile-month-grid"></div>
+                    <div id="mobile-agenda-events"></div>
                 </div>
-            </div>
-            <div class="mobile-calendar">
-                 <div class="agenda-header">
-                    <h2 id="mobile-calendar-title">October 2025</h2>
-                </div>
-                <div id="mobile-month-grid"></div>
-                <div id="mobile-agenda-events"></div>
             </div>
         </div>
+
+
+        <div id="tools-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-cogs"></i> AI Tools</h2> <p>This area provides access to a suite of specialized AI tools, such as data analysis dashboards, report generation wizards, and predictive modeling interfaces.</p> </div> </div>
+        <div id="compose-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-pen-alt"></i> Compose</h2> <p>Use this section to draft emails, reports, and other documents with AI assistance. The agent can help with tone, clarity, and content generation.</p> </div> </div>
+        <div id="templates-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-file-alt"></i> Templates</h2> <p>Access a library of pre-built templates for various documents, including meeting minutes, project proposals, and executive summaries, to streamline your workflow.</p> </div> </div>
     </div>
-
-
-    <div id="tools-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-cogs"></i> AI Tools</h2> <p>This area provides access to a suite of specialized AI tools, such as data analysis dashboards, report generation wizards, and predictive modeling interfaces.</p> </div> </div>
-    <div id="compose-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-pen-alt"></i> Compose</h2> <p>Use this section to draft emails, reports, and other documents with AI assistance. The agent can help with tone, clarity, and content generation.</p> </div> </div>
-    <div id="templates-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-file-alt"></i> Templates</h2> <p>Access a library of pre-built templates for various documents, including meeting minutes, project proposals, and executive summaries, to streamline your workflow.</p> </div> </div>
 
     <div id="personaModal" class="modal">
         <div class="modal-content">
@@ -740,7 +757,15 @@
             navButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const targetId = button.dataset.target;
-                    pages.forEach(page => { page.style.display = page.id === targetId ? 'flex' : 'none'; });
+                    
+                    pages.forEach(page => {
+                        if (page.id === targetId) {
+                            page.classList.add('active');
+                        } else {
+                            page.classList.remove('active');
+                        }
+                    });
+
                     navButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
                     if (navTabsContainer.classList.contains('active')) {
