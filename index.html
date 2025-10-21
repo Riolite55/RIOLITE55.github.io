@@ -250,7 +250,7 @@
         /* --- Agenda / Calendar Styles --- */
         .agenda-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
         .agenda-header h2 { margin: 0; font-weight: 500; }
-        .view-switcher { display: none; } /* Hide on mobile by default */
+        .view-switcher { display: none; } /* Hide on desktop for simplicity now */
         .desktop-calendar { display: block; }
         .mobile-calendar { display: none; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
@@ -750,7 +750,7 @@
             });
 
             // --- Agenda & Topics Functions ---
-            function setupAgendaInteractions() {
+             function setupAgendaInteractions() {
                 const agendaViewBtns = document.querySelectorAll('.agenda-view-btn');
                 const agendaViews = document.querySelectorAll('.agenda-view');
                  agendaViewBtns.forEach(button => {
@@ -1042,6 +1042,7 @@
                     handleSendMessage();
                 }
             });
+
 
             document.querySelectorAll('.topic-action-btn').forEach(button => {
                 button.addEventListener('click', () => {
