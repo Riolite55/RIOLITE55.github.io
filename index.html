@@ -250,8 +250,9 @@
         /* --- Agenda / Calendar Styles --- */
         .agenda-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
         .agenda-header h2 { margin: 0; font-weight: 500; }
-        .view-switcher button { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
-        .view-switcher button.active { background-color: var(--primary-blue); color: var(--text-dark); border-color: var(--primary-blue); }
+        .view-switcher { display: none; } /* Hide on mobile by default */
+        .desktop-calendar { display: block; }
+        .mobile-calendar { display: none; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
         .day-column { border-right: 1px solid var(--border-color); padding: 5px; }
         .day-column:last-child { border-right: none; }
@@ -264,15 +265,6 @@
         .event-time { font-size: 0.8em; opacity: 0.8; margin-bottom: 4px; }
         .event-title { font-weight: 500; color: var(--text-dark); }
         .event-milestone { background: rgba(255, 193, 7, 0.2); border-left-color: #ffc107; }
-        .day-view-container { display: flex; flex-direction: column; }
-        .time-slot { display: flex; border-bottom: 1px dashed var(--border-color); padding: 15px 0; }
-        .time-label { flex: 0 0 80px; text-align: right; padding-right: 15px; font-size: 0.9em; opacity: 0.7; }
-        .time-events { flex: 1; }
-        .month-view-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
-        .month-day { border: 1px solid var(--border-color); text-align: right; padding: 5px; opacity: 0.5; }
-        .month-day.current-month { opacity: 1; }
-        .month-day.has-event { background: rgba(0, 169, 157, 0.1); }
-        .month-day .day-number { font-weight: 500; }
         
         /* --- Topics Page Styles --- */
         .topics-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; }
@@ -414,6 +406,15 @@
             #meetings-modal-list .meeting-time {
                 font-size: 0.8rem;
             }
+            .desktop-calendar { display: none; }
+            .mobile-calendar { display: flex; flex-direction: column; flex-grow: 1; }
+            #mobile-month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+            #mobile-month-grid .day-name { text-align: center; font-size: 0.8em; opacity: 0.7; padding-bottom: 5px; }
+            #mobile-month-grid .day-cell { position: relative; text-align: center; padding: 10px 0; cursor: pointer; border-radius: 50%; }
+            #mobile-month-grid .day-cell.selected { background-color: var(--primary-blue); color: var(--text-dark); }
+            #mobile-month-grid .day-cell.today { font-weight: bold; border: 1px solid var(--primary-blue); }
+            #mobile-month-grid .day-cell.has-event::after { content: ''; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background-color: var(--primary-blue); border-radius: 50%; }
+            #mobile-agenda-events { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); flex-grow: 1; overflow-y: auto; }
         }
     </style>
 </head>
@@ -577,49 +578,36 @@
         </div>
     </div>
 
-    <div id="agenda-page" class="page-content" style="display: none;">
+    <div id="agenda-page" class="page-content">
         <div class="agenda-container" style="width: 100%;">
-            <div class="agenda-header">
-                <h2>October 2025</h2>
-                <div class="view-switcher">
-                    <button class="agenda-view-btn" data-view="day">Day</button>
-                    <button class="agenda-view-btn active" data-view="week">Week</button>
-                    <button class="agenda-view-btn" data-view="month">Month</button>
+            <div class="desktop-calendar">
+                <div class="agenda-header">
+                    <h2>October 2025</h2>
+                    <div class="view-switcher">
+                        <button class="agenda-view-btn" data-view="day">Day</button>
+                        <button class="agenda-view-btn active" data-view="week">Week</button>
+                        <button class="agenda-view-btn" data-view="month">Month</button>
+                    </div>
+                </div>
+                <div id="week-view" class="agenda-view">
+                    <div class="calendar-grid">
+                        <!-- Sunday --><div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
+                        <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
+                        <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
+                        <!-- Wednesday --><div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
+                        <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
+                        <!-- Friday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
+                        <!-- Saturday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
+                    </div>
                 </div>
             </div>
-            
-            <div id="day-view" class="agenda-view" style="display: none;">
-                <div class="day-view-container">
-                    <div class="time-slot"><div class="time-label">09:00 AM</div><div class="time-events"><div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 - 10:30 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 - 10:30 AM</div> <div class="event-title">Labor Market Policy Review</div> </div></div></div>
-                    <div class="time-slot"><div class="time-label">11:00 AM</div><div class="time-events"><div class="event" data-event-title="Social Development Fund Update" data-event-time="11:00 AM - 12:00 PM" data-event-details="Meeting to review the performance of initiatives funded by the Social Development Fund." data-topic="empowerment" data-date="2025-10-20"> <div class="event-time">11:00 AM - 12:00 PM</div> <div class="event-title">Social Development Fund Update</div> </div></div></div>
-                    <div class="time-slot"><div class="time-label">02:00 PM</div><div class="time-events"><div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="End of Day" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">End of Day</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div></div>
+            <div class="mobile-calendar">
+                 <div class="agenda-header">
+                    <h2 id="mobile-calendar-title">October 2025</h2>
                 </div>
+                <div id="mobile-month-grid"></div>
+                <div id="mobile-agenda-events"></div>
             </div>
-            
-            <div id="week-view" class="agenda-view">
-                <div class="calendar-grid">
-                    <!-- Sunday --><div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
-                    <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
-                    <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
-                    <!-- Wednesday --><div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
-                    <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
-                    <!-- Friday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
-                    <!-- Saturday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
-                </div>
-            </div>
-            
-            <div id="month-view" class="agenda-view" style="display: none;">
-                 <div class="month-view-grid">
-                    <!-- Simplified month view for October 2025 --><div class="month-day">28</div><div class="month-day">29</div><div class="month-day">30</div>
-                    <div class="month-day current-month">1</div><div class="month-day current-month">2</div><div class="month-day current-month">3</div><div class="month-day current-month">4</div>
-                    <div class="month-day current-month">5</div><div class="month-day current-month">6</div><div class="month-day current-month">7</div><div class="month-day current-month">8</div><div class="month-day current-month">9</div><div class="month-day current-month">10</div><div class="month-day current-month">11</div>
-                    <div class="month-day current-month">12</div><div class="month-day current-month">13</div><div class="month-day current-month">14</div><div class="month-day current-month">15</div><div class="month-day current-month">16</div><div class="month-day current-month">17</div><div class="month-day current-month">18</div>
-                    <div class="month-day current-month">19</div><div class="month-day current-month has-event"><div class="day-number">20</div></div><div class="month-day current-month has-event"><div class="day-number">21</div></div><div class="month-day current-month"><div class="day-number">22</div></div><div class="month-day current-month has-event"><div class="day-number">23</div></div><div class="month-day current-month"><div class="day-number">24</div></div><div class="month-day current-month"><div class="day-number">25</div></div>
-                    <div class="month-day current-month"><div class="day-number">26</div></div><div class="month-day current-month"><div class="day-number">27</div></div><div class="month-day current-month"><div class="day-number">28</div></div><div class="month-day current-month"><div class="day-number">29</div></div><div class="month-day current-month"><div class="day-number">30</div></div><div class="month-day current-month"><div class="day-number">31</div></div>
-                    <div class="month-day">1</div>
-                 </div>
-            </div>
-
         </div>
     </div>
 
@@ -687,8 +675,6 @@
             const chatInput = document.getElementById('chatInput');
             const sendBtn = document.getElementById('send-btn');
             const chatMessages = document.getElementById('chatMessages');
-            const agendaViewBtns = document.querySelectorAll('.agenda-view-btn');
-            const agendaViews = document.querySelectorAll('.agenda-view');
             const askAgentBtn = document.getElementById('ask-agent-btn');
             const summaryContent = document.getElementById('summary-content');
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -764,14 +750,29 @@
             });
 
             // --- Agenda & Topics Functions ---
-            agendaViewBtns.forEach(button => {
-                button.addEventListener('click', () => {
-                    const viewId = button.dataset.view + '-view';
-                    agendaViews.forEach(view => { view.style.display = view.id === viewId ? 'block' : 'none'; });
-                    agendaViewBtns.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
+            function setupAgendaInteractions() {
+                const agendaViewBtns = document.querySelectorAll('.agenda-view-btn');
+                const agendaViews = document.querySelectorAll('.agenda-view');
+                 agendaViewBtns.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const viewId = button.dataset.view + '-view';
+                        agendaViews.forEach(view => { 
+                             if(view) view.style.display = view.id === viewId ? 'block' : 'none'; 
+                        });
+                        agendaViewBtns.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                    });
                 });
-            });
+                document.querySelectorAll('.event').forEach(eventEl => {
+                    eventEl.addEventListener('click', () => {
+                        const title = eventEl.dataset.eventTitle;
+                        const time = eventEl.dataset.eventTime;
+                        const details = eventEl.dataset.eventDetails;
+                        openEventModal(title, time, details);
+                    });
+                });
+            }
+
 
             function openEventModal(title, time, details) {
                 document.getElementById('event-modal-title').textContent = title;
@@ -1042,16 +1043,6 @@
                 }
             });
 
-
-            document.querySelectorAll('.event').forEach(eventEl => {
-                eventEl.addEventListener('click', () => {
-                    const title = eventEl.dataset.eventTitle;
-                    const time = eventEl.dataset.eventTime;
-                    const details = eventEl.dataset.eventDetails;
-                    openEventModal(title, time, details);
-                });
-            });
-
             document.querySelectorAll('.topic-action-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const action = button.dataset.action;
@@ -1156,7 +1147,7 @@
             // --- Initial Setup ---
             updatePersonaUI(currentPersonaId, true);
             updateTodaysAgendaPanel();
-            document.querySelector('.agenda-view-btn[data-view="week"]').click();
+            setupAgendaInteractions();
         });
     </script>
 </body>
