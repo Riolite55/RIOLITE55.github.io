@@ -9,8 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --primary-blue: #00A99D; /* Lighter teal from logo */
-            --dark-teal: #004F58;   /* Darker teal from logo */
+            --primary-blue: #00A99D;
+            --dark-teal: #004F58;
             --text-light: #e0e0e0;
             --text-dark: #ffffff;
             --border-color: rgba(255, 255, 255, 0.2);
@@ -98,14 +98,14 @@
             color: var(--primary-blue);
         }
         
-        .mobile-menu-btn { display: none; } /* Hidden on desktop */
+        .mobile-menu-btn { display: none; }
 
         .nav-tabs-container {
             display: flex;
             justify-content: center;
             padding: 5px 0;
             border-bottom: 1px solid var(--border-color);
-            top: 83px; /* Adjust based on header height */
+            top: 83px;
         }
 
         .nav-tabs {
@@ -141,13 +141,21 @@
             background-color: var(--container-bg-light);
             border-color: var(--border-color);
         }
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
 
         .page-content {
-            display: flex;
+            display: none;
             flex-grow: 1;
             padding: 30px 40px;
             gap: 30px;
-            overflow-y: auto;
+        }
+        .page-content.active {
+            display: flex;
         }
 
         .chat-section-container {
@@ -160,7 +168,7 @@
             backdrop-filter: blur(15px);
             padding: 25px;
             min-width: 0;
-            max-height: 80vh; /* Set a max height */
+            max-height: 80vh;
         }
         
         .persona-display {
@@ -192,7 +200,6 @@
         .message-bubble.user .content { background-color: var(--primary-blue); color: #fff; border-bottom-right-radius: 5px; }
         .message-bubble.agent .content { background-color: rgba(0, 0, 0, 0.2); border-color: var(--border-color); color: var(--text-light); border-bottom-left-radius: 5px; }
 
-        /* Styles for rendered markdown content in chat */
         .message-bubble.agent .content h3 { color: var(--primary-blue); margin-top: 1em; margin-bottom: 0.5em; }
         .message-bubble.agent .content h4 { color: var(--text-dark); margin-top: 1em; margin-bottom: 0.5em; }
         .message-bubble.agent .content p { margin-top: 0.5em; margin-bottom: 0.5em; }
@@ -221,7 +228,7 @@
             flex-direction: column;
             gap: 15px;
             min-width: 300px;
-            max-height: 80vh; /* Set a max height */
+            max-height: 80vh;
         }
         .summary-header { display: flex; justify-content: space-between; align-items: center; }
         .summary-header h3 { margin: 0; font-size: 1.2rem; color: var(--text-dark); font-weight: 500; }
@@ -247,11 +254,10 @@
         .placeholder-page h2 { color: var(--primary-blue); text-align: center; }
         .placeholder-page p { text-align: center; font-size: 1.1rem; }
         
-        /* --- Agenda / Calendar Styles --- */
         .agenda-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
         .agenda-header h2 { margin: 0; font-weight: 500; }
-        .view-switcher button { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
-        .view-switcher button.active { background-color: var(--primary-blue); color: var(--text-dark); border-color: var(--primary-blue); }
+        .desktop-calendar { display: block; }
+        .mobile-calendar { display: none; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
         .day-column { border-right: 1px solid var(--border-color); padding: 5px; }
         .day-column:last-child { border-right: none; }
@@ -264,17 +270,7 @@
         .event-time { font-size: 0.8em; opacity: 0.8; margin-bottom: 4px; }
         .event-title { font-weight: 500; color: var(--text-dark); }
         .event-milestone { background: rgba(255, 193, 7, 0.2); border-left-color: #ffc107; }
-        .day-view-container { display: flex; flex-direction: column; }
-        .time-slot { display: flex; border-bottom: 1px dashed var(--border-color); padding: 15px 0; }
-        .time-label { flex: 0 0 80px; text-align: right; padding-right: 15px; font-size: 0.9em; opacity: 0.7; }
-        .time-events { flex: 1; }
-        .month-view-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
-        .month-day { border: 1px solid var(--border-color); text-align: right; padding: 5px; opacity: 0.5; }
-        .month-day.current-month { opacity: 1; }
-        .month-day.has-event { background: rgba(0, 169, 157, 0.1); }
-        .month-day .day-number { font-weight: 500; }
         
-        /* --- Topics Page Styles --- */
         .topics-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; }
         .topic-card { background: var(--container-bg-light); border-radius: 15px; border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease; }
         .topic-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); border-color: var(--primary-blue); }
@@ -289,7 +285,6 @@
         .topic-actions button { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-light); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .topic-actions button:hover { background-color: var(--primary-blue); color: var(--text-dark); }
         
-        /* --- Modal Styles --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-content { background: var(--container-bg); border: 1px solid var(--border-color); backdrop-filter: blur(20px); padding: 30px; border-radius: 15px; width: 650px; max-width: 90%; text-align: left; position: relative; animation: slideIn 0.3s; max-height: 65vh; overflow-y: auto; }
@@ -346,10 +341,13 @@
             .page-content { flex-direction: column; }
             .persona-display { display: none; }
         }
+        
         @media (max-width: 768px) {
-             body {
+            body {
                 height: 100vh;
                 height: calc(var(--vh, 1vh) * 100);
+                display: flex;
+                flex-direction: column;
             }
             .header { padding: 15px 20px; }
             .header-left span, .header-right .welcome-text { display: none; }
@@ -373,11 +371,24 @@
                 padding: 10px;
                 gap: 0;
             }
-             .nav-tabs button {
+            .nav-tabs button {
                 justify-content: flex-start;
-             }
+            }
 
-            .page-content { padding: 0; gap: 0; flex-grow: 1; height: calc(100% - 73px); }
+            .main-container {
+                flex-grow: 1;
+                display: flex;
+                overflow: hidden;
+            }
+
+            .page-content { 
+                padding: 0;
+                gap: 0;
+                flex-grow: 1;
+                height: 100%;
+                overflow: hidden;
+            }
+            
             .chat-section-container {
                 width: 100%;
                 height: 100%;
@@ -386,34 +397,122 @@
                 max-height: none;
                 box-sizing: border-box;
             }
-             .persona-display, .summary-section {
+            
+            .persona-display, .summary-section {
                 display: none;
             }
+            
             .chat-interaction-area {
                 height: 100%;
             }
+            
             .chat-input-area {
                 padding-bottom: env(safe-area-inset-bottom);
             }
+            
             #chatInput {
                 padding-top: 20px;
                 padding-bottom: 20px;
             }
-             #topics-page, #agenda-page, .placeholder-page {
-                padding: 20px;
-                width: auto;
+            
+            #topics-page, #agenda-page, .placeholder-page {
+                padding: 0;
+                width: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
             }
-            .calendar-grid { grid-template-columns: 1fr; } /* Stack days vertically on mobile */
+            
+            .agenda-container {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+                max-height: none;
+                border-radius: 0;
+                overflow: hidden;
+            }
             
             .modal-topic-pill {
                 font-size: 0.8rem;
                 padding: 6px 12px;
             }
+            
             #meetings-modal-list .meeting-title {
                 font-size: 0.9rem;
             }
+            
             #meetings-modal-list .meeting-time {
                 font-size: 0.8rem;
+            }
+            
+            .desktop-calendar { display: none; }
+            
+            .mobile-calendar { 
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                width: 100%;
+                overflow-x: hidden;
+                box-sizing: border-box;
+            }
+            
+            .agenda-header {
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+            }
+            
+            #mobile-month-grid { 
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 3px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            #mobile-month-grid .day-name { 
+                text-align: center;
+                font-size: 0.7em;
+                opacity: 0.7;
+                padding-bottom: 3px;
+            }
+            
+            #mobile-month-grid .day-cell { 
+                position: relative;
+                text-align: center;
+                padding: 6px 0;
+                cursor: pointer;
+                border-radius: 50%;
+                font-size: 0.85rem;
+                box-sizing: border-box;
+            }
+            
+            #mobile-month-grid .day-cell.selected { 
+                background-color: var(--primary-blue);
+                color: var(--text-dark);
+            }
+            
+            #mobile-month-grid .day-cell.today { 
+                font-weight: bold;
+                border: 1px solid var(--primary-blue);
+            }
+            
+            #mobile-month-grid .day-cell.has-event::after { 
+                content: '';
+                position: absolute;
+                bottom: 2px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 4px;
+                background-color: var(--primary-blue);
+                border-radius: 50%;
+            }
+            
+            #mobile-agenda-events { 
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid var(--border-color);
+                flex-grow: 1;
+                overflow-y: auto;
             }
         }
     </style>
@@ -444,190 +543,172 @@
         </nav>
     </div>
 
-    <main id="agent-page" class="page-content">
-        <section class="chat-section-container">
-            <div class="persona-display">
-                <img id="mainPersonaImage" src="https://hams.ai/images/ai-voice-agent.png" alt="AI Persona">
-                <div class="persona-info">
-                    <h3 id="mainPersonaName">Hakim Nüruddin</h3>
-                    <p id="mainPersonaTitle">AI Executive Office Agent</p>
-                </div>
-            </div>
-            <div class="chat-interaction-area">
-                <div class="chat-header-greeting">
-                    <h2>Welcome your Highness</h2>
-                </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message-bubble agent">
-                        <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar>
-                        <div class="content">As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
+    <div class="main-container">
+        <main id="agent-page" class="page-content active">
+            <section class="chat-section-container">
+                <div class="persona-display">
+                    <img id="mainPersonaImage" src="https://hams.ai/images/ai-voice-agent.png" alt="AI Persona">
+                    <div class="persona-info">
+                        <h3 id="mainPersonaName">Hakim Nüruddin</h3>
+                        <p id="mainPersonaTitle">AI Executive Office Agent</p>
                     </div>
                 </div>
-                <div class="chat-input-area">
-                    <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
-                    <div class="chat-input-controls">
-                        <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
-                        <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
-                        <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
+                <div class="chat-interaction-area">
+                    <div class="chat-header-greeting">
+                        <h2>Welcome your Highness</h2>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message-bubble agent">
+                            <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar>
+                            <div class="content">As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
+                        <div class="chat-input-controls">
+                            <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
+                            <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
+                            <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="summary-section">
-            <div class="summary-header">
-                <h3>Today's Agenda</h3>
-                <button><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
-            </div>
-            <div class="summary-content" id="summary-content">
-                <!-- Content will be dynamically generated by JS -->
-            </div>
-        </section>
-    </main>
-    
-    <div id="topics-page" class="page-content" style="display: none;">
-        <div class="topics-container" style="width: 100%;">
-            <!-- Topic Card 1 --><div class="topic-card" data-topic-id="labor-market">
-                <div class="topic-icon"><i class="fas fa-briefcase"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Strengthening Labor Market</h3>
-                    <p class="topic-description">Developing policies to create an attractive, inclusive, and safe labor market that empowers Saudi nationals and aligns with global standards.</p>
+            <section class="summary-section">
+                <div class="summary-header">
+                    <h3>Today's Agenda</h3>
+                    <button><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
                 </div>
-                <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">4</span>
-                        <span class="kpi-label">Strategic KPIs</span>
+                <div class="summary-content" id="summary-content"></div>
+            </section>
+        </main>
+        
+        <div id="topics-page" class="page-content">
+            <div class="topics-container" style="width: 100%;">
+                <div class="topic-card" data-topic-id="labor-market">
+                    <div class="topic-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Strengthening Labor Market</h3>
+                        <p class="topic-description">Developing policies to create an attractive, inclusive, and safe labor market that empowers Saudi nationals and aligns with global standards.</p>
                     </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">7</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                    <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">4</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">7</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
                     </div>
-                </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
-                </div>
-            </div>
-            <!-- Topic Card 2 --><div class="topic-card" data-topic-id="empowerment">
-                 <div class="topic-icon"><i class="fas fa-users"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Empowering Society & Individuals</h3>
-                    <p class="topic-description">Enhancing social development, empowering individuals and communities, and promoting self-reliance through targeted programs and support.</p>
-                </div>
-                 <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">5</span>
-                        <span class="kpi-label">Strategic KPIs</span>
-                    </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">9</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
                     </div>
                 </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
-                </div>
-            </div>
-            <!-- Topic Card 3 --><div class="topic-card" data-topic-id="non-profit">
-                 <div class="topic-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Enabling the Non-Profit Sector</h3>
-                    <p class="topic-description">Fostering the growth and impact of the non-profit sector to expand its contribution to the economy and social development.</p>
-                </div>
-                 <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">3</span>
-                        <span class="kpi-label">Strategic KPIs</span>
+                <div class="topic-card" data-topic-id="empowerment">
+                     <div class="topic-icon"><i class="fas fa-users"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Empowering Society & Individuals</h3>
+                        <p class="topic-description">Enhancing social development, empowering individuals and communities, and promoting self-reliance through targeted programs and support.</p>
                     </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">4</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">5</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">9</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
                     </div>
-                </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
-                </div>
-            </div>
-            <!-- Topic Card 4 --><div class="topic-card" data-topic-id="strategic-partnerships">
-                 <div class="topic-icon"><i class="fas fa-handshake"></i></div>
-                <div class="topic-content">
-                    <h3 class="topic-title">Strategic Partnerships</h3>
-                    <p class="topic-description">Building effective and sustainable partnerships with public, private, and non-profit entities to achieve shared national goals.</p>
-                </div>
-                 <div class="topic-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value">2</span>
-                        <span class="kpi-label">Strategic KPIs</span>
-                    </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value">6</span>
-                        <span class="kpi-label">Related Initiatives</span>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
                     </div>
                 </div>
-                <div class="topic-actions">
-                    <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
-                    <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
-                    <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                <div class="topic-card" data-topic-id="non-profit">
+                     <div class="topic-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Enabling the Non-Profit Sector</h3>
+                        <p class="topic-description">Fostering the growth and impact of the non-profit sector to expand its contribution to the economy and social development.</p>
+                    </div>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">3</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">4</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
+                </div>
+                <div class="topic-card" data-topic-id="strategic-partnerships">
+                     <div class="topic-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Strategic Partnerships</h3>
+                        <p class="topic-description">Building effective and sustainable partnerships with public, private, and non-profit entities to achieve shared national goals.</p>
+                    </div>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">2</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">6</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="agenda-page" class="page-content" style="display: none;">
-        <div class="agenda-container" style="width: 100%;">
-            <div class="agenda-header">
-                <h2>October 2025</h2>
-                <div class="view-switcher">
-                    <button class="agenda-view-btn" data-view="day">Day</button>
-                    <button class="agenda-view-btn active" data-view="week">Week</button>
-                    <button class="agenda-view-btn" data-view="month">Month</button>
+        <div id="agenda-page" class="page-content">
+            <div class="agenda-container" style="width: 100%;">
+                <div class="desktop-calendar">
+                    <div class="agenda-header">
+                        <h2>October 2025</h2>
+                    </div>
+                    <div id="week-view" class="agenda-view">
+                        <div class="calendar-grid">
+                            <div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
+                            <div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
+                            <div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-calendar">
+                     <div class="agenda-header">
+                        <h2 id="mobile-calendar-title">October 2025</h2>
+                    </div>
+                    <div id="mobile-month-grid"></div>
+                    <div id="mobile-agenda-events"></div>
                 </div>
             </div>
-            
-            <div id="day-view" class="agenda-view" style="display: none;">
-                <div class="day-view-container">
-                    <div class="time-slot"><div class="time-label">09:00 AM</div><div class="time-events"><div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 - 10:30 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 - 10:30 AM</div> <div class="event-title">Labor Market Policy Review</div> </div></div></div>
-                    <div class="time-slot"><div class="time-label">11:00 AM</div><div class="time-events"><div class="event" data-event-title="Social Development Fund Update" data-event-time="11:00 AM - 12:00 PM" data-event-details="Meeting to review the performance of initiatives funded by the Social Development Fund." data-topic="empowerment" data-date="2025-10-20"> <div class="event-time">11:00 AM - 12:00 PM</div> <div class="event-title">Social Development Fund Update</div> </div></div></div>
-                    <div class="time-slot"><div class="time-label">02:00 PM</div><div class="time-events"><div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="End of Day" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">End of Day</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div></div>
-                </div>
-            </div>
-            
-            <div id="week-view" class="agenda-view">
-                <div class="calendar-grid">
-                    <!-- Sunday --><div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
-                    <!-- Monday --><div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
-                    <!-- Tuesday --><div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
-                    <!-- Wednesday --><div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
-                    <!-- Thursday --><div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
-                    <!-- Friday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
-                    <!-- Saturday --><div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
-                </div>
-            </div>
-            
-            <div id="month-view" class="agenda-view" style="display: none;">
-                 <div class="month-view-grid">
-                    <!-- Simplified month view for October 2025 --><div class="month-day">28</div><div class="month-day">29</div><div class="month-day">30</div>
-                    <div class="month-day current-month">1</div><div class="month-day current-month">2</div><div class="month-day current-month">3</div><div class="month-day current-month">4</div>
-                    <div class="month-day current-month">5</div><div class="month-day current-month">6</div><div class="month-day current-month">7</div><div class="month-day current-month">8</div><div class="month-day current-month">9</div><div class="month-day current-month">10</div><div class="month-day current-month">11</div>
-                    <div class="month-day current-month">12</div><div class="month-day current-month">13</div><div class="month-day current-month">14</div><div class="month-day current-month">15</div><div class="month-day current-month">16</div><div class="month-day current-month">17</div><div class="month-day current-month">18</div>
-                    <div class="month-day current-month">19</div><div class="month-day current-month has-event"><div class="day-number">20</div></div><div class="month-day current-month has-event"><div class="day-number">21</div></div><div class="month-day current-month"><div class="day-number">22</div></div><div class="month-day current-month has-event"><div class="day-number">23</div></div><div class="month-day current-month"><div class="day-number">24</div></div><div class="month-day current-month"><div class="day-number">25</div></div>
-                    <div class="month-day current-month"><div class="day-number">26</div></div><div class="month-day current-month"><div class="day-number">27</div></div><div class="month-day current-month"><div class="day-number">28</div></div><div class="month-day current-month"><div class="day-number">29</div></div><div class="month-day current-month"><div class="day-number">30</div></div><div class="month-day current-month"><div class="day-number">31</div></div>
-                    <div class="month-day">1</div>
-                 </div>
-            </div>
-
         </div>
+
+
+        <div id="tools-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-cogs"></i> AI Tools</h2> <p>This area provides access to a suite of specialized AI tools, such as data analysis dashboards, report generation wizards, and predictive modeling interfaces.</p> </div> </div>
+        <div id="compose-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-pen-alt"></i> Compose</h2> <p>Use this section to draft emails, reports, and other documents with AI assistance. The agent can help with tone, clarity, and content generation.</p> </div> </div>
+        <div id="templates-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-file-alt"></i> Templates</h2> <p>Access a library of pre-built templates for various documents, including meeting minutes, project proposals, and executive summaries, to streamline your workflow.</p> </div> </div>
     </div>
-
-
-    <div id="tools-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-cogs"></i> AI Tools</h2> <p>This area provides access to a suite of specialized AI tools, such as data analysis dashboards, report generation wizards, and predictive modeling interfaces.</p> </div> </div>
-    <div id="compose-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-pen-alt"></i> Compose</h2> <p>Use this section to draft emails, reports, and other documents with AI assistance. The agent can help with tone, clarity, and content generation.</p> </div> </div>
-    <div id="templates-page" class="page-content" style="display: none;"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-file-alt"></i> Templates</h2> <p>Access a library of pre-built templates for various documents, including meeting minutes, project proposals, and executive summaries, to streamline your workflow.</p> </div> </div>
 
     <div id="personaModal" class="modal">
         <div class="modal-content">
@@ -654,13 +735,11 @@
         <div class="modal-content" id="focus-modal-content">
             <span class="close-button">&times;</span>
             <h2 id="meetings-modal-title">Discuss a Topic</h2>
-            <div id="meetings-modal-list">
-                <!-- Meeting items will be injected here --></div>
+            <div id="meetings-modal-list"></div>
         </div>
     </div>
     
     <div id="ask-agent-btn"><i class="fas fa-comment-dots"></i> Ask Agent</div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -673,7 +752,6 @@
             let chatHistory = [];
             let selectedText = '';
 
-            // --- Element Cache ---
             const mainPersonaImage = document.getElementById('mainPersonaImage');
             const mainPersonaName = document.getElementById('mainPersonaName');
             const mainPersonaTitle = document.getElementById('mainPersonaTitle');
@@ -688,15 +766,12 @@
             const chatInput = document.getElementById('chatInput');
             const sendBtn = document.getElementById('send-btn');
             const chatMessages = document.getElementById('chatMessages');
-            const agendaViewBtns = document.querySelectorAll('.agenda-view-btn');
-            const agendaViews = document.querySelectorAll('.agenda-view');
             const askAgentBtn = document.getElementById('ask-agent-btn');
             const summaryContent = document.getElementById('summary-content');
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
             const navTabsContainer = document.querySelector('.nav-tabs-container');
             const chatActionBtn = document.getElementById('chat-action-btn');
             
-            // --- Persona Functions ---
             function updatePersonaUI(personaId, isInitialLoad = false) {
                 const persona = personaData.find(p => p.id === personaId);
                 if (!persona) return;
@@ -751,11 +826,18 @@
             }
             function closeModal(modal) { modal.style.display = "none"; }
 
-            // --- Navigation ---
             navButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const targetId = button.dataset.target;
-                    pages.forEach(page => { page.style.display = page.id === targetId ? 'flex' : 'none'; });
+                    
+                    pages.forEach(page => {
+                        if (page.id === targetId) {
+                            page.classList.add('active');
+                        } else {
+                            page.classList.remove('active');
+                        }
+                    });
+
                     navButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
                     if (navTabsContainer.classList.contains('active')) {
@@ -764,15 +846,16 @@
                 });
             });
 
-            // --- Agenda & Topics Functions ---
-            agendaViewBtns.forEach(button => {
-                button.addEventListener('click', () => {
-                    const viewId = button.dataset.view + '-view';
-                    agendaViews.forEach(view => { view.style.display = view.id === viewId ? 'block' : 'none'; });
-                    agendaViewBtns.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
+             function setupAgendaInteractions() {
+                document.querySelectorAll('.event').forEach(eventEl => {
+                    eventEl.addEventListener('click', () => {
+                        const title = eventEl.dataset.eventTitle;
+                        const time = eventEl.dataset.eventTime;
+                        const details = eventEl.dataset.eventDetails;
+                        openEventModal(title, time, details);
+                    });
                 });
-            });
+            }
 
             function openEventModal(title, time, details) {
                 document.getElementById('event-modal-title').textContent = title;
@@ -801,7 +884,7 @@
 
             function takeActionFromAgenda(prompt) {
                 closeModal(eventModal);
-                document.querySelector('.nav-button[data-target="agent-page"]').click(); // Switch to agent view
+                document.querySelector('.nav-button[data-target="agent-page"]').click();
                 chatInput.value = prompt;
                 handleSendMessage();
             }
@@ -838,7 +921,6 @@
                 handleSendMessage();
             }
             
-            // --- Chat Functions ---
             function displayMessage(sender, text) {
                 const persona = personaData.find(p => p.id === currentPersonaId);
                 const avatarSrc = sender === 'user' 
@@ -896,7 +978,6 @@
                 await sendMessageToGemini(userMessage);
             }
             
-            // --- Gemini API Call ---
             async function sendMessageToGemini(message) {
                  const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; // Keep this empty.
                  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
@@ -945,9 +1026,8 @@
                 }
             }
             
-            // --- Dynamic Agenda Panel ---
             function updateTodaysAgendaPanel() {
-                const now = new Date('2025-10-20T13:08:00+03:00'); // Simulating Monday 1:08 PM for demo
+                const now = new Date('2025-10-20T13:08:00+03:00');
                 const todayStr = now.toISOString().split('T')[0];
 
                 const allEvents = Array.from(document.querySelectorAll('.event'));
@@ -960,7 +1040,7 @@
                         eventHour = parseInt(eventTimeStr.split(':')[0]);
                         if (eventTimeStr.includes('PM') && eventHour !== 12) eventHour += 12;
                     } else if (eventTimeStr === 'EOD') {
-                        eventHour = 17; // 5 PM
+                        eventHour = 17;
                     }
                     return now.getHours() < eventHour;
                 });
@@ -1013,16 +1093,13 @@
                 }
             }
             
-             // Mobile Viewport Height fix
             function setViewportHeight() {
                 let vh = window.innerHeight * 0.01;
                 document.documentElement.style.setProperty('--vh', `${vh}px`);
             }
             window.addEventListener('resize', setViewportHeight);
-            setViewportHeight(); // Initial call
+            setViewportHeight();
 
-
-            // --- Event Listeners ---
             changePersonaBtn?.addEventListener('click', () => openModal(personaModal));
             closeModalBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1041,16 +1118,6 @@
                 if (event.key === 'Enter') {
                     handleSendMessage();
                 }
-            });
-
-
-            document.querySelectorAll('.event').forEach(eventEl => {
-                eventEl.addEventListener('click', () => {
-                    const title = eventEl.dataset.eventTitle;
-                    const time = eventEl.dataset.eventTime;
-                    const details = eventEl.dataset.eventDetails;
-                    openEventModal(title, time, details);
-                });
             });
 
             document.querySelectorAll('.topic-action-btn').forEach(button => {
@@ -1075,7 +1142,6 @@
             document.addEventListener('mouseup', (e) => {
                 const askAgentBtn = document.getElementById('ask-agent-btn');
                 if (!askAgentBtn) return;
-                // Don't show the button if we're selecting text inside an input
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     askAgentBtn.style.display = 'none';
                     return;
@@ -1092,7 +1158,6 @@
             document.addEventListener('mousedown', (e) => {
                 const askAgentBtn = document.getElementById('ask-agent-btn');
                 if (!askAgentBtn) return;
-                // Hide the button when the user clicks somewhere else, but not on the button itself
                 if (e.target.id !== 'ask-agent-btn') {
                     askAgentBtn.style.display = 'none';
                 }
@@ -1101,7 +1166,7 @@
             askAgentBtn.addEventListener('click', () => {
                 if (selectedText) {
                     const prompt = `Please provide more details about the following: "${selectedText}"`;
-                    takeActionFromAgenda(prompt); // Re-use this function to switch view and send message
+                    takeActionFromAgenda(prompt);
                     selectedText = '';
                 }
                 askAgentBtn.style.display = 'none';
@@ -1126,7 +1191,6 @@
                     content += `<div class="modal-topic-pill chat-action-item" data-prompt="Let's discuss the focus area: ${topicTitle}">${topicTitle}</div>`;
                 });
                 content += '</div>';
-
 
                 content += '<div class="dropdown-header">Discuss a Meeting</div>';
                 document.querySelectorAll('.event').forEach(event => {
@@ -1153,11 +1217,105 @@
                 });
             });
 
-
-            // --- Initial Setup ---
+            function initMobileCalendar() {
+                const monthGrid = document.getElementById('mobile-month-grid');
+                const agendaEvents = document.getElementById('mobile-agenda-events');
+                
+                if (!monthGrid) return;
+                
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const today = new Date('2025-10-20');
+                let selectedDate = today;
+                
+                // Get all events with dates
+                const allEvents = Array.from(document.querySelectorAll('.event[data-date]'));
+                const eventDates = new Set(allEvents.map(e => e.dataset.date));
+                
+                // Render calendar
+                function renderCalendar() {
+                    monthGrid.innerHTML = '';
+                    
+                    // Add day names
+                    dayNames.forEach(day => {
+                        const dayNameEl = document.createElement('div');
+                        dayNameEl.className = 'day-name';
+                        dayNameEl.textContent = day;
+                        monthGrid.appendChild(dayNameEl);
+                    });
+                    
+                    // Add days (19-25 for the week shown in desktop)
+                    for (let day = 19; day <= 25; day++) {
+                        const dayCell = document.createElement('div');
+                        dayCell.className = 'day-cell';
+                        dayCell.textContent = day;
+                        
+                        const dateStr = `2025-10-${day.toString().padStart(2, '0')}`;
+                        
+                        // Mark today
+                        if (day === today.getDate()) {
+                            dayCell.classList.add('today');
+                        }
+                        
+                        // Mark selected
+                        if (dateStr === selectedDate.toISOString().split('T')[0]) {
+                            dayCell.classList.add('selected');
+                        }
+                        
+                        // Mark if has events
+                        if (eventDates.has(dateStr)) {
+                            dayCell.classList.add('has-event');
+                        }
+                        
+                        dayCell.addEventListener('click', () => {
+                            selectedDate = new Date(dateStr);
+                            renderCalendar();
+                            renderEvents(dateStr);
+                        });
+                        
+                        monthGrid.appendChild(dayCell);
+                    }
+                }
+                
+                // Render events for selected date
+                function renderEvents(dateStr) {
+                    const dayEvents = allEvents.filter(e => e.dataset.date === dateStr);
+                    
+                    if (dayEvents.length === 0) {
+                        agendaEvents.innerHTML = '<p style="opacity: 0.7; text-align: center; padding: 20px;">No events scheduled for this day</p>';
+                        return;
+                    }
+                    
+                    agendaEvents.innerHTML = '';
+                    dayEvents.forEach(eventEl => {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = 'event';
+                        if (eventEl.classList.contains('event-milestone')) {
+                            eventDiv.classList.add('event-milestone');
+                        }
+                        eventDiv.innerHTML = `
+                            <div class="event-time">${eventEl.dataset.eventTime}</div>
+                            <div class="event-title">${eventEl.dataset.eventTitle}</div>
+                        `;
+                        eventDiv.addEventListener('click', () => {
+                            openEventModal(
+                                eventEl.dataset.eventTitle,
+                                eventEl.dataset.eventTime,
+                                eventEl.dataset.eventDetails
+                            );
+                        });
+                        agendaEvents.appendChild(eventDiv);
+                    });
+                }
+                
+                // Initial render
+                renderCalendar();
+                renderEvents(selectedDate.toISOString().split('T')[0]);
+            }
+            
             updatePersonaUI(currentPersonaId, true);
             updateTodaysAgendaPanel();
-            document.querySelector('.agenda-view-btn[data-view="week"]').click();
+            setupAgendaInteractions();
+            initMobileCalendar();
         });
     </script>
 </body>
