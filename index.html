@@ -345,6 +345,58 @@
             .page-content { flex-direction: column; }
             .persona-display { display: none; }
         }
+
+        @media (max-width: 768px) {
+    /* ... existing mobile styles ... */
+    
+    /* Fix for agenda page horizontal scroll */
+    .agenda-container {
+        padding: 15px; /* Reduced from 25px */
+        max-height: none;
+    }
+    
+    #mobile-month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px; /* Reduced from 5px */
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    #mobile-month-grid .day-cell {
+        position: relative;
+        text-align: center;
+        padding: 8px 2px; /* Reduced horizontal padding */
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 0.9rem; /* Slightly smaller font */
+    }
+    
+    #mobile-month-grid .day-name {
+        text-align: center;
+        font-size: 0.75em; /* Slightly smaller */
+        opacity: 0.7;
+        padding-bottom: 5px;
+    }
+    
+    #mobile-agenda-events {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid var(--border-color);
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+    
+    /* Ensure the mobile calendar doesn't overflow */
+    .mobile-calendar {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+        width: 100%;
+    }
+}
+        
         @media (max-width: 768px) {
              body {
                 height: 100vh;
