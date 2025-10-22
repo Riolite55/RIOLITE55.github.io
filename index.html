@@ -4,11 +4,11 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HRSD AI Executive Office</title>
-    <link href="./HRSD AI Executive Office_files/css2" rel="stylesheet">
-    <link rel="stylesheet" href="./HRSD AI Executive Office_files/all.min.css">
-    <script src="./HRSD AI Executive Office_files/marked.min.js"></script>
-    <!-- Include Chart.js -->
-    <script src="./HRSD AI Executive Office_files/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --primary-blue: #00A99D;
@@ -1917,13 +1917,13 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <img src="./HRSD AI Executive Office_files/logo.svg" alt="HRSD Logo" class="hrsd-logo">
+            <img src="https://www.hrsd.gov.sa/sites/default/files/logo_0.svg" alt="HRSD Logo" class="hrsd-logo">
             <span>| AI Executive Office</span>
         </div>
         <div class="header-right">
             <div class="user-profile">
                 <span class="welcome-text">Welcome Ahmad</span>
-                <img src="./HRSD AI Executive Office_files/ffffff" alt="User Avatar">
+                <img src="https://placehold.co/40x40/00A99D/ffffff?text=U" alt="User Avatar">
             </div>
             <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
         </div>
@@ -1977,7 +1977,7 @@
                 <div class="chat-interaction-area">
                     <div class="chat-messages" id="chatMessages">
                         <div class="message-bubble agent">
-                            <img src="./HRSD AI Executive Office_files/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar="">
+                            <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar="">
                             <div class="content">Welcome your Highness. As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
                         </div>
                     </div>
@@ -2697,46 +2697,63 @@
              function renderChart(canvasElement, chartData) {
                  if (!canvasElement || !chartData || !chartData.type || !chartData.labels || !chartData.datasets) {
                      console.error("Invalid chart data or canvas element provided for rendering.");
-                     // Optionally display error in the chart container
                      if (canvasElement && canvasElement.parentElement) {
-                        canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Could not render chart: Invalid data.</p>";
+                        canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc; padding: 10px;'>Could not render chart: Invalid data format.</p>";
                      }
                      return;
                  }
+                 
+                 // Check if Chart.js is available
+                 if (typeof Chart === 'undefined') {
+                     console.error("Chart.js library is not loaded.");
+                     if (canvasElement && canvasElement.parentElement) {
+                        canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc; padding: 10px;'>Chart library not available.</p>";
+                     }
+                     return;
+                 }
+                 
                  const ctx = canvasElement.getContext('2d');
                  if (!ctx) {
                      console.error("Could not get canvas context.");
                       if (canvasElement && canvasElement.parentElement) {
-                        canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Could not render chart: Canvas context error.</p>";
+                        canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc; padding: 10px;'>Canvas error.</p>";
                      }
                      return;
                  }
 
-                 // Basic Chart.js options (customize as needed)
+                 // Chart types that don't use scales
+                 const noScaleTypes = ['pie', 'doughnut', 'polarArea'];
+                 const useScales = !noScaleTypes.includes(chartData.type);
+
+                 // Basic Chart.js options
                  const options = {
                      responsive: true,
-                     maintainAspectRatio: true, // Allow chart to resize within container
+                     maintainAspectRatio: true,
                      plugins: {
                          legend: {
                              labels: {
-                                 color: 'rgba(255, 255, 255, 0.8)' // Legend text color
+                                 color: 'rgba(255, 255, 255, 0.8)'
                              }
-                         }
-                     },
-                     scales: {
-                         y: {
-                             beginAtZero: true,
-                             ticks: { color: 'rgba(255, 255, 255, 0.7)' }, // Y-axis labels
-                             grid: { color: 'rgba(255, 255, 255, 0.1)' }  // Y-axis grid lines
-                         },
-                         x: {
-                             ticks: { color: 'rgba(255, 255, 255, 0.7)' }, // X-axis labels
-                             grid: { color: 'rgba(255, 255, 255, 0.1)' }  // X-axis grid lines
                          }
                      }
                  };
+                 
+                 // Only add scales for chart types that support them
+                 if (useScales) {
+                     options.scales = {
+                         y: {
+                             beginAtZero: true,
+                             ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                             grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                         },
+                         x: {
+                             ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                             grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                         }
+                     };
+                 }
 
-                 // Default colors if not provided by AI (can customize)
+                 // Default colors if not provided by AI
                  const defaultBackgroundColors = [
                      'rgba(0, 169, 157, 0.6)', 'rgba(255, 193, 7, 0.6)', 'rgba(0, 123, 255, 0.6)',
                      'rgba(220, 53, 69, 0.6)', 'rgba(40, 167, 69, 0.6)', 'rgba(23, 162, 184, 0.6)'
@@ -2746,39 +2763,32 @@
                       'rgba(220, 53, 69, 1)', 'rgba(40, 167, 69, 1)', 'rgba(23, 162, 184, 1)'
                     ];
 
-                 // Ensure datasets have colors
+                 // Ensure datasets have colors and valid data
                  chartData.datasets.forEach((dataset, index) => {
-                     // Check if data exists and is an array before mapping colors
-                    if (Array.isArray(dataset.data)) {
+                    if (!Array.isArray(dataset.data)) {
+                        console.warn(`Dataset ${index} has invalid or missing 'data' array.`);
+                        dataset.data = [];
+                    }
+                    
+                    if (dataset.data.length > 0) {
                         if (!dataset.backgroundColor) {
                             if (chartData.type === 'line' || chartData.type === 'radar') {
                                 dataset.backgroundColor = defaultBackgroundColors[index % defaultBackgroundColors.length].replace('0.6', '0.2');
                                 dataset.borderColor = defaultBorderColors[index % defaultBorderColors.length];
+                                dataset.borderWidth = 2;
+                                dataset.fill = true;
                             } else {
                                 dataset.backgroundColor = dataset.data.map((_, i) => defaultBackgroundColors[i % defaultBackgroundColors.length]);
                                 dataset.borderColor = dataset.data.map((_, i) => defaultBorderColors[i % defaultBorderColors.length]);
                                 dataset.borderWidth = 1;
                             }
                         }
-                        if (!dataset.borderColor && chartData.type !== 'line' && chartData.type !== 'radar') {
-                            // Ensure borderColor is also an array if backgroundColor is
-                            if(Array.isArray(dataset.backgroundColor)) {
-                                dataset.borderColor = dataset.backgroundColor.map(color => color.replace('0.6', '1')); // Make border opaque
-                            } else {
-                                dataset.borderColor = defaultBorderColors[index % defaultBorderColors.length]; // Fallback
-                            }
-                        }
-                    } else {
-                        console.warn(`Dataset ${index} has invalid or missing 'data' array.`);
-                        // Provide default empty array to prevent further errors
-                        dataset.data = [];
                     }
                  });
 
-
                  try {
                      new Chart(ctx, {
-                         type: chartData.type, // e.g., 'bar', 'line', 'pie'
+                         type: chartData.type,
                          data: {
                              labels: chartData.labels,
                              datasets: chartData.datasets
@@ -2787,8 +2797,8 @@
                      });
                  } catch (e) {
                      console.error("Chart.js rendering error:", e);
-                      // Optionally display an error message in the chat
-                      canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Error rendering chart data.</p>";
+                     console.error("Chart data:", chartData);
+                     canvasElement.parentElement.innerHTML = `<p style='color: #ffcccc; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;'>⚠️ Chart rendering failed: ${e.message || 'Unknown error'}</p>`;
                  }
             }
 
