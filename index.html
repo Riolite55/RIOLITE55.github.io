@@ -353,7 +353,7 @@
             overflow-y: auto; /* Enable scrolling for messages */
             padding: 10px; /* Add padding for mobile */
              /* padding-bottom accounts for sticky footer height */
-             padding-bottom: calc(var(--mobile-footer-height) + 10px);
+             padding-bottom: calc(var(--mobile-footer-height) + 20px); /* Increased bottom padding */
         }
         @media (min-width: 769px) {
              .chat-messages {
@@ -378,45 +378,51 @@
             .message-bubble.agent .content { background-color: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-color); color: var(--text-light); border-bottom-left-radius: 5px; backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); }
         }
 
-        /* Mobile Bubble Styles Override */
+        /* Mobile Chat Appearance Override */
         @media (max-width: 768px) {
             .message-bubble { animation: none; max-width: 100%;}
-            /* User bubble on mobile */
+            /* User bubble - keep as is */
             .message-bubble.user .content {
                 background: linear-gradient(135deg, var(--primary-blue), #008a7e);
                 color: #fff;
                 border-bottom-right-radius: 5px;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                 border-bottom-left-radius: 18px; /* Keep other corners rounded */
-                 border-top-left-radius: 18px;
-                 border-top-right-radius: 18px;
+                border-bottom-left-radius: 18px;
+                border-top-left-radius: 18px;
+                border-top-right-radius: 18px;
             }
-             /* Agent "bubble" on mobile - remove bubble style */
+             /* Agent message - enhance slightly */
+            .message-bubble.agent {
+                 padding-left: 5px; /* Indent agent messages slightly */
+            }
             .message-bubble.agent .content {
-                background: none !important;
+                background: rgba(0, 0, 0, 0.1) !important; /* Subtle background */
                 border: none;
                 box-shadow: none;
-                padding: 0; /* Remove padding */
-                border-radius: 0;
+                padding: 10px 15px; /* Add padding back */
+                border-radius: 12px; /* Slightly rounded corners */
                 backdrop-filter: none;
-                color: var(--text-light); /* Ensure text is visible */
+                color: var(--text-light);
                 line-height: 1.6;
+                font-size: 0.9rem; /* Match user bubble font size */
+                 border-bottom-left-radius: 5px; /* Keep the agent distinctive corner */
             }
             .message-bubble.agent .content .chart-container {
-                 background-color: transparent; /* Remove container bg */
+                 background-color: transparent;
                  padding: 0;
                  border: none;
                  margin-top: 10px;
-                 max-width: 100%; /* Allow chart full width */
+                 max-width: 100%;
             }
-            /* Adjust markdown styles for no-bubble agent message */
+            /* Adjust markdown for subtle background */
             .message-bubble.agent .content h1, .message-bubble.agent .content h2, .message-bubble.agent .content h3 { border: none; padding-bottom: 0; }
             .message-bubble.agent .content table { background: none; font-size: 0.85rem; }
             .message-bubble.agent .content th, .message-bubble.agent .content td { padding: 6px 8px;}
             .message-bubble.agent .content th { background: none; color: var(--primary-blue);}
              .message-bubble.agent .content tr:nth-child(even) { background-color: transparent; }
              .message-bubble.agent .content blockquote { padding-left: 10px; border-left-width: 3px;}
-             .message-bubble.agent .content pre, .message-bubble.agent .content code { background-color: rgba(0,0,0,0.2);}
+             /* Keep code blocks distinct */
+             .message-bubble.agent .content pre, .message-bubble.agent .content code { background-color: rgba(0,0,0,0.3);}
         }
 
 
@@ -647,7 +653,13 @@
         .persona-details p { font-size: 0.85rem; }
         @media (max-width: 768px) {
              #personaModal .modal-content { width: 90%; }
-             .persona-option img { width: 50px; height: 50px; }
+             /* Ensure 3 personas fit without scrolling if possible */
+             .persona-options { gap: 8px;}
+             .persona-option { padding: 12px; gap: 10px; }
+             .persona-option img { width: 45px; height: 45px; }
+             .persona-details h4 { font-size: 1rem; margin-bottom: 4px;}
+             .persona-details p { font-size: 0.8rem; line-height: 1.4; }
+
         }
 
 
@@ -1241,14 +1253,72 @@
                 messageBubble.appendChild(contentDiv);
                 if (chatMessages) { chatMessages.appendChild(messageBubble); if (chartData && canvasId && sender === 'agent') { setTimeout(() => { const canvasElement = document.getElementById(canvasId); if (canvasElement) { renderChart(canvasElement, chartData); } else { console.error(`Canvas ${canvasId} not found.`); } setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 100); }, 0); } else { setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 0); } } else { console.error("chatMessages element not found."); }
             }
-            function renderChart(canvasElement, chartData) { /* ... chart rendering logic ... */ }
+             function renderChart(canvasElement, chartData) {
+                 if (!canvasElement || !chartData || !chartData.type || !chartData.labels || !chartData.datasets) {
+                     console.error("renderChart: Invalid chart data or canvas element.", {canvas: !!canvasElement, data: chartData});
+                     if (canvasElement?.parentElement) { canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Could not render chart: Invalid data provided.</p>"; }
+                     return;
+                 }
+                 const ctx = canvasElement.getContext('2d');
+                 if (!ctx) {
+                     console.error("renderChart: Could not get canvas context.");
+                     if (canvasElement?.parentElement) { canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Could not render chart: Canvas context error.</p>"; }
+                     return;
+                 }
+                 console.log("Rendering chart with data:", JSON.stringify(chartData)); // Log valid data before rendering
+
+                 const options = {
+                     responsive: true, maintainAspectRatio: true,
+                     plugins: { legend: { labels: { color: 'rgba(255, 255, 255, 0.8)' } } },
+                     scales: {
+                         y: { beginAtZero: true, ticks: { color: 'rgba(255, 255, 255, 0.7)', font: { family: 'Poppins' } }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                         x: { ticks: { color: 'rgba(255, 255, 255, 0.7)', font: { family: 'Poppins' } }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                     }
+                 };
+
+                 const defaultBackgroundColors = ['rgba(0, 169, 157, 0.6)', 'rgba(255, 193, 7, 0.6)', 'rgba(0, 123, 255, 0.6)', 'rgba(220, 53, 69, 0.6)', 'rgba(40, 167, 69, 0.6)', 'rgba(23, 162, 184, 0.6)'];
+                 const defaultBorderColors = ['rgba(0, 169, 157, 1)', 'rgba(255, 193, 7, 1)', 'rgba(0, 123, 255, 1)', 'rgba(220, 53, 69, 1)', 'rgba(40, 167, 69, 1)', 'rgba(23, 162, 184, 1)'];
+
+                 chartData.datasets.forEach((dataset, index) => {
+                     if (!Array.isArray(dataset.data)) { console.warn(`Dataset ${index} has invalid 'data'. Using empty array.`); dataset.data = []; }
+                     // Assign colors based on chart type
+                     const colorIndex = index % defaultBackgroundColors.length;
+                     if (chartData.type === 'line' || chartData.type === 'radar') {
+                        dataset.backgroundColor = dataset.backgroundColor || defaultBackgroundColors[colorIndex].replace('0.6', '0.2');
+                        dataset.borderColor = dataset.borderColor || defaultBorderColors[colorIndex];
+                        dataset.tension = 0.1; // Make lines slightly curved
+                     } else if (chartData.type === 'pie' || chartData.type === 'doughnut') {
+                        // For pie/doughnut, backgroundColor should be an array matching data length
+                        dataset.backgroundColor = dataset.backgroundColor || dataset.data.map((_, i) => defaultBackgroundColors[i % defaultBackgroundColors.length]);
+                        dataset.borderColor = dataset.borderColor || defaultBorderColors[0].replace('1', '0.2'); // Use a subtle border or make it transparent
+                        dataset.borderWidth = 1;
+                     } else { // bar, etc.
+                        dataset.backgroundColor = dataset.backgroundColor || defaultBackgroundColors[colorIndex];
+                        dataset.borderColor = dataset.borderColor || defaultBorderColors[colorIndex];
+                        dataset.borderWidth = 1;
+                     }
+                 });
+
+                 try {
+                     // Destroy previous chart instance if it exists
+                     const existingChart = Chart.getChart(ctx);
+                     if (existingChart) {
+                         existingChart.destroy();
+                     }
+                     // Create new chart
+                     new Chart(ctx, { type: chartData.type, data: { labels: chartData.labels, datasets: chartData.datasets }, options: options });
+                 } catch (e) {
+                     console.error("Chart.js rendering error:", e, "Data:", chartData);
+                     if (canvasElement?.parentElement) { canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Error rendering chart data.</p>"; }
+                 }
+             }
             function showTypingIndicator() { /* ... typing indicator logic ... */ }
             function removeTypingIndicator() { /* ... typing indicator logic ... */ }
             async function handleSendMessage() { /* ... send message logic ... */
                  if (!chatInput) return; const userMessage = chatInput.value.trim(); if (!userMessage) return; displayMessage('user', userMessage); chatHistory.push({ role: 'user', parts: [{ text: userMessage }] }); chatInput.value = ''; showTypingIndicator(); await sendMessageToGemini(userMessage);
              }
             async function sendMessageToGemini(message, retries = 3, delay = 1000) { /* ... Gemini API call logic ... */
-                 const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`; const persona = personaData.find(p => p.id === currentPersonaId); const systemPromptText = persona ? persona.systemPrompt : 'You are a helpful assistant.'; const payload = { contents: chatHistory, systemInstruction: { parts: [{ text: `${systemPromptText} User is "Your Highness". Current date: ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Riyadh' })}.` }] }, generationConfig: { maxOutputTokens: 8192, }, safetySettings: [ { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, ] };
+                 const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU";  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`; const persona = personaData.find(p => p.id === currentPersonaId); const systemPromptText = persona ? persona.systemPrompt : 'You are a helpful assistant.'; const payload = { contents: chatHistory, systemInstruction: { parts: [{ text: `${systemPromptText} User is "Your Highness". Current date: ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Riyadh' })}.` }] }, generationConfig: { maxOutputTokens: 8192, }, safetySettings: [ { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, ] };
                  try { const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); removeTypingIndicator(); if (!response.ok) { if (!(response.status === 429 || response.status >= 500)) { console.error(`API Error: ${response.status} ${response.statusText}`, await response.text()); } if ((response.status === 429 || response.status >= 500) && retries > 0) { await new Promise(resolve => setTimeout(resolve, delay)); return sendMessageToGemini(message, retries - 1, delay * 2); } throw new Error(`API error: ${response.status} ${response.statusText}`); } const result = await response.json(); const candidate = result.candidates?.[0]; const agentResponseText = candidate?.content?.parts?.[0]?.text; if (agentResponseText) { displayMessage('agent', agentResponseText); chatHistory.push({ role: 'model', parts: [{ text: agentResponseText }] }); } else { let errorText = "Apologies, couldn't process fully."; if (candidate?.finishReason && candidate.finishReason !== 'STOP') { errorText = `Response stopped: ${candidate.finishReason}.`; console.warn("Gemini finishReason:", candidate.finishReason, candidate.safetyRatings); } else if (result.promptFeedback?.blockReason) { errorText = `Prompt blocked: ${result.promptFeedback.blockReason}.`; console.warn("Gemini promptFeedback:", result.promptFeedback); } else if (!agentResponseText) { console.warn("Gemini response missing text:", result); errorText = "Received empty response."; } displayMessage('agent', errorText); } } catch (error) { console.error('Error fetching from Gemini API:', error.message); removeTypingIndicator(); displayMessage('agent', "Network difficulties connecting. Please try again."); }
             }
 
