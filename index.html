@@ -203,43 +203,24 @@
         }
 
         .persona-display {
-            flex: 0 0 200px;
-            text-align: center;
+            flex: 0 0 280px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-        }
-
-        #mainPersonaImage {
-            width: 100%;
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            border: 3px solid var(--border-color);
-            aspect-ratio: 1 / 1.1;
-            object-fit: cover;
-            box-shadow: 0 8px 30px rgba(0, 169, 157, 0.3);
-            transition: all 0.3s;
+            padding: 20px;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
         }
 
-        #mainPersonaImage:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 40px rgba(0, 169, 157, 0.5);
-            border-color: var(--primary-blue);
-        }
-
-        .persona-info { margin-top: 0; }
-        #mainPersonaName {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            text-shadow: 0 2px 10px rgba(0, 169, 157, 0.2);
-        }
-        .persona-info p {
-            margin: 5px 0 0;
-            color: var(--primary-blue);
-            font-weight: 500;
-            font-size: 0.85rem;
-            opacity: 0.9;
+        /* Removed old single persona image styles - now using multi-agent selection */
+        
+        .multi-agent-header {
+            text-align: left;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .quick-actions {
@@ -255,12 +236,33 @@
             text-align: left;
         }
         
+        .multi-agent-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
         .agent-selection-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
             max-height: 400px;
             overflow-y: auto;
+            padding: 5px 0;
+        }
+        
+        .agent-selection-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .agent-selection-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .agent-selection-list::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 10px;
         }
         
         .agent-select-item {
@@ -271,11 +273,29 @@
             border: 2px solid transparent;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .agent-select-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 169, 157, 0.1), rgba(0, 169, 157, 0.2));
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .agent-select-item:hover::before {
+            opacity: 1;
         }
         
         .agent-select-item:hover {
-            background: rgba(0, 169, 157, 0.15);
             border-color: rgba(0, 169, 157, 0.3);
             transform: translateX(3px);
         }
@@ -283,7 +303,14 @@
         .agent-select-item.selected {
             background: linear-gradient(135deg, rgba(0, 169, 157, 0.2), rgba(0, 169, 157, 0.3));
             border-color: var(--primary-blue);
-            box-shadow: 0 0 15px rgba(0, 169, 157, 0.3);
+            box-shadow: 0 0 20px rgba(0, 169, 157, 0.4), inset 0 0 20px rgba(0, 169, 157, 0.1);
+            animation: agentSelected 0.4s ease;
+        }
+        
+        @keyframes agentSelected {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         
         .agent-checkbox {
@@ -1332,7 +1359,21 @@
 
         @media (max-width: 1200px) {
             .page-content { flex-direction: column; }
-            .persona-display { display: none; }
+            .persona-display { 
+                flex: 0 0 auto;
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto 20px;
+            }
+            .agent-selection-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .agent-select-item {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 140px;
+            }
             .chat-section-container { flex-direction: column; max-height: 60vh; }
             .summary-section, .agenda-container { max-height: 60vh; }
              .tools-container { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
@@ -1395,12 +1436,81 @@
                 box-sizing: border-box; /* Ensure padding is included in height */
             }
 
-            .persona-display, .summary-section {
+            .persona-display {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--container-bg);
+                backdrop-filter: blur(30px);
+                border-radius: 20px 20px 0 0;
+                border: 1px solid var(--border-color);
+                border-bottom: none;
+                padding: 15px;
+                max-height: 40vh;
+                overflow-y: auto;
+                z-index: 800;
+                transform: translateY(calc(100% - 50px));
+                transition: transform 0.3s ease;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            }
+            
+            .persona-display.expanded {
+                transform: translateY(0);
+            }
+            
+            .multi-agent-header {
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            
+            .multi-agent-header::after {
+                content: '▲';
+                font-size: 1.2rem;
+                transition: transform 0.3s;
+            }
+            
+            .persona-display:not(.expanded) .multi-agent-header::after {
+                transform: rotate(180deg);
+            }
+            
+            .persona-display:not(.expanded) .agent-selection-list,
+            .persona-display:not(.expanded) .quick-actions {
+                display: none;
+            }
+            
+            .agent-selection-list {
+                gap: 8px;
+            }
+            
+            .agent-select-item {
+                padding: 8px;
+            }
+            
+            .agent-mini-avatar {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .agent-select-name {
+                font-size: 0.85rem;
+            }
+            
+            .agent-select-title {
+                font-size: 0.7rem;
+            }
+            
+            .summary-section {
                 display: none;
             }
 
             .chat-interaction-area {
-                height: 100%; /* Take full height of container */
+                height: calc(100% - 60px); /* Adjust for collapsed persona display */
+                padding-bottom: 60px; /* Space for the collapsed agent selector */
             }
 
             .chat-input-area {
@@ -1839,7 +1949,10 @@
                 <!-- Multi-Agent Selection Panel (Desktop) -->
                 <div class="persona-display">
                     <div class="multi-agent-header">
-                        <h3 style="margin: 0 0 15px 0; color: var(--primary-blue);">Active Agents</h3>
+                        <h3 style="margin: 0 0 15px 0; color: var(--primary-blue);">
+                            Active Agents
+                            <span id="agentCountBadge" class="multi-agent-badge">1</span>
+                        </h3>
                         <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 15px;">Select one or more agents to assist you</p>
                     </div>
                     
@@ -2271,6 +2384,12 @@
                     
                     container.appendChild(div);
                 });
+                
+                // Update the count badge
+                const countBadge = document.getElementById('agentCountBadge');
+                if (countBadge) {
+                    countBadge.textContent = selectedAgents.length;
+                }
             }
             
             function toggleAgentSelection(agentId) {
@@ -3052,6 +3171,15 @@
             const agentDiscussBtn = document.getElementById('agentDiscussBtn');
             if (agentDiscussBtn) {
                 agentDiscussBtn.addEventListener('click', startAgentDiscussion);
+            }
+            
+            // Mobile agent selector expand/collapse
+            const personaDisplay = document.querySelector('.persona-display');
+            const multiAgentHeader = document.querySelector('.multi-agent-header');
+            if (personaDisplay && multiAgentHeader && window.innerWidth <= 768) {
+                multiAgentHeader.addEventListener('click', () => {
+                    personaDisplay.classList.toggle('expanded');
+                });
             }
 
         });
