@@ -307,19 +307,85 @@
             animation: agentSelected 0.4s ease;
         }
         
+        .agent-select-item.selected .agent-mini-avatar {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 15px rgba(0, 169, 157, 0.5);
+        }
+        
+        .agent-select-item.selected .agent-select-name {
+            color: var(--primary-blue);
+        }
+        
         @keyframes agentSelected {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.03); }
             100% { transform: scale(1); }
         }
         
         .agent-checkbox {
-            width: 22px;
-            height: 22px;
-            margin-right: 10px;
-            cursor: pointer;
-            accent-color: var(--primary-blue);
+            display: none; /* Hide the actual checkbox */
+        }
+        
+        /* Toggle Switch */
+        .agent-toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            margin-right: 12px;
             flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .agent-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 34px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .agent-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .agent-checkbox:checked + .agent-toggle .agent-toggle-slider {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 10px rgba(0, 169, 157, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3);
+        }
+        
+        .agent-checkbox:checked + .agent-toggle .agent-toggle-slider:before {
+            transform: translateX(24px);
+            box-shadow: 0 2px 8px rgba(0, 169, 157, 0.4);
+        }
+        
+        .agent-toggle-slider:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .agent-checkbox:checked + .agent-toggle .agent-toggle-slider:hover {
+            background: linear-gradient(135deg, #00bfae, #00a99d);
+            box-shadow: 0 0 15px rgba(0, 169, 157, 0.7), inset 0 1px 3px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Active state when clicking */
+        .agent-toggle:active .agent-toggle-slider:before {
+            width: 22px;
         }
         
         .agent-mini-avatar {
@@ -1491,6 +1557,23 @@
                 padding: 8px;
             }
             
+            .agent-toggle {
+                width: 44px;
+                height: 24px;
+                margin-right: 10px;
+            }
+            
+            .agent-toggle-slider:before {
+                height: 16px;
+                width: 16px;
+                left: 2px;
+                bottom: 2px;
+            }
+            
+            .agent-checkbox:checked + .agent-toggle .agent-toggle-slider:before {
+                transform: translateX(20px);
+            }
+            
             .agent-mini-avatar {
                 width: 35px;
                 height: 35px;
@@ -2356,10 +2439,18 @@
                     const isSelected = selectedAgents.includes(agent.id);
                     const div = document.createElement('div');
                     div.className = `agent-select-item ${isSelected ? 'selected' : ''}`;
+                    
+                    // Create unique ID for checkbox-label association
+                    const toggleId = `agent-toggle-${agent.id}`;
+                    
                     div.innerHTML = `
                         <input type="checkbox" class="agent-checkbox" 
+                               id="${toggleId}"
                                data-agent-id="${agent.id}" 
                                ${isSelected ? 'checked' : ''}>
+                        <label for="${toggleId}" class="agent-toggle">
+                            <span class="agent-toggle-slider"></span>
+                        </label>
                         <img src="${agent.smallImg}" alt="${agent.name}" class="agent-mini-avatar">
                         <div class="agent-select-info">
                             <div class="agent-select-name">${agent.name}</div>
@@ -2374,9 +2465,10 @@
                         toggleAgentSelection(agent.id);
                     });
                     
-                    // Handle div click
+                    // Handle div click (toggle when clicking anywhere on the card except the toggle itself)
                     div.addEventListener('click', (e) => {
-                        if (e.target !== checkbox) {
+                        // Don't toggle if clicking directly on the toggle switch or checkbox
+                        if (!e.target.closest('.agent-toggle') && e.target !== checkbox) {
                             checkbox.checked = !checkbox.checked;
                             toggleAgentSelection(agent.id);
                         }
