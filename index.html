@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" style="--vh: 7.66px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HRSD AI Executive Office</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -114,262 +115,205 @@
             justify-content: center;
             padding: 5px 0;
             border-bottom: 1px solid var(--border-color);
-            top: 83px;
+            top: 83px; /* Adjusted based on typical header height */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .nav-tabs {
             display: flex;
-            gap: 15px;
-            padding: 0 20px;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .nav-button {
-            background: transparent;
+        .nav-tabs button {
+            background: none;
             border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
             color: var(--text-light);
-            padding: 12px 25px;
-            border-radius: 12px;
             cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 500;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
-            position: relative;
+            border-radius: 25px;
             border: 1px solid transparent;
-        }
-        .nav-button:hover:not(.active) {
-            background: var(--container-bg-light);
-            color: var(--text-dark);
-            transform: translateY(-2px);
-        }
-        .nav-button.active {
-            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
-            color: var(--text-dark);
-            border-color: var(--primary-blue);
-            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
-        }
-        .nav-button.active::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 3px;
-            background: var(--primary-blue);
-            border-radius: 3px 3px 0 0;
+            position: relative;
+            overflow: hidden;
         }
 
+        .nav-tabs button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 169, 157, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-tabs button:hover::before {
+            left: 100%;
+        }
+
+        .nav-tabs button.active {
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
+            border-color: rgba(0, 169, 157, 0.3);
+        }
+
+        .nav-tabs button:hover:not(.active) {
+            background-color: var(--container-bg-light);
+            border-color: var(--border-color);
+            transform: translateY(-2px);
+        }
         .main-container {
-            flex: 1;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            padding: 20px 40px;
             overflow-y: auto;
         }
 
         .page-content {
             display: none;
-            opacity: 0;
-            animation: fadeInPage 0.5s forwards;
+            flex-grow: 1;
+            padding: 30px 40px;
+            gap: 30px;
         }
         .page-content.active {
-            display: block;
-        }
-        @keyframes fadeInPage {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            display: flex;
         }
 
-        /* Agent Chat Page Styles */
         .chat-section-container {
+            flex: 2;
             display: flex;
             gap: 30px;
-            height: calc(100vh - 220px);
-            min-height: 500px;
+            background: var(--container-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            min-width: 0;
+            max-height: 80vh;
+            box-shadow: var(--shadow-lg);
         }
 
         .persona-display {
-            flex: 0 0 280px;
-            background: var(--container-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            padding: 25px;
+            flex: 0 0 200px;
+            text-align: center;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            box-shadow: var(--shadow-md);
-            height: fit-content;
+            gap: 12px;
         }
 
-        .persona-display img {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 4px solid var(--primary-blue);
-            box-shadow: 0 8px 20px rgba(0, 169, 157, 0.3);
-            object-fit: cover;
-        }
-
-        .persona-info {
-            text-align: center;
-        }
-
-        .persona-info h3 {
-            margin: 0 0 8px 0;
-            font-size: 1.3rem;
-            color: var(--text-dark);
-        }
-
-        .persona-info p {
-            margin: 0;
-            font-size: 0.9rem;
-            opacity: 0.85;
-        }
-
-        .quick-actions {
+        #mainPersonaImage {
             width: 100%;
-            margin-top: 10px;
+            border-radius: 20px;
+            border: 3px solid var(--border-color);
+            aspect-ratio: 1 / 1.1;
+            object-fit: cover;
+            box-shadow: 0 8px 30px rgba(0, 169, 157, 0.3);
+            transition: all 0.3s;
         }
 
-        .quick-actions h4 {
-            font-size: 0.95rem;
-            margin: 0 0 15px 0;
-            text-align: center;
+        #mainPersonaImage:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 169, 157, 0.5);
+            border-color: var(--primary-blue);
+        }
+
+        .persona-info { margin-top: 0; }
+        #mainPersonaName {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-shadow: 0 2px 10px rgba(0, 169, 157, 0.2);
+        }
+        .persona-info p {
+            margin: 5px 0 0;
+            color: var(--primary-blue);
+            font-weight: 500;
+            font-size: 0.85rem;
             opacity: 0.9;
         }
 
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .quick-actions h4 {
+            margin: 0 0 8px 0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            opacity: 0.7;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-light);
+        }
+
         .quick-action-btn {
-            width: 100%;
             background: var(--container-bg-light);
             border: 1px solid var(--border-color);
             color: var(--text-light);
-            padding: 12px;
-            border-radius: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
-            margin-bottom: 10px;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
         }
 
         .quick-action-btn:hover {
             background: linear-gradient(135deg, var(--primary-blue), #008a7e);
             color: var(--text-dark);
-            transform: translateY(-2px);
+            transform: translateX(5px);
             box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
+            border-color: transparent;
         }
 
-        /* Multi-Agent Panel */
-        .multi-agent-panel {
-            width: 100%;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .multi-agent-panel h4 {
-            font-size: 0.95rem;
-            margin: 0 0 15px 0;
+        .quick-action-btn i {
+            font-size: 1rem;
+            width: 18px;
             text-align: center;
+            flex-shrink: 0;
             opacity: 0.9;
         }
 
-        .agent-chips-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
+        .quick-action-btn:hover i {
+            opacity: 1;
         }
 
-        .agent-chip {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: var(--container-bg-light);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.85rem;
-        }
-
-        .agent-chip img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-        }
-
-        .agent-chip.active {
-            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
-            color: var(--text-dark);
-            border-color: var(--primary-blue);
-            box-shadow: 0 2px 8px rgba(0, 169, 157, 0.4);
-        }
-
-        .agent-chip.active img {
-            border-color: var(--text-dark);
-        }
-
-        .agent-chip:hover:not(.active) {
-            background: rgba(0, 169, 157, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .chat-interaction-area {
+        .quick-action-btn span {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--container-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
         }
 
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: var(--primary-blue);
-            border-radius: 10px;
-        }
+        .chat-interaction-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .chat-messages { flex: 1; overflow-y: auto; padding-right: 10px; }
 
         .message-bubble {
             display: flex;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 20px;
             align-items: flex-start;
-            animation: slideInMessage 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: 85%;
+            animation: slideIn 0.3s ease-out;
         }
 
-        @keyframes slideInMessage {
+        @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(10px);
@@ -380,164 +324,526 @@
             }
         }
 
-        .message-bubble.user {
-            flex-direction: row-reverse;
-            margin-left: auto;
-        }
-
+        .message-bubble.user { justify-content: flex-end; }
         .message-bubble .avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 2px solid var(--primary-blue);
-            object-fit: cover;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--border-color);
         }
-
         .message-bubble .content {
-            background: linear-gradient(135deg, rgba(0, 169, 157, 0.15), rgba(0, 169, 157, 0.25));
-            padding: 15px 18px;
+            padding: 14px 20px;
             border-radius: 18px;
-            line-height: 1.6;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
         }
-
         .message-bubble.user .content {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            color: #fff;
+            border-bottom-right-radius: 5px;
         }
+        .message-bubble.agent .content {
+            background-color: rgba(0, 0, 0, 0.25);
+            border-color: var(--border-color);
+            color: var(--text-light);
+            border-bottom-left-radius: 5px;
+            backdrop-filter: blur(10px);
+        }
+        /* Style for canvas container */
+        .message-bubble.agent .content .chart-container {
+             width: 100%;
+             max-width: 450px; /* Adjust max width as needed */
+             margin-top: 15px;
+             background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter background */
+             padding: 15px;
+             border-radius: 8px;
+             border: 1px solid var(--border-color);
+        }
+         .message-bubble.agent .content canvas {
+             max-width: 100%;
+             height: auto;
+         }
 
-        .message-bubble .agent-name {
-            font-size: 0.75rem;
-            font-weight: 600;
+        /* Styles for rendered Markdown in agent bubbles */
+        .message-bubble.agent .content h1,
+        .message-bubble.agent .content h2,
+        .message-bubble.agent .content h3 { color: var(--primary-blue); margin-top: 1em; margin-bottom: 0.5em; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
+        .message-bubble.agent .content h4 { color: var(--text-dark); margin-top: 1em; margin-bottom: 0.5em; }
+        .message-bubble.agent .content p { margin-top: 0.5em; margin-bottom: 0.5em; }
+        .message-bubble.agent .content ul, .message-bubble.agent .content ol { padding-left: 20px; margin: 0.5em 0; }
+        .message-bubble.agent .content li { margin-bottom: 0.5em; }
+        .message-bubble.agent .content hr { border: none; border-top: 1px solid var(--border-color); margin: 1em 0; }
+        .message-bubble.agent .content strong { color: var(--text-dark); }
+        .message-bubble.agent .content code {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .message-bubble.agent .content pre {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .message-bubble.agent .content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        .message-bubble.agent .content a {
             color: var(--primary-blue);
-            margin-bottom: 5px;
-            display: block;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .message-bubble.agent .content a:hover {
+            text-decoration: underline;
+        }
+        .message-bubble.agent .content blockquote {
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+         /* Markdown table styling */
+        .message-bubble.agent .content table {
+            width: auto; /* Allow table to fit content */
+            max-width: 100%; /* Prevent overflow */
+            border-collapse: collapse;
+            margin: 1em 0;
+            font-size: 0.9em;
+            background-color: rgba(0,0,0,0.1);
+        }
+        .message-bubble.agent .content th,
+        .message-bubble.agent .content td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .message-bubble.agent .content th {
+            background-color: rgba(0, 169, 157, 0.2);
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        .message-bubble.agent .content tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.05);
         }
 
         .chat-input-area {
-            padding: 20px 25px;
+            padding-top: 20px;
             border-top: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        #chatInput {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            padding: 15px 20px;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            font-family: 'Poppins', sans-serif;
-            resize: none;
-            transition: all 0.3s;
-            margin-bottom: 12px;
-        }
-
-        #chatInput:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 20px rgba(0, 169, 157, 0.2);
-        }
-
-        #chatInput::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .chat-input-controls {
             display: flex;
-            gap: 10px;
-            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 0 -25px -25px -25px;
+            padding: 20px 25px;
+            border-radius: 0 0 20px 0; /* Only bottom-right corner of chat-area */
         }
-
+        .chat-input-controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        #chatInput {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-dark);
+            font-size: 1rem;
+            padding: 12px 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        #chatInput::placeholder { color: var(--text-light); opacity: 0.6; }
         .chat-input-controls button {
-            background: var(--container-bg-light);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--border-color);
             color: var(--text-light);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            font-size: 1.1rem;
             cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
-            font-size: 1.1rem;
+        }
+        .chat-input-controls button:hover {
+            color: var(--text-dark);
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            transform: scale(1.1);
+        }
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e) !important;
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
+        }
+        .send-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 169, 157, 0.6) !important;
+            transform: scale(1.1) !important;
         }
 
-        .chat-input-controls button:hover {
+        .summary-section, .placeholder-page, .agenda-container {
+            flex: 1;
+            background: var(--container-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 300px;
+            max-height: 80vh;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        .summary-header { display: flex; justify-content: space-between; align-items: center; }
+        .summary-header h3 { margin: 0; font-size: 1.3rem; color: var(--text-dark); font-weight: 600; }
+        .summary-header button {
+            background: var(--container-bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .summary-header button:hover {
             background: linear-gradient(135deg, var(--primary-blue), #008a7e);
-            color: var(--text-dark);
+            color: #fff;
+            border-color: var(--primary-blue);
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
         }
-
-        .send-btn {
-            background: linear-gradient(135deg, var(--primary-blue), #008a7e) !important;
-            color: var(--text-dark) !important;
-            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.3);
+        .summary-content { font-size: 0.95rem; line-height: 1.7; color: var(--text-light); overflow-y: auto; flex: 1; }
+        .summary-content h4 {
+            color: var(--primary-blue);
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 10px rgba(0, 169, 157, 0.2);
         }
+        .summary-content h4:first-child { margin-top: 0; }
+        .summary-content ul { list-style-type: none; padding-left: 15px; margin-top: 10px; }
+        .summary-content ul li { position: relative; padding-left: 20px; margin-bottom: 8px; }
+        .summary-content ul li::before { content: '▶'; position: absolute; left: 0; top: 0; color: var(--primary-blue); font-size: 0.8em; }
+        .summary-content ul li strong { color: var(--text-dark); }
+        .key-topics-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+        .key-topic-pill { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .key-topic-pill:hover { background: var(--primary-blue); color: var(--text-dark); border-color: var(--primary-blue); }
 
-        .send-btn:hover {
-            transform: translateY(-3px) !important;
-            box-shadow: 0 6px 20px rgba(0, 169, 157, 0.5) !important;
+        .typing-indicator { display: flex; align-items: center; }
+        .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--primary-blue); border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+        .placeholder-page h2 { color: var(--primary-blue); text-align: center; }
+        .placeholder-page p { text-align: center; font-size: 1.1rem; }
+        /* Style for AI Tools Cards */
+        #tools-page { flex-direction: column; } /* Ensure tools page stacks vertically */
+        .tools-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+            gap: 20px;
+            width: 100%;
+            padding: 20px 0; /* Add padding around the grid */
         }
-
-        .summary-section {
-            flex: 0 0 320px;
+        .tool-card {
             background: var(--container-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
+            border-radius: 15px;
             border: 1px solid var(--border-color);
             padding: 25px;
             display: flex;
             flex-direction: column;
+            align-items: center; /* Center icon and text */
+            text-align: center; /* Center text */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(15px);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
             box-shadow: var(--shadow-md);
-            height: fit-content;
-            max-height: calc(100vh - 220px);
-            overflow-y: auto;
+            border-color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--container-bg), rgba(0, 169, 157, 0.1));
+        }
+        .tool-icon {
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .tool-card:hover .tool-icon {
+            transform: scale(1.1);
+            text-shadow: 0 2px 15px rgba(0, 169, 157, 0.4);
+        }
+        .tool-title {
+            color: var(--text-dark);
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .tool-description {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            opacity: 0.85;
+            flex-grow: 1; /* Allow description to take space */
+            margin-bottom: 15px; /* Space before button */
+        }
+        .tool-action-btn {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            display: inline-flex; /* Make it inline */
+            align-items: center;
+            gap: 6px;
+            margin-top: auto; /* Push button to bottom */
+        }
+        .tool-action-btn:hover {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 169, 157, 0.3);
+            border-color: transparent;
         }
 
-        .summary-header {
+
+        .agenda-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .agenda-header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            text-shadow: 0 2px 10px rgba(0, 169, 157, 0.2);
+            flex: 1 1 auto;
+            min-width: 150px;
         }
 
-        .summary-header h3 {
-            margin: 0;
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            background: var(--container-bg-light);
+            padding: 4px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .view-toggle button,
+        .mobile-view-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .view-toggle button.active,
+        .mobile-view-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            color: var(--text-dark);
+            box-shadow: 0 2px 10px rgba(0, 169, 157, 0.4);
+        }
+
+        .view-toggle button:hover:not(.active),
+        .mobile-view-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .agenda-view {
+            display: none;
+            flex-grow: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .agenda-view.active {
+            display: block;
+        }
+
+        #today-view.active,
+        #week-view.active {
+            display: flex !important; /* Use flex for week view grid */
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #month-view.active {
+            display: flex !important; /* Use flex for month view grid */
+            flex-direction: column;
+        }
+
+        .month-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+            flex-grow: 1;
+            min-height: 0;
+            grid-template-rows: auto repeat(6, 1fr); /* Header row + 6 weeks */
+        }
+
+        .month-day-header {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            padding: 10px 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .month-day-header.weekend {
+            background-color: rgba(0, 0, 0, 0.15);
+            border-radius: 5px 5px 0 0;
+        }
+
+        .month-day-cell {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px;
+            background: var(--container-bg-light);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .month-day-cell:hover {
+            background: rgba(0, 169, 157, 0.2);
+            transform: scale(1.02);
+            border-color: var(--primary-blue);
+        }
+
+        .month-day-cell.weekend {
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+
+        .month-day-cell.today {
+            border: 2px solid var(--primary-blue);
+            background: rgba(0, 169, 157, 0.15);
+            box-shadow: 0 0 15px rgba(0, 169, 157, 0.3);
+        }
+
+        .month-day-cell.other-month,
+        .month-day-cell.disabled-day {
+            opacity: 0.3;
+            pointer-events: none;
+            background: transparent;
+        }
+
+        .month-day-number {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            flex-shrink: 0;
+        }
+
+        .month-day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .month-event-dot {
+            width: 100%;
+            height: 4px;
+            background: var(--primary-blue);
+            border-radius: 2px;
+            font-size: 0.7rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .month-event-dot.milestone {
+            background: #ffc107;
+        }
+
+        .today-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .today-date {
             font-size: 1.2rem;
+            font-weight: 600;
             color: var(--text-dark);
         }
 
-        .summary-header button {
-            background: none;
-            border: none;
-            color: var(--primary-blue);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: all 0.3s;
+        .today-events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-
-        .summary-header button:hover {
-            background: rgba(0, 169, 157, 0.2);
-            transform: scale(1.1);
+        .desktop-calendar { display: block; }
+        .mobile-calendar { display: none; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
+        .day-column { border-right: 1px solid var(--border-color); padding: 5px; }
+        .day-column:last-child { border-right: none; }
+        .day-column.weekend { background-color: rgba(0, 0, 0, 0.2); border-radius: 5px; }
+        .day-header {
+            text-align: center;
+            font-weight: 600;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
         }
-
-        #summary-content {
-            font-size: 0.9rem;
-            line-height: 1.7;
+        .day-header .day-name {
+            font-size: 0.75em;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-
-        #summary-content .event {
+        .day-header .day-number {
+            font-size: 1.4em;
+            margin-top: 5px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+        .event {
             background: linear-gradient(135deg, rgba(0, 169, 157, 0.15), rgba(0, 169, 157, 0.25));
             border-left: 4px solid var(--primary-blue);
             padding: 12px;
@@ -545,25 +851,118 @@
             margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-
-        #summary-content .event:hover {
+        .event:hover {
             background: linear-gradient(135deg, rgba(0, 169, 157, 0.3), rgba(0, 169, 157, 0.4));
             transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.3);
+        }
+        .event-time { font-size: 0.8em; opacity: 0.9; margin-bottom: 5px; font-weight: 500; }
+        .event-title { font-weight: 600; color: var(--text-dark); font-size: 0.95rem; }
+        .event-milestone {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.25));
+            border-left-color: #ffc107;
+        }
+        .event-milestone:hover {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(255, 193, 7, 0.4));
         }
 
-        #summary-content .event-time {
-            font-size: 0.8em;
-            opacity: 0.9;
-            margin-bottom: 5px;
+        .topics-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; }
+        .topic-card {
+            background: var(--container-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(20px);
         }
-
-        #summary-content .event-title {
-            font-weight: 600;
+        .topic-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 169, 157, 0.3);
+            border-color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--container-bg), rgba(0, 169, 157, 0.1));
+        }
+        .topic-icon {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .topic-card:hover .topic-icon {
+            transform: scale(1.1) rotate(5deg);
+            text-shadow: 0 4px 20px rgba(0, 169, 157, 0.5);
+        }
+        .topic-title {
             color: var(--text-dark);
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .topic-description {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            opacity: 0.9;
+        }
+        .topic-kpis {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .kpi-item {
+            text-align: center;
+            flex: 1;
+        }
+        .kpi-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-shadow: 0 2px 10px rgba(0, 169, 157, 0.3);
+        }
+        .kpi-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .topic-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 15px;
+        }
+        .topic-actions button {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .topic-actions button:hover {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
+            border-color: transparent;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -578,12 +977,7 @@
             align-items: center;
             animation: fadeIn 0.3s;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-content {
             background: var(--container-bg);
             border: 1px solid var(--border-color);
@@ -594,13 +988,12 @@
             max-width: 90%;
             text-align: left;
             position: relative;
-            animation: slideInModal 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideInModal 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Renamed animation */
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
-
-        @keyframes slideInModal {
+        @keyframes slideInModal { /* Renamed animation */
             from {
                 transform: translateY(-50px) scale(0.9);
                 opacity: 0;
@@ -610,7 +1003,6 @@
                 opacity: 1;
             }
         }
-
         .close-button {
             color: #aaa;
             position: absolute;
@@ -627,13 +1019,11 @@
             justify-content: center;
             border-radius: 50%;
         }
-
         .close-button:hover {
             color: #fff;
             background: rgba(255, 255, 255, 0.1);
             transform: rotate(90deg);
         }
-
         .modal-content h2 {
             margin-top: 0;
             color: var(--primary-blue);
@@ -642,13 +1032,42 @@
             font-size: 1.5rem;
             text-shadow: 0 2px 10px rgba(0, 169, 157, 0.3);
         }
-
-        .persona-options {
+        #event-modal-title { font-size: 1.5rem; color: var(--text-dark); margin: 0 0 5px 0; text-align: left; }
+        #event-modal-time { color: var(--primary-blue); font-weight: 500; margin-bottom: 15px; text-align: left; }
+        #event-modal-details { margin-bottom: 20px; line-height: 1.6; text-align: left;}
+        .event-actions, .day-actions {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+        .event-actions button, .day-actions button {
+            flex: 1;
+            background: var(--container-bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        .event-actions button:hover, .day-actions button:hover {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            color: var(--text-dark);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
         }
 
+        .persona-options { display: flex; flex-direction: column; gap: 15px; }
         .persona-option {
             display: flex;
             align-items: center;
@@ -660,19 +1079,16 @@
             background: var(--container-bg-light);
             transition: all 0.3s ease-in-out;
         }
-
         .persona-option:hover {
             background-color: rgba(0, 169, 157, 0.2);
             transform: translateX(5px);
             box-shadow: 0 4px 15px rgba(0, 169, 157, 0.2);
         }
-
         .persona-option.selected {
             border-color: var(--primary-blue);
             box-shadow: 0 0 20px rgba(0, 169, 157, 0.4);
             background: linear-gradient(135deg, rgba(0, 169, 157, 0.15), rgba(0, 169, 157, 0.25));
         }
-
         .persona-option img {
             width: 80px;
             height: 80px;
@@ -681,17 +1097,14 @@
             border: 3px solid var(--border-color);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-
         .persona-option.selected img {
             border-color: var(--primary-blue);
         }
-
         .persona-details h4 {
             margin: 0 0 8px 0;
             color: var(--text-dark);
             font-size: 1.1rem;
         }
-
         .persona-details p {
             margin: 0;
             font-size: 0.9rem;
@@ -700,119 +1113,465 @@
             line-height: 1.5;
         }
 
-        /* Placeholder page styles */
-        .placeholder-page {
-            display: flex;
-            flex-direction: column;
+        .key-topic-pill, .modal-topic-pill {
+            background: var(--container-bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            min-height: 400px;
-            text-align: center;
-            padding: 60px 40px;
+            gap: 5px;
         }
-
-        .placeholder-page i {
-            font-size: 5rem;
-            color: var(--primary-blue);
-            margin-bottom: 25px;
-            opacity: 0.6;
-        }
-
-        .placeholder-page h2 {
-            font-size: 2rem;
-            margin: 0 0 15px 0;
+        .key-topic-pill:hover, .modal-topic-pill:hover, .modal-topic-pill.active {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
             color: var(--text-dark);
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.4);
         }
 
-        .placeholder-page p {
-            font-size: 1.1rem;
-            max-width: 600px;
+        .modal-pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        #meetings-modal-list .meeting-item {
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--container-bg-light);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        #meetings-modal-list .meeting-item:hover {
+            background: linear-gradient(135deg, rgba(0, 169, 157, 0.15), rgba(0, 169, 157, 0.25));
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.3);
+        }
+        #meetings-modal-list .meeting-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            margin-bottom: 5px;
+        }
+        #meetings-modal-list .meeting-time {
+            font-size: 0.9em;
             opacity: 0.8;
+            color: var(--primary-blue);
+        }
+        #meetings-modal-list .dropdown-header, #dayActionModal .dropdown-header {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+            padding: 20px 0 10px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
-        /* Responsive Design */
+
+
+        #ask-agent-btn {
+            position: absolute;
+            display: none;
+            background: var(--container-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--primary-blue);
+            color: var(--text-light);
+            padding: 10px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 169, 157, 0.4);
+            font-weight: 500;
+        }
+        #ask-agent-btn:hover {
+            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 169, 157, 0.6);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #008a7e;
+        }
+
         @media (max-width: 1200px) {
-            .chat-section-container {
-                flex-direction: column;
-            }
-
-            .persona-display {
-                flex: 0 0 auto;
-                width: 100%;
-                flex-direction: row;
-                justify-content: space-between;
-            }
-
-            .persona-display img {
-                width: 100px;
-                height: 100px;
-            }
-
-            .summary-section {
-                flex: 0 0 auto;
-                width: 100%;
-                max-height: 400px;
-            }
+            .page-content { flex-direction: column; }
+            .persona-display { display: none; }
+            .chat-section-container { flex-direction: column; max-height: 60vh; }
+            .summary-section, .agenda-container { max-height: 60vh; }
+             .tools-container { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
         }
 
         @media (max-width: 768px) {
-            .header {
-                padding: 12px 20px;
+            body {
+                height: 100vh;
+                height: calc(var(--vh, 1vh) * 100);
+                display: flex;
+                flex-direction: column;
+            }
+            .header { padding: 15px 20px; }
+            .header-left span, .header-right .welcome-text { display: none; }
+            .mobile-menu-btn { display: block; }
+
+            .nav-tabs-container {
+                display: none; /* Hidden by default */
+                position: fixed;
+                top: 73px; /* Height of header */
+                left: 0;
+                right: 0;
+                height: auto;
+                background: var(--dark-teal); /* Solid background for mobile menu */
+            }
+            .nav-tabs-container.active {
+                display: flex;
+            }
+            .nav-tabs {
+                flex-direction: column;
+                width: 100%;
+                padding: 10px;
+                gap: 0;
+            }
+            .nav-tabs button {
+                justify-content: flex-start;
+                border-radius: 8px;
             }
 
             .main-container {
-                padding: 15px 20px;
-            }
-
-            .nav-tabs {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--container-bg);
-                backdrop-filter: blur(20px);
-                border-bottom: 1px solid var(--border-color);
-                padding: 10px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            }
-
-            .nav-tabs-container.active .nav-tabs {
+                flex-grow: 1;
                 display: flex;
+                overflow: hidden; /* Prevent body scrolling */
             }
 
-            .mobile-menu-btn {
-                display: block;
+            .page-content {
+                padding: 0;
+                gap: 0;
+                flex-grow: 1;
+                height: 100%; /* Take full height of main-container */
+                overflow: hidden; /* Page content itself handles scrolling */
             }
 
             .chat-section-container {
-                height: auto;
-                min-height: auto;
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+                padding: 1rem;
+                max-height: none;
+                box-sizing: border-box; /* Ensure padding is included in height */
             }
 
-            .persona-display {
-                flex-direction: column;
-                align-items: center;
+            .persona-display, .summary-section {
+                display: none;
             }
 
-            .multi-agent-panel {
+            .chat-interaction-area {
+                height: 100%; /* Take full height of container */
+            }
+
+            .chat-input-area {
+                padding-bottom: env(safe-area-inset-bottom);
+                padding: 20px 15px;
+                margin: 0 -1rem -1rem -1rem;
+            }
+
+            #chatInput {
                 padding-top: 15px;
+                padding-bottom: 15px;
+            }
+
+            .chat-input-controls button {
+                width: 44px;
+                height: 44px;
+            }
+
+            .send-btn {
+                width: 48px !important;
+                height: 48px !important;
+            }
+
+            #topics-page, #agenda-page, .placeholder-page, #tools-page {
+                padding: 0;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: 100%;
+            }
+
+            .topics-container, .tools-container {
+                padding: 15px;
+                grid-template-columns: 1fr;
+                height: auto;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .tool-card { padding: 20px; }
+            .tool-icon { font-size: 2rem; }
+            .tool-title { font-size: 1rem; }
+            .tool-description { font-size: 0.8rem; }
+
+
+            .topic-card {
+                margin-bottom: 15px;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 15px;
+            }
+
+            .topic-icon {
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+
+            .topic-title {
+                font-size: 1.1rem;
+            }
+
+            .topic-description {
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+
+            .topic-kpis {
+                gap: 15px;
+                margin-bottom: 15px;
+                padding: 15px 0;
+            }
+
+            .kpi-value {
+                font-size: 1.5rem;
+            }
+
+            .kpi-label {
+                font-size: 0.7rem;
+            }
+
+            .topic-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .topic-actions button {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .agenda-container {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+                max-height: none;
+                border-radius: 0;
+                overflow: hidden;
+                height: 100%; /* Full page height */
+                display: flex; /* Allow mobile calendar to grow */
+                flex-direction: column;
+            }
+
+            .modal-content {
+                padding: 25px 20px;
+                max-height: 80vh;
+            }
+
+            .modal-content h2 {
+                font-size: 1.3rem;
+            }
+
+            #event-modal-title {
+                font-size: 1.2rem;
+            }
+
+            .modal-topic-pill {
+                font-size: 0.85rem;
+                padding: 7px 13px;
+            }
+            .placeholder-page {
+                padding: 30px 20px;
+            }
+
+            .placeholder-page h2 {
+                font-size: 1.5rem;
+            }
+
+            .placeholder-page p {
+                font-size: 1rem;
+            }
+
+            #meetings-modal-list .meeting-title {
+                font-size: 0.95rem;
+            }
+
+            #meetings-modal-list .meeting-time {
+                font-size: 0.85rem;
+            }
+
+            #mobile-agenda-events .event {
+                margin-bottom: 12px;
+            }
+
+            .desktop-calendar { display: none; }
+
+            .mobile-calendar {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                width: 100%;
+                overflow-x: hidden;
+                box-sizing: border-box;
+                height: 100%; /* Take remaining height */
+                min-height: 0; /* Allow flex shrinking */
+            }
+
+            .agenda-header {
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+                flex-shrink: 0; /* Prevent header from shrinking */
+            }
+
+            .agenda-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .view-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .view-toggle button,
+            .mobile-view-btn {
+                font-size: 0.85rem;
+                padding: 8px 14px;
+            }
+
+            #mobile-month-grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 3px;
+                width: 100%;
+                box-sizing: border-box;
+                flex-shrink: 0; /* Prevent grid from shrinking */
+            }
+
+            #mobile-month-grid .day-name {
+                text-align: center;
+                font-size: 0.7em;
+                opacity: 0.7;
+                padding-bottom: 3px;
+            }
+
+            #mobile-month-grid .day-cell {
+                position: relative;
+                text-align: center;
+                cursor: pointer;
+                border-radius: 50%;
+                font-size: 0.9rem;
+                box-sizing: border-box;
+                aspect-ratio: 1 / 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 2px auto;
+                width: 40px;
+                height: 40px;
+                transition: all 0.3s;
+                font-weight: 500;
+            }
+
+            #mobile-month-grid .day-cell:hover {
+                background-color: rgba(0, 169, 157, 0.2);
+                transform: scale(1.1);
+            }
+
+            #mobile-month-grid .day-cell.selected {
+                background: linear-gradient(135deg, var(--primary-blue), #008a7e);
+                color: var(--text-dark);
+                box-shadow: 0 4px 15px rgba(0, 169, 157, 0.5);
+                font-weight: 700;
+            }
+
+            #mobile-month-grid .day-cell.today {
+                font-weight: bold;
+                border: 2px solid var(--primary-blue);
+                box-shadow: 0 0 15px rgba(0, 169, 157, 0.3);
+                background: rgba(0, 169, 157, 0.15);
+            }
+
+            #mobile-month-grid .day-cell.has-event::after {
+                content: '';
+                position: absolute;
+                bottom: 2px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 5px;
+                height: 5px;
+                background-color: var(--primary-blue);
+                border-radius: 50%;
+                box-shadow: 0 0 8px rgba(0, 169, 157, 0.8);
+            }
+
+            #mobile-month-grid .day-cell.selected.has-event::after {
+                background-color: white;
+            }
+
+            #mobile-month-grid .day-cell.today.has-event::after {
+                background-color: var(--primary-blue);
+            }
+
+            .month-calendar-grid {
+                gap: 5px;
+            }
+
+            .month-day-cell {
+                min-height: 60px;
+                font-size: 0.85rem;
+                padding: 5px;
+            }
+
+            .month-day-number {
+                font-size: 0.85rem;
+            }
+
+            .month-event-dot {
+                height: 3px;
+            }
+
+            #mobile-agenda-events {
                 margin-top: 15px;
-            }
-
-            .agent-chips-container {
-                gap: 6px;
-            }
-
-            .agent-chip {
-                font-size: 0.8rem;
-                padding: 5px 10px;
-            }
-
-            .agent-chip img {
-                width: 20px;
-                height: 20px;
+                padding-top: 15px;
+                border-top: 1px solid var(--border-color);
+                flex-grow: 1;
+                overflow-y: auto;
+                min-height: 0; /* Allow this to shrink and grow */
             }
         }
     </style>
@@ -821,13 +1580,13 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <img src="./HRSD AI Executive Office_files/logo.svg" alt="HRSD Logo" class="hrsd-logo">
+            <img src="https://www.hrsd.gov.sa/assets/logo.svg" alt="HRSD Logo" class="hrsd-logo">
             <span>| AI Executive Office</span>
         </div>
         <div class="header-right">
             <div class="user-profile">
                 <span class="welcome-text">Welcome Ahmad</span>
-                <img src="./HRSD AI Executive Office_files/ffffff" alt="User Avatar">
+                <img src="https://placehold.co/40x40/28a745/ffffff?text=A" alt="User Avatar">
             </div>
             <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
         </div>
@@ -847,12 +1606,12 @@
 
     <!-- Main Content Container -->
     <div class="main-container">
-        <!-- Agent Chat Page with Multi-Agent Support -->
+        <!-- Agent Chat Page -->
         <main id="agent-page" class="page-content active">
             <section class="chat-section-container">
                 <!-- Persona Display (Desktop) -->
                 <div class="persona-display">
-                    <img id="mainPersonaImage" src="./HRSD AI Executive Office_files/ai-voice-agent.png" alt="AI Persona">
+                    <img id="mainPersonaImage" src="https://hams.ai/images/ai-voice-agent.png" alt="AI Persona">
                     <div class="persona-info">
                         <h3 id="mainPersonaName">Hakim Nüruddin</h3>
                         <p id="mainPersonaTitle">AI Executive Office Agent</p>
@@ -868,295 +1627,391 @@
                             <span>Today's Agenda</span>
                         </button>
                     </div>
-                    
-                    <!-- Multi-Agent Panel -->
-                    <div class="multi-agent-panel">
-                        <h4>Active Agents</h4>
-                        <div class="agent-chips-container" id="agentChips">
-                            <!-- Agent chips will be dynamically added here -->
-                        </div>
-                    </div>
                 </div>
-
                 <!-- Chat Interaction Area -->
                 <div class="chat-interaction-area">
                     <div class="chat-messages" id="chatMessages">
                         <div class="message-bubble agent">
-                            <img src="./HRSD AI Executive Office_files/ai-voice-agent.png" alt="Agent Avatar" class="avatar">
-                            <div class="content">
-                                <span class="agent-name">Hakim Nüruddin</span>
-                                Welcome your Highness. As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. I can work with my colleagues Layla (Data Analytics) and Omar (Coordination) to provide you comprehensive support. How may I assist you today?
-                            </div>
+                            <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar>
+                            <div class="content">Welcome your Highness. As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
                         </div>
                     </div>
                     <div class="chat-input-area">
-                        <input id="chatInput" type="text" placeholder="Ask me anything... (Multi-agent mode enabled)">
+                        <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
                         <div class="chat-input-controls">
                             <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
-                            <button id="changePersonaBtn" title="Manage AI Agents"><i class="fa-solid fa-users"></i></button>
+                            <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
                             <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Summary Section (Desktop) -->
-                <section class="summary-section">
-                    <div class="summary-header">
-                        <h3>Today's Agenda</h3>
-                        <button id="copy-summary-btn" title="Copy Agenda"><i class="fas fa-copy"></i></button>
-                    </div>
-                    <div id="summary-content">
-                        <p style="opacity: 0.7; text-align: center; padding: 20px;">No events scheduled for today.</p>
-                    </div>
-                </section>
+            <!-- Summary Section (Desktop) -->
+            <section class="summary-section">
+                <div class="summary-header">
+                    <h3>Today's Agenda</h3>
+                    <button id="copy-summary-btn"><i class="fas fa-copy" style="margin-right: 5px;"></i>Copy</button>
+                </div>
+                <div class="summary-content" id="summary-content">
+                    <!-- Content populated by JS -->
+                </div>
             </section>
         </main>
 
-        <!-- Topics Page (Placeholder) -->
+        <!-- Focus Areas Page -->
         <div id="topics-page" class="page-content">
-            <div class="placeholder-page">
-                <i class="fas fa-th-large"></i>
-                <h2>Focus Areas</h2>
-                <p>Strategic focus areas and key performance indicators will be displayed here.</p>
+            <div class="topics-container" style="width: 100%;">
+                <!-- Topic Card 1 -->
+                <div class="topic-card" data-topic-id="labor-market">
+                    <div class="topic-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Strengthening Labor Market</h3>
+                        <p class="topic-description">Developing policies to create an attractive, inclusive, and safe labor market that empowers Saudi nationals and aligns with global standards.</p>
+                    </div>
+                    <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">4</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">7</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
+                </div>
+                <!-- Topic Card 2 -->
+                <div class="topic-card" data-topic-id="empowerment">
+                     <div class="topic-icon"><i class="fas fa-users"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Empowering Society & Individuals</h3>
+                        <p class="topic-description">Enhancing social development, empowering individuals and communities, and promoting self-reliance through targeted programs and support.</p>
+                    </div>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">5</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">9</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
+                </div>
+                <!-- Topic Card 3 -->
+                <div class="topic-card" data-topic-id="non-profit">
+                     <div class="topic-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Enabling the Non-Profit Sector</h3>
+                        <p class="topic-description">Fostering the growth and impact of the non-profit sector to expand its contribution to the economy and social development.</p>
+                    </div>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">3</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">4</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
+                </div>
+                <!-- Topic Card 4 -->
+                <div class="topic-card" data-topic-id="strategic-partnerships">
+                     <div class="topic-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Strategic Partnerships</h3>
+                        <p class="topic-description">Building effective and sustainable partnerships with public, private, and non-profit entities to achieve shared national goals.</p>
+                    </div>
+                     <div class="topic-kpis">
+                        <div class="kpi-item">
+                            <span class="kpi-value">2</span>
+                            <span class="kpi-label">Strategic KPIs</span>
+                        </div>
+                        <div class="kpi-item">
+                            <span class="kpi-value">6</span>
+                            <span class="kpi-label">Related Initiatives</span>
+                        </div>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-action-btn" data-action="meetings"><i class="fas fa-calendar-days"></i> Related Meetings</button>
+                        <button class="topic-action-btn" data-action="deeper"><i class="fas fa-magnifying-glass"></i> Dig Deeper</button>
+                        <button class="topic-action-btn" data-action="references"><i class="fas fa-file-alt"></i> View References</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Agenda Page (Placeholder) -->
+        <!-- Agenda Page -->
         <div id="agenda-page" class="page-content">
-            <div class="placeholder-page">
-                <i class="fas fa-calendar-alt"></i>
-                <h2>Agenda</h2>
-                <p>Your calendar and scheduled meetings will appear here.</p>
+            <div class="agenda-container" style="width: 100%;">
+                <!-- Desktop Calendar View -->
+                <div class="desktop-calendar">
+                    <div class="agenda-header">
+                        <h2>October 2025</h2>
+                        <div class="view-toggle">
+                            <button class="view-btn" data-view="today">Today</button>
+                            <button class="view-btn active" data-view="week">Week</button>
+                            <button class="view-btn" data-view="month">Month</button>
+                        </div>
+                    </div>
+
+                    <!-- Today View (Desktop) -->
+                    <div id="today-view" class="agenda-view">
+                        <div class="today-header">
+                            <div class="today-date">Monday, October 20, 2025</div>
+                        </div>
+                        <div class="today-events-list" id="today-events-list">
+                            <!-- Events will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Week View (Desktop) -->
+                    <div id="week-view" class="agenda-view active">
+                        <div class="calendar-grid">
+                            <div class="day-column"><div class="day-header"><div class="day-name">Sun</div><div class="day-number">19</div></div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Mon</div><div class="day-number">20</div></div> <div class="event" data-event-title="Labor Market Policy Review" data-event-time="09:00 AM" data-event-details="Strategic sync on new labor market policies to enhance Saudization." data-topic="labor-market" data-date="2025-10-20"> <div class="event-time">09:00 AM</div> <div class="event-title">Labor Market Policy Review</div> </div> <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"> <div class="event-time">EOD</div> <div class="event-title">Milestone: Non-Profit Portal Launch</div> </div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Tue</div><div class="day-number">21</div></div> <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"> <div class="event-time">10:00 AM</div> <div class="event-title">Partnership MoU Signing</div> </div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Wed</div><div class="day-number">22</div></div></div>
+                            <div class="day-column"><div class="day-header"><div class="day-name">Thu</div><div class="day-number">23</div></div> <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"> <div class="event-time">02:00 PM</div> <div class="event-title">Community Empowerment Briefing</div> </div></div>
+                            <div class="day-column weekend"><div class="day-header"><div class="day-name">Fri</div><div class="day-number">24</div></div></div>
+                            <div class="day-column weekend"><div class="day-header"><div class="day-name">Sat</div><div class="day-number">25</div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Month View (Desktop) -->
+                    <div id="month-view" class="agenda-view">
+                        <div class="month-calendar-grid" id="month-calendar-grid">
+                            <!-- Month calendar will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Calendar View -->
+                <div class="mobile-calendar">
+                     <div class="agenda-header">
+                        <h2 id="mobile-calendar-title">October 2025</h2>
+                        <div class="view-toggle">
+                            <button class="mobile-view-btn" data-view="today">Today</button>
+                            <button class="mobile-view-btn active" data-view="week">Week</button>
+                            <button class="mobile-view-btn" data-view="month">Month</button>
+                        </div>
+                    </div>
+                    <div id="mobile-month-grid"></div>
+                    <div id="mobile-agenda-events"></div>
+                </div>
             </div>
         </div>
 
-        <!-- Tools Page (Placeholder) -->
+
+        <!-- Tools Page -->
         <div id="tools-page" class="page-content">
-            <div class="placeholder-page">
-                <i class="fas fa-cogs"></i>
-                <h2>AI Tools</h2>
-                <p>AI-powered tools for data visualization, predictive analytics, and more.</p>
+            <div class="tools-container">
+                <!-- Tool Card 1: Data Visualization -->
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-chart-bar"></i></div>
+                    <h3 class="tool-title">AI-Powered Data Visualization</h3>
+                    <p class="tool-description">Automatically generates insightful charts and dashboards from ministry data, highlighting key trends, anomalies, and performance metrics without manual setup.</p>
+                    <button class="tool-action-btn" data-tool-action="visualize"><i class="fas fa-eye"></i> Explore Tool</button>
+                </div>
+                <!-- Tool Card 2: Predictive Analytics -->
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-brain"></i></div>
+                    <h3 class="tool-title">Predictive Policy Modeling</h3>
+                    <p class="tool-description">Simulates the potential impact of proposed policies on key indicators (e.g., employment, social welfare) using AI to forecast outcomes and risks.</p>
+                    <button class="tool-action-btn" data-tool-action="predict"><i class="fas fa-cogs"></i> Run Simulation</button>
+                </div>
+                <!-- Tool Card 3: Report Generation -->
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-file-invoice"></i></div>
+                    <h3 class="tool-title">Automated Report Synthesis</h3>
+                    <p class="tool-description">Condenses lengthy reports, research papers, and meeting transcripts into concise executive summaries, extracting key findings and action items.</p>
+                    <button class="tool-action-btn" data-tool-action="summarize"><i class="fas fa-align-left"></i> Generate Summary</button>
+                </div>
+                 <!-- Tool Card 4: Sentiment Analysis -->
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-comments"></i></div>
+                    <h3 class="tool-title">Public Sentiment Analysis</h3>
+                    <p class="tool-description">Analyzes social media, news, and public feedback channels to gauge sentiment towards HRSD initiatives and identify emerging public concerns.</p>
+                    <button class="tool-action-btn" data-tool-action="sentiment"><i class="fas fa-search"></i> View Sentiment</button>
+                </div>
+                 <!-- Tool Card 5: Smart Scheduling -->
+                 <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h3 class="tool-title">Intelligent Meeting Scheduler</h3>
+                    <p class="tool-description">Optimizes scheduling for complex, multi-attendee high-level meetings by considering priorities, availability, and optimal time slots using AI.</p>
+                    <button class="tool-action-btn" data-tool-action="schedule"><i class="fas fa-calendar-plus"></i> Schedule Meeting</button>
+                </div>
+                 <!-- Tool Card 6: Risk Assessment -->
+                 <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="tool-title">AI Risk Assessment</h3>
+                    <p class="tool-description">Identifies potential risks in projects, policies, or operational areas by analyzing historical data and external factors, providing early warnings.</p>
+                    <button class="tool-action-btn" data-tool-action="risk"><i class="fas fa-exclamation-triangle"></i> Assess Risk</button>
+                </div>
             </div>
         </div>
-
-        <!-- Compose Page (Placeholder) -->
-        <div id="compose-page" class="page-content">
-            <div class="placeholder-page">
-                <i class="fas fa-pen-alt"></i>
-                <h2>Compose</h2>
-                <p>Create and compose documents with AI assistance.</p>
-            </div>
-        </div>
-
-        <!-- Templates Page (Placeholder) -->
-        <div id="templates-page" class="page-content">
-            <div class="placeholder-page">
-                <i class="fas fa-file-alt"></i>
-                <h2>Templates</h2>
-                <p>Access document templates and pre-formatted materials.</p>
-            </div>
-        </div>
+        <!-- Placeholder Pages -->
+        <div id="compose-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-pen-alt"></i> Compose</h2> <p>Use this section to draft emails, reports, and other documents with AI assistance. The agent can help with tone, clarity, and content generation.</p> </div> </div>
+        <div id="templates-page" class="page-content"> <div class="placeholder-page" style="width: 100%;"> <h2><i class="fas fa-file-alt"></i> Templates</h2> <p>Access a library of pre-built templates for various documents, including meeting minutes, project proposals, and executive summaries, to streamline your workflow.</p> </div> </div>
     </div>
 
-    <!-- Persona Modal -->
+    <!-- Modals -->
     <div id="personaModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">×</span>
-            <h2>Select Active Agents</h2>
-            <p style="text-align: center; opacity: 0.8; margin-bottom: 20px;">Choose which agents should collaborate on your queries</p>
-            <div id="personaOptions" class="persona-options">
-                <!-- Persona options will be populated by JavaScript -->
+            <span class="close-button">&times;</span>
+            <h2>Choose Your AI Agent</h2>
+            <div class="persona-options" id="personaOptions"></div>
+        </div>
+    </div>
+
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="event-modal-title">Event Title</h3>
+            <p id="event-modal-time">Event Time</p>
+            <p id="event-modal-details">Event Details</p>
+            <div class="event-actions">
+                <button id="summarize-event-btn"><i class="fas fa-align-left"></i> Summarize</button>
+                <button id="prepare-event-btn"><i class="fas fa-clipboard-check"></i> Consult for Preparation</button>
             </div>
         </div>
     </div>
 
-    <!-- Message Modal -->
+    <div id="meetingsModal" class="modal">
+        <div class="modal-content" id="focus-modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="meetings-modal-title">Discuss a Topic</h2>
+            <div id="meetings-modal-list"></div>
+        </div>
+    </div>
+
+    <div id="dayActionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="day-action-title">Actions for Date</h2>
+            <div id="day-action-focus-areas">
+                 <div class="dropdown-header">Select a Focus Area</div>
+                 <div class="modal-pills-container" id="day-action-pills">
+                     <!-- Pills will be populated by JS -->
+                 </div>
+            </div>
+            <div class="day-actions">
+                <button data-action="check"><i class="fas fa-calendar-check"></i> Check Availability</button>
+                <button data-action="media"><i class="fas fa-bullhorn"></i> Coordinate with Media Team</button>
+                <button data-action="consulting"><i class="fas fa-users-cog"></i> Summon Consulting Team</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple Message Modal (replaces alert) -->
     <div id="messageModal" class="modal">
         <div class="modal-content" style="width: 400px; max-width: 90%;">
-            <span class="close-button">×</span>
+            <span class="close-button">&times;</span>
             <h2 id="message-modal-title" style="color: var(--primary-blue); margin-bottom: 15px;">Notice</h2>
             <p id="message-modal-text" style="text-align: center; font-size: 1.1rem; line-height: 1.6;"></p>
         </div>
     </div>
 
+    <!-- Floating "Ask Agent" Button -->
+    <div id="ask-agent-btn"><i class="fas fa-comment-dots"></i> Ask Agent</div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- DATA ---
             const personaData = [
-                { 
-                    id: 'hakim', 
-                    name: 'Hakim Nüruddin', 
-                    title: 'AI Executive Office Agent', 
-                    largeImg: 'https://hams.ai/images/ai-voice-agent.png', 
-                    smallImg: 'https://hams.ai/images/ai-voice-agent.png', 
-                    description: 'Strategic partner providing high-level summaries, executive advice, and strategic alignment for key decisions.',
-                    systemPrompt: 'You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia. Be concise, professional, and insightful. Provide strategic advice and summaries.',
-                    active: true
-                },
-                { 
-                    id: 'layla', 
-                    name: 'Layla Al-Farsi', 
-                    title: 'Data Analytics Agent', 
-                    largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', 
-                    smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', 
-                    description: 'Data expert providing key insights from HRSD, identifying trends, and offering detailed analytical support.',
-                    systemPrompt: 'You are Layla Al-Farsi, a Data Analytics Agent for HRSD. Provide data-driven insights, key findings, and analytical support. Focus on metrics and trends.',
-                    active: false
-                },
-                { 
-                    id: 'omar', 
-                    name: 'Omar Mansour', 
-                    title: 'AI Coordinator', 
-                    largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', 
-                    smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', 
-                    description: 'Operational specialist managing schedules, coordinating between departments, and providing logistical support.',
-                    systemPrompt: 'You are Omar Mansour, an AI Coordinator for HRSD. Focus on logistics, scheduling, action items, and operational smoothness.',
-                    active: false
-                }
+                { id: 'hakim', name: 'Hakim Nüruddin', title: 'AI Executive Office Agent', largeImg: 'https://hams.ai/images/ai-voice-agent.png', smallImg: 'https://hams.ai/images/ai-voice-agent.png', description: 'As your strategic partner, I provide high-level summaries, executive advice, and focus on strategic alignment for your key decisions.', systemPrompt: 'You are Hakim Nüruddin, an AI Executive Office Agent for HRSD in Saudi Arabia... Be concise, professional, and insightful. Provide strategic advice and summaries.' },
+                // Update Layla's systemPrompt for insights/charts
+                { id: 'layla', name: 'Layla Al-Farsi', title: 'Data Analytics Agent', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/27feb2bb-aeb4-4a83-9fb6-8f3f2a15885e/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png', description: 'As your data expert, I provide your Highness with key insights from around HRSD, identify trends, and offer detailed analytical support for your objectives.', systemPrompt: 'You are Layla Al-Farsi, a Data Analytics Agent for HRSD in Saudi Arabia. Your Highness requires data-driven insights. ALWAYS respond with concise analysis, key findings, and data points. When a visualization is appropriate (e.g., trends, comparisons), provide the necessary data in a Chart.js-compatible JSON format strictly enclosed within `[CHART_DATA:{...}]`. The JSON MUST be complete and valid. It MUST contain "type" (e.g., "bar", "line", "pie"), "labels" (array of strings), and "datasets" (array of objects, each with "label" and "data" properties). Example: `[CHART_DATA:{"type": "bar", "labels": ["Q1", "Q2"], "datasets": [{"label": "Metric A", "data": [10, 15]}]}]` Always include a brief textual explanation of the chart\'s insights immediately following the chart data marker. Focus strictly on providing analytical insights derived from data. Avoid conversational filler unless specifically asked.' }, // Added "MUST be complete and valid"
+                { id: 'omar', name: 'Omar Mansour', title: 'AI Coordinator', largeImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', smallImg: 'https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://media.easy-peasy.ai/2f8cd8b2-88d5-4865-b07e-cafd6403b72b/bd99faca-67c4-4cc3-895e-06bed59a08d2.png', description: 'As your operational specialist, I manage schedules, coordinate between departments, and provide logistical support to ensure operational smoothness.', systemPrompt: 'You are Omar Mansour, an AI Coordinator for HRSD... Focus on logistics, scheduling, action items, and ensuring operational smoothness.' }
             ];
-
             let currentPersonaId = 'hakim';
             let chatHistory = [];
+            let selectedText = '';
+            // Set "today" to the specified context date: Wednesday, Oct 22, 2025
+            const today = new Date('2025-10-22T09:23:00+03:00');
 
             // --- DOM Elements ---
             const mainPersonaImage = document.getElementById('mainPersonaImage');
             const mainPersonaName = document.getElementById('mainPersonaName');
             const mainPersonaTitle = document.getElementById('mainPersonaTitle');
             const personaModal = document.getElementById("personaModal");
-            const messageModal = document.getElementById("messageModal");
+            const eventModal = document.getElementById("eventModal");
+            const meetingsModal = document.getElementById("meetingsModal");
+            const dayActionModal = document.getElementById("dayActionModal");
+            const messageModal = document.getElementById("messageModal"); // New modal
             const changePersonaBtn = document.getElementById('changePersonaBtn');
             const closeModalBtns = document.querySelectorAll('.close-button');
             const personaOptionsContainer = document.getElementById('personaOptions');
-            const navButtons = document.querySelectorAll('.nav-tabs .nav-button');
+            const navButtons = document.querySelectorAll('.nav-tabs .nav-button'); // More specific selector
             const pages = document.querySelectorAll('.page-content');
             const chatInput = document.getElementById('chatInput');
             const sendBtn = document.getElementById('send-btn');
             const chatMessages = document.getElementById('chatMessages');
+            const askAgentBtn = document.getElementById('ask-agent-btn');
+            const summaryContent = document.getElementById('summary-content');
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
             const navTabsContainer = document.querySelector('.nav-tabs-container');
-            const messageModalTitle = document.getElementById("message-modal-title");
-            const messageModalText = document.getElementById("message-modal-text");
-            const agentChipsContainer = document.getElementById('agentChips');
+            const chatActionBtn = document.getElementById('chat-action-btn');
+            const messageModalTitle = document.getElementById("message-modal-title"); // New
+            const messageModalText = document.getElementById("message-modal-text"); // New
+            const copySummaryBtn = document.getElementById("copy-summary-btn"); // Copy button
 
             // --- Function Definitions ---
 
-            // Update agent chips display
-            function updateAgentChips() {
-                if (!agentChipsContainer) return;
-                agentChipsContainer.innerHTML = '';
-                
-                personaData.forEach(persona => {
-                    const chip = document.createElement('div');
-                    chip.className = `agent-chip ${persona.active ? 'active' : ''}`;
-                    chip.innerHTML = `
-                        <img src="${persona.smallImg}" alt="${persona.name}">
-                        <span>${persona.name.split(' ')[0]}</span>
-                    `;
-                    chip.addEventListener('click', () => {
-                        persona.active = !persona.active;
-                        updateAgentChips();
-                        if (persona.active && persona.id !== currentPersonaId) {
-                            displayMessage('agent', `${persona.name} has joined the conversation and is ready to assist.`, persona);
-                        } else if (!persona.active) {
-                            displayMessage('agent', `${persona.name} has left the conversation.`, persona);
-                        }
-                    });
-                    agentChipsContainer.appendChild(chip);
-                });
-            }
-
-            // Display message with agent identification
-            function displayMessage(sender, text, persona = null) {
-                if (!chatMessages) return;
-                
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message-bubble ${sender}`;
-                
-                if (sender === 'agent') {
-                    const agentPersona = persona || personaData.find(p => p.id === currentPersonaId);
-                    messageDiv.innerHTML = `
-                        <img src="${agentPersona.smallImg}" alt="${agentPersona.name}" class="avatar">
-                        <div class="content">
-                            <span class="agent-name">${agentPersona.name}</span>
-                            ${text}
-                        </div>
-                    `;
-                } else {
-                    messageDiv.innerHTML = `
-                        <img src="./HRSD AI Executive Office_files/ffffff" alt="User" class="avatar">
-                        <div class="content">${text}</div>
-                    `;
-                }
-                
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-
-            // Handle sending message with multi-agent support
-            async function handleSendMessage() {
-                const message = chatInput.value.trim();
-                if (!message) return;
-
-                // Display user message
-                displayMessage('user', message);
-                chatInput.value = '';
-
-                // Get active agents
-                const activeAgents = personaData.filter(p => p.active);
-                
-                if (activeAgents.length === 0) {
-                    showMessageModal('No active agents. Please activate at least one agent.', 'No Agents Active');
-                    return;
-                }
-
-                // Simulate responses from each active agent
-                for (const agent of activeAgents) {
-                    await simulateAgentResponse(agent, message);
-                }
-            }
-
-            // Simulate agent response (in production, this would call actual AI API)
-            async function simulateAgentResponse(agent, userMessage) {
-                // Simulate thinking delay
-                await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-
-                let response = '';
-                
-                // Generate contextual responses based on agent type
-                if (agent.id === 'hakim') {
-                    response = `From a strategic perspective, ${userMessage.toLowerCase().includes('meeting') ? 'I recommend preparing key talking points and reviewing relevant KPIs before the meeting.' : 'this requires careful consideration of our organizational goals and alignment with Vision 2030 initiatives.'}`;
-                } else if (agent.id === 'layla') {
-                    response = `Based on data analysis, ${userMessage.toLowerCase().includes('data') || userMessage.toLowerCase().includes('report') ? 'I can prepare a comprehensive dashboard showing trends and key metrics.' : 'I see patterns indicating strong performance in our recent initiatives. Would you like me to generate detailed visualizations?'}`;
-                } else if (agent.id === 'omar') {
-                    response = `From a coordination standpoint, ${userMessage.toLowerCase().includes('schedule') || userMessage.toLowerCase().includes('meeting') ? 'I can arrange the necessary logistics and ensure all stakeholders are properly notified.' : 'I will coordinate with the relevant departments to ensure smooth execution.'}`;
-                }
-
-                displayMessage('agent', response, agent);
-            }
-
-            // Persona Management
-            function updatePersonaUI(personaId) {
-                const persona = personaData.find(p => p.id === personaId);
+            // --- Persona Management ---
+            function updatePersonaUI(personaId, isInitialLoad = false) {
+                 const persona = personaData.find(p => p.id === personaId);
                 if (!persona) return;
 
-                if (mainPersonaImage) mainPersonaImage.src = persona.largeImg;
-                if (mainPersonaName) mainPersonaName.textContent = persona.name;
-                if (mainPersonaTitle) mainPersonaTitle.textContent = persona.title;
+                if(mainPersonaImage) mainPersonaImage.src = persona.largeImg;
+                if(mainPersonaName) mainPersonaName.textContent = persona.name;
+                if(mainPersonaTitle) mainPersonaTitle.textContent = persona.title;
 
+                document.querySelectorAll('[data-persona-avatar]').forEach(img => {
+                    img.src = persona.smallImg;
+                });
+
+                const oldPersonaId = currentPersonaId;
                 currentPersonaId = personaId;
-                
-                // Ensure the selected persona is active
-                persona.active = true;
-                updateAgentChips();
+
+                if (!isInitialLoad && oldPersonaId !== currentPersonaId) {
+                    chatHistory = []; // Reset history when changing persona
+                   if (chatMessages) chatMessages.innerHTML = ''; // Add null check
+                    displayNewPersonaGreeting(persona);
+                }
+            }
+
+            function displayNewPersonaGreeting(persona) {
+                 let greeting = `Welcome your Highness. As-salāmu 'alaykum. I am ${persona.name}. ${persona.description} How may I be of service to your Highness today?`;
+                 displayMessage('agent', greeting);
+                 // Add greeting to history for context
+                 // Check if history is empty or last message wasn't this greeting to avoid duplicates on quick switches
+                 if(chatHistory.length === 0 || chatHistory[chatHistory.length-1]?.parts?.[0]?.text !== greeting) {
+                    chatHistory.push({ role: 'model', parts: [{ text: greeting }] });
+                 }
             }
 
             function renderPersonaOptions() {
-                if (!personaOptionsContainer) return;
+                 if (!personaOptionsContainer) return;
                 personaOptionsContainer.innerHTML = '';
-                
                 personaData.forEach(persona => {
                     const div = document.createElement('div');
-                    div.className = `persona-option ${persona.active ? 'selected' : ''}`;
+                    div.className = `persona-option ${persona.id === currentPersonaId ? 'selected' : ''}`;
                     div.innerHTML = `
                         <img src="${persona.smallImg}" alt="${persona.name}">
                         <div class="persona-details">
@@ -1166,125 +2021,685 @@
                     `;
 
                     div.addEventListener('click', () => {
-                        persona.active = !persona.active;
-                        renderPersonaOptions();
-                        updateAgentChips();
+                        updatePersonaUI(persona.id);
+                        closeModal(personaModal);
                     });
                     personaOptionsContainer.appendChild(div);
                 });
             }
 
-            // Modal Management
+            // --- Modal Management ---
             function openModal(modal) {
-                if (!modal) return;
-                if (modal === personaModal) renderPersonaOptions();
-                modal.style.display = "flex";
+                 if (!modal) return;
+                 if (modal === personaModal) renderPersonaOptions();
+                 modal.style.display = "flex";
             }
-
             function closeModal(modal) {
-                if (!modal) return;
+                 if (!modal) return;
                 modal.style.display = "none";
             }
 
+            // Simple message modal
             function showMessageModal(text, title = 'Notice') {
-                if (messageModalTitle) messageModalTitle.textContent = title;
-                if (messageModalText) messageModalText.textContent = text;
-                if (messageModal) openModal(messageModal);
+                if(messageModalTitle) messageModalTitle.textContent = title;
+                if(messageModalText) messageModalText.textContent = text;
+                if(messageModal) openModal(messageModal);
             }
 
-            // --- Event Listeners ---
+            // --- Agenda & Calendar ---
+             function setupAgendaInteractions() {
+                 document.querySelectorAll('.event').forEach(eventEl => {
+                     eventEl.addEventListener('click', () => {
+                         const title = eventEl.dataset.eventTitle;
+                         const time = eventEl.dataset.eventTime;
+                         const details = eventEl.dataset.eventDetails;
+                         openEventModal(title, time, details);
+                     });
+                 });
+             }
 
-            // Modal close buttons
-            closeModalBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const modal = btn.closest('.modal');
-                    if (modal) closeModal(modal);
+            function openEventModal(title, time, details) {
+                 const titleEl = document.getElementById('event-modal-title');
+                const timeEl = document.getElementById('event-modal-time');
+                const detailsEl = document.getElementById('event-modal-details');
+
+                if (titleEl) titleEl.textContent = title;
+                if (timeEl) timeEl.textContent = time;
+                if (detailsEl) detailsEl.textContent = details;
+
+                const summarizeBtn = document.getElementById('summarize-event-btn');
+                const prepareBtn = document.getElementById('prepare-event-btn');
+
+                if (!summarizeBtn || !prepareBtn) return;
+
+                // Clone and replace buttons to remove old event listeners
+                const newSummarizeBtn = summarizeBtn.cloneNode(true);
+                summarizeBtn.parentNode.replaceChild(newSummarizeBtn, summarizeBtn);
+                const newPrepareBtn = prepareBtn.cloneNode(true);
+                prepareBtn.parentNode.replaceChild(newPrepareBtn, prepareBtn);
+
+                newSummarizeBtn.addEventListener('click', () => {
+                    const prompt = `Please provide a brief summary for my upcoming event: "${title}".`;
+                    switchToAgentAndSendPrompt(prompt);
                 });
-            });
+                newPrepareBtn.addEventListener('click', () => {
+                    const prompt = `What preparations do I need for my event: "${title}"? Please consult and advise.`;
+                    switchToAgentAndSendPrompt(prompt);
+                });
 
-            window.addEventListener('click', (event) => {
-                if (event.target.classList.contains('modal')) {
-                    closeModal(event.target);
+                openModal(eventModal);
+            }
+
+            function switchToAgentAndSendPrompt(prompt, targetPersonaId = null) {
+                closeModal(eventModal);
+                closeModal(dayActionModal);
+                closeModal(meetingsModal);
+
+                // Switch persona if specified
+                if (targetPersonaId && targetPersonaId !== currentPersonaId) {
+                    updatePersonaUI(targetPersonaId); // This will reset history and show greeting
                 }
-            });
 
-            // Change persona button
-            if (changePersonaBtn) {
-                changePersonaBtn.addEventListener('click', () => openModal(personaModal));
-            }
+                const agentButton = document.querySelector('.nav-button[data-target="agent-page"]');
+                if (agentButton && !agentButton.classList.contains('active')) { // Only click if not already active
+                    agentButton.click();
+                }
 
-            // Send button and Enter key
-            if (sendBtn) {
-                sendBtn.addEventListener('click', handleSendMessage);
-            }
-
-            if (chatInput) {
-                chatInput.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' && !event.shiftKey) {
-                        event.preventDefault();
+                if (chatInput) {
+                    chatInput.value = prompt;
+                    // Need a slight delay if persona just switched, otherwise greeting might overlap
+                    if (targetPersonaId) {
+                         setTimeout(handleSendMessage, 100); // Small delay
+                    } else {
                         handleSendMessage();
                     }
-                });
+                }
             }
 
-            // Mobile menu toggle
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', () => {
-                    if (navTabsContainer) navTabsContainer.classList.toggle('active');
-                });
+
+            function openMeetingsModal(topicId, topicTitle) {
+                const list = document.getElementById('meetings-modal-list');
+                const title = document.getElementById('meetings-modal-title');
+                if (!list || !title) return;
+
+                list.innerHTML = '';
+                title.textContent = `Meetings Related to "${topicTitle}"`;
+
+                const relatedEvents = document.querySelectorAll(`.event[data-topic="${topicId}"]`);
+
+                if (relatedEvents.length > 0) {
+                    relatedEvents.forEach(eventEl => {
+                        const item = document.createElement('div');
+                        item.className = 'meeting-item';
+                        item.innerHTML = `
+                            <div class="meeting-title">${eventEl.dataset.eventTitle}</div>
+                            <div class="meeting-time">${eventEl.dataset.eventTime}</div>
+                        `;
+                        // Add click handler to discuss this specific meeting
+                        item.addEventListener('click', () => {
+                             const prompt = `Let's discuss my meeting: "${eventEl.dataset.eventTitle}". Please provide a summary and key objectives.`;
+                             switchToAgentAndSendPrompt(prompt);
+                        });
+                        list.appendChild(item);
+                    });
+                } else {
+                    list.innerHTML = '<p>No scheduled meetings for this topic.</p>';
+                }
+
+                openModal(meetingsModal);
             }
 
-            // Quick Actions
-            document.querySelectorAll('.quick-action-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const action = btn.dataset.action;
-                    if (action === 'call') {
-                        showMessageModal("Voice call feature not implemented in this demo.");
-                    } else if (action === 'agenda') {
-                        if (chatInput) {
-                            chatInput.value = "Please provide a detailed overview of my agenda for today.";
-                            handleSendMessage();
+            function takeActionFromTopic(prompt) {
+                 closeModal(meetingsModal);
+                const agentButton = document.querySelector('.nav-button[data-target="agent-page"]');
+                if (agentButton) agentButton.click();
+
+                if (chatInput) {
+                    chatInput.value = prompt;
+                    handleSendMessage();
+                }
+            }
+
+            // --- Chat & Gemini API ---
+            function displayMessage(sender, text) {
+                if (!chatMessages) {
+                    console.error("chatMessages element not found.");
+                    return;
+                }
+                const persona = personaData.find(p => p.id === currentPersonaId);
+                const avatarSrc = sender === 'user'
+                    ? 'https://placehold.co/40x40/28a745/ffffff?text=A'
+                    : (persona ? persona.smallImg : 'https://placehold.co/40x40/00A99D/ffffff?text=AI');
+
+                const messageBubble = document.createElement('div');
+                messageBubble.className = `message-bubble ${sender}`;
+
+                // Create and append avatar image
+                const avatarImg = document.createElement('img');
+                avatarImg.src = avatarSrc;
+                avatarImg.alt = `${sender} Avatar`;
+                avatarImg.className = 'avatar';
+                if (sender === 'agent') {
+                    avatarImg.setAttribute('data-persona-avatar', '');
+                }
+                messageBubble.appendChild(avatarImg); // Append image first
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'content';
+
+                let chartData = null;
+                let textContent = text; // Keep original text by default
+                let canvasId = null;
+                const chartMarkerStart = '[CHART_DATA:';
+                const chartMarkerEnd = ']';
+
+                // Check for chart data marker if it's an agent message
+                if (sender === 'agent') {
+                    const startIndex = text.indexOf(chartMarkerStart);
+                    const endIndex = text.lastIndexOf(chartMarkerEnd); // Find the last closing bracket
+
+                    // Ensure both markers are found and the end is after the start
+                    if (startIndex !== -1 && endIndex > startIndex) {
+                        const jsonString = text.substring(startIndex + chartMarkerStart.length, endIndex).trim();
+                        if (jsonString.startsWith('{') && jsonString.endsWith('}')) {
+                            try {
+                                chartData = JSON.parse(jsonString);
+                                if (chartData.type && chartData.labels && chartData.datasets) {
+                                    textContent = text.substring(0, startIndex).trim() + text.substring(endIndex + chartMarkerEnd.length).trim();
+                                    canvasId = `chart-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                                    const chartContainer = document.createElement('div');
+                                    chartContainer.className = 'chart-container';
+                                    chartContainer.innerHTML = `<canvas id="${canvasId}"></canvas>`;
+                                    contentDiv.appendChild(chartContainer);
+                                } else {
+                                     console.error("Parsed chart JSON is missing required properties (type, labels, datasets).", chartData);
+                                     chartData = null;
+                                     textContent = text;
+                                }
+                            } catch (e) {
+                                console.error("Failed to parse chart JSON:", e, "JSON string:", jsonString);
+                                textContent = text;
+                                chartData = null;
+                            }
+                        } else {
+                             console.warn("Potential chart data found but doesn't appear to be valid JSON object:", jsonString);
+                             textContent = text;
+                             chartData = null;
                         }
                     }
-                });
-            });
 
-            // Navigation Logic
-            if (navButtons && pages) {
-                navButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const targetId = button.dataset.target;
-                        const targetPage = document.getElementById(targetId);
-
-                        // Hide all pages first
-                        pages.forEach(page => {
-                            if (page) page.classList.remove('active');
-                        });
-
-                        // Show the target page if found
-                        if (targetPage) {
-                            targetPage.classList.add('active');
+                    // Render textContent as Markdown
+                    if (textContent && typeof marked !== 'undefined' && marked.parse) {
+                        try {
+                             const textDiv = document.createElement('div');
+                             textDiv.innerHTML = marked.parse(textContent);
+                             contentDiv.insertBefore(textDiv, contentDiv.firstChild); // Insert text before chart if chart exists
+                        } catch (e) {
+                            console.error("Markdown parsing error:", e);
+                            const textDiv = document.createElement('div');
+                            textDiv.textContent = textContent;
+                             contentDiv.insertBefore(textDiv, contentDiv.firstChild);
                         }
+                    } else if (textContent) {
+                         const textDiv = document.createElement('div');
+                         textDiv.textContent = textContent;
+                         contentDiv.insertBefore(textDiv, contentDiv.firstChild);
+                    }
+                } else {
+                    // User message - simple text
+                    contentDiv.textContent = textContent;
+                }
 
-                        // Update button active state
-                        navButtons.forEach(btn => btn.classList.remove('active'));
+                 // Append contentDiv to messageBubble
+                 messageBubble.appendChild(contentDiv);
+
+                 // Append the complete bubble to chatMessages
+                if (chatMessages) { // Ensure chatMessages exists
+                    chatMessages.appendChild(messageBubble); // Error might have happened here if messageBubble was invalid
+
+                    // Scroll logic and chart rendering timeout remain the same
+                    if (chartData && canvasId && sender === 'agent') {
+                         setTimeout(() => {
+                            const canvasElement = document.getElementById(canvasId);
+                            if (canvasElement) { renderChart(canvasElement, chartData); }
+                            else { console.error(`Canvas element with ID ${canvasId} not found.`); }
+                            setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 100);
+                         }, 0);
+                    } else {
+                        setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 0);
+                    }
+                } else {
+                    console.error("chatMessages element not found when trying to append message.");
+                }
+            }
+
+
+            // Function to render chart using Chart.js
+             function renderChart(canvasElement, chartData) {
+                 if (!canvasElement || !chartData || !chartData.type || !chartData.labels || !chartData.datasets) {
+                     console.error("Invalid chart data or canvas element provided for rendering.");
+                     // Optionally display error in the chart container
+                     if (canvasElement && canvasElement.parentElement) {
+                        canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Could not render chart: Invalid data.</p>";
+                     }
+                     return;
+                 }
+                 const ctx = canvasElement.getContext('2d');
+                 if (!ctx) {
+                     console.error("Could not get canvas context.");
+                      if (canvasElement && canvasElement.parentElement) {
+                        canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Could not render chart: Canvas context error.</p>";
+                     }
+                     return;
+                 }
+
+                 // Basic Chart.js options (customize as needed)
+                 const options = {
+                     responsive: true,
+                     maintainAspectRatio: true, // Allow chart to resize within container
+                     plugins: {
+                         legend: {
+                             labels: {
+                                 color: 'rgba(255, 255, 255, 0.8)' // Legend text color
+                             }
+                         }
+                     },
+                     scales: {
+                         y: {
+                             beginAtZero: true,
+                             ticks: { color: 'rgba(255, 255, 255, 0.7)' }, // Y-axis labels
+                             grid: { color: 'rgba(255, 255, 255, 0.1)' }  // Y-axis grid lines
+                         },
+                         x: {
+                             ticks: { color: 'rgba(255, 255, 255, 0.7)' }, // X-axis labels
+                             grid: { color: 'rgba(255, 255, 255, 0.1)' }  // X-axis grid lines
+                         }
+                     }
+                 };
+
+                 // Default colors if not provided by AI (can customize)
+                 const defaultBackgroundColors = [
+                     'rgba(0, 169, 157, 0.6)', 'rgba(255, 193, 7, 0.6)', 'rgba(0, 123, 255, 0.6)',
+                     'rgba(220, 53, 69, 0.6)', 'rgba(40, 167, 69, 0.6)', 'rgba(23, 162, 184, 0.6)'
+                    ];
+                 const defaultBorderColors = [
+                      'rgba(0, 169, 157, 1)', 'rgba(255, 193, 7, 1)', 'rgba(0, 123, 255, 1)',
+                      'rgba(220, 53, 69, 1)', 'rgba(40, 167, 69, 1)', 'rgba(23, 162, 184, 1)'
+                    ];
+
+                 // Ensure datasets have colors
+                 chartData.datasets.forEach((dataset, index) => {
+                     // Check if data exists and is an array before mapping colors
+                    if (Array.isArray(dataset.data)) {
+                        if (!dataset.backgroundColor) {
+                            if (chartData.type === 'line' || chartData.type === 'radar') {
+                                dataset.backgroundColor = defaultBackgroundColors[index % defaultBackgroundColors.length].replace('0.6', '0.2');
+                                dataset.borderColor = defaultBorderColors[index % defaultBorderColors.length];
+                            } else {
+                                dataset.backgroundColor = dataset.data.map((_, i) => defaultBackgroundColors[i % defaultBackgroundColors.length]);
+                                dataset.borderColor = dataset.data.map((_, i) => defaultBorderColors[i % defaultBorderColors.length]);
+                                dataset.borderWidth = 1;
+                            }
+                        }
+                        if (!dataset.borderColor && chartData.type !== 'line' && chartData.type !== 'radar') {
+                            // Ensure borderColor is also an array if backgroundColor is
+                            if(Array.isArray(dataset.backgroundColor)) {
+                                dataset.borderColor = dataset.backgroundColor.map(color => color.replace('0.6', '1')); // Make border opaque
+                            } else {
+                                dataset.borderColor = defaultBorderColors[index % defaultBorderColors.length]; // Fallback
+                            }
+                        }
+                    } else {
+                        console.warn(`Dataset ${index} has invalid or missing 'data' array.`);
+                        // Provide default empty array to prevent further errors
+                        dataset.data = [];
+                    }
+                 });
+
+
+                 try {
+                     new Chart(ctx, {
+                         type: chartData.type, // e.g., 'bar', 'line', 'pie'
+                         data: {
+                             labels: chartData.labels,
+                             datasets: chartData.datasets
+                         },
+                         options: options
+                     });
+                 } catch (e) {
+                     console.error("Chart.js rendering error:", e);
+                      // Optionally display an error message in the chat
+                      canvasElement.parentElement.innerHTML = "<p style='color: #ffcccc;'>Error rendering chart data.</p>";
+                 }
+            }
+
+
+            function showTypingIndicator() {
+                if (!chatMessages) return;
+                removeTypingIndicator(); // Ensure only one indicator
+
+                const typingBubble = document.createElement('div');
+                typingBubble.id = 'typing-indicator';
+                typingBubble.className = 'message-bubble agent';
+                 const persona = personaData.find(p => p.id === currentPersonaId);
+                 const avatarSrc = persona ? persona.smallImg : 'https://placehold.co/40x40/00A99D/ffffff?text=AI'; // Fallback
+
+                typingBubble.innerHTML = `
+                    <img src="${avatarSrc}" alt="Agent Avatar" class="avatar" data-persona-avatar>
+                    <div class="content">
+                       <div class="typing-indicator">
+                            <span></span><span></span><span></span>
+                       </div>
+                    </div>
+                `;
+                chatMessages.appendChild(typingBubble);
+                 setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 0);
+            }
+
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove();
+            }
+
+            async function handleSendMessage() {
+                if (!chatInput) return;
+                const userMessage = chatInput.value.trim();
+                if (!userMessage) return;
+
+                displayMessage('user', userMessage);
+                 // Add user message to history *before* calling API
+                chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+                chatInput.value = '';
+                showTypingIndicator();
+
+                await sendMessageToGemini(userMessage); // Pass message for context if retry needed
+            }
+
+            async function sendMessageToGemini(message, retries = 3, delay = 1000) {
+                 const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU"; // Keep this empty.
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                const persona = personaData.find(p => p.id === currentPersonaId);
+                const systemPromptText = persona ? persona.systemPrompt : 'You are a helpful assistant.';
+
+                // Send the current, complete history
+                const payload = {
+                    contents: chatHistory, // Send current state
+                    systemInstruction: {
+                        parts: [{ text: `${systemPromptText} Your user is a high-level executive ("Your Highness"). The current date and time is ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Riyadh' })}.` }]
+                    },
+                     generationConfig: {
+                         maxOutputTokens: 8192,
+                     },
+                     safetySettings: [
+                        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                    ]
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    removeTypingIndicator();
+
+                    if (!response.ok) {
+                        if (!(response.status === 429 || response.status >= 500)) {
+                           console.error(`API Error: ${response.status} ${response.statusText}`, await response.text());
+                        }
+                        if ((response.status === 429 || response.status >= 500) && retries > 0) {
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            return sendMessageToGemini(message, retries - 1, delay * 2);
+                        }
+                        throw new Error(`API error: ${response.status} ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+                    const agentResponseText = candidate?.content?.parts?.[0]?.text;
+
+                    if (agentResponseText) {
+                        displayMessage('agent', agentResponseText); // Handles text and potential chart
+                        // Add successful AI response to history
+                        chatHistory.push({ role: 'model', parts: [{ text: agentResponseText }] });
+                    } else {
+                        // Error handling for missing content or safety blocks
+                        let errorText = "I apologize, but I couldn't process that request fully. Please try rephrasing.";
+                         if (candidate && candidate.finishReason && candidate.finishReason !== 'STOP') {
+                            errorText = `I'm sorry, my response was stopped due to: ${candidate.finishReason.toLowerCase().replace(/_/g, ' ')}.`;
+                             console.warn("Gemini finishReason:", candidate.finishReason, candidate.safetyRatings);
+                        } else if (result.promptFeedback && result.promptFeedback.blockReason) {
+                            errorText = `I'm sorry, your prompt could not be processed due to: ${result.promptFeedback.blockReason.toLowerCase().replace(/_/g, ' ')}.`;
+                             console.warn("Gemini promptFeedback:", result.promptFeedback);
+                        } else if (!agentResponseText) {
+                             console.warn("Gemini response missing text content:", result);
+                             errorText = "I received an empty response. Could you please try asking in a different way?";
+                        }
+                        displayMessage('agent', errorText);
+                        // Do NOT add error/empty AI responses to chatHistory
+                    }
+                } catch (error) {
+                    console.error('Error fetching from Gemini API:', error.message);
+                    removeTypingIndicator();
+                    displayMessage('agent', "I'm experiencing network difficulties connecting to my services. Please check your connection or try again shortly.");
+                    // Do NOT add network errors to chatHistory
+                }
+            }
+
+
+            // --- UI & Event Listeners ---
+            function updateTodaysAgendaPanel() {
+                 if (!summaryContent) return;
+                const now = today;
+                const todayStr = now.toISOString().split('T')[0];
+                const allEvents = Array.from(document.querySelectorAll('.event'));
+                const todaysEvents = allEvents.filter(eventEl => eventEl.dataset.date === todayStr);
+                const upcomingEvents = todaysEvents.filter(eventEl => { /* ... time filtering logic ... */
+                    const eventTimeStr = eventEl.dataset.eventTime; let eventHour = 99; let eventMinute = 0;
+                    if (eventTimeStr === 'EOD') { eventHour = 17; } else if (eventTimeStr.includes(':')) { const parts = eventTimeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i); if (parts) { eventHour = parseInt(parts[1]); eventMinute = parseInt(parts[2]); const isPM = parts[3] && parts[3].toUpperCase() === 'PM'; if (isPM && eventHour !== 12) eventHour += 12; if (!isPM && eventHour === 12) eventHour = 0; } }
+                    return now.getHours() < eventHour || (now.getHours() === eventHour && now.getMinutes() < eventMinute);
+                });
+                upcomingEvents.sort((a, b) => { /* ... time sorting logic ... */
+                    const timeStrToMinutes = (timeStr) => { if (timeStr === 'EOD') return 17 * 60; const parts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i); if (parts) { let hours = parseInt(parts[1]); const minutes = parseInt(parts[2]); const isPM = parts[3] && parts[3].toUpperCase() === 'PM'; if (isPM && hours !== 12) hours += 12; if (!isPM && hours === 12) hours = 0; return hours * 60 + minutes; } return 24 * 60; }; return timeStrToMinutes(a.dataset.eventTime) - timeStrToMinutes(b.dataset.eventTime);
+                });
+
+                if (upcomingEvents.length > 0) { /* ... populate with next/later events ... */
+                    const nextEvent = upcomingEvents[0]; const laterEvents = upcomingEvents.slice(1);
+                    summaryContent.innerHTML = `<h4>Next Up: ${nextEvent.dataset.eventTitle} (${nextEvent.dataset.eventTime})</h4> <p>${nextEvent.dataset.eventDetails}</p> <div class="key-topics-pills"><div class="key-topic-pill" data-topic="Key Objectives">Key Objectives</div><div class="key-topic-pill" data-topic="Attendees">Attendees</div><div class="key-topic-pill" data-topic="Required Actions">Required Actions</div></div>`;
+                    if (laterEvents.length > 0) { summaryContent.innerHTML += '<h4>Later Today</h4><ul>'; laterEvents.forEach(eventEl => { summaryContent.innerHTML += `<li><strong>${eventEl.dataset.eventTitle}</strong> (${eventEl.dataset.eventTime})</li>`; }); summaryContent.innerHTML += '</ul>'; }
+                    summaryContent.querySelectorAll('.key-topic-pill').forEach(pill => { pill.addEventListener('click', () => { const prompt = `Elaborate on the topic "${pill.dataset.topic}" regarding the "${nextEvent.dataset.eventTitle}".`; switchToAgentAndSendPrompt(prompt); }); });
+                } else { /* ... show completed / look ahead ... */
+                     summaryContent.innerHTML = `<h4>Today's Agenda</h4><p>No further meetings or milestones scheduled for today.</p>`;
+                    const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1); const tomorrowStr = tomorrow.toISOString().split('T')[0]; const tomorrowsEvents = allEvents.filter(eventEl => eventEl.dataset.date === tomorrowStr); tomorrowsEvents.sort((a, b) => { /* Add sorting if needed */ });
+                    if (tomorrowsEvents.length > 0) { summaryContent.innerHTML += `<h4>Tomorrow's First Item: ${tomorrowsEvents[0].dataset.eventTitle} (${tomorrowsEvents[0].dataset.eventTime})</h4>`; }
+                }
+            }
+
+
+            function setViewportHeight() {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+
+             // Calendar Toggle Button Logic
+            function setupCalendarToggles() {
+                document.querySelectorAll('.view-toggle').forEach(toggle => {
+                    toggle.addEventListener('click', e => {
+                        const button = e.target.closest('[data-view]');
+                        if (!button) return;
+                        const view = button.dataset.view;
+                        const calendarContainer = button.closest('.desktop-calendar, .mobile-calendar');
+                        if (!calendarContainer) return;
+                        calendarContainer.querySelectorAll('[data-view]').forEach(btn => btn.classList.remove('active'));
                         button.classList.add('active');
-
-                        // Close mobile nav if open
-                        if (navTabsContainer && navTabsContainer.classList.contains('active')) {
-                            navTabsContainer.classList.remove('active');
+                        if (calendarContainer.classList.contains('desktop-calendar')) {
+                            calendarContainer.querySelectorAll('.agenda-view').forEach(v => v.classList.remove('active'));
+                            const targetView = calendarContainer.querySelector(`#${view}-view`);
+                            if (targetView) targetView.classList.add('active');
+                            if (view === 'month') { renderDesktopMonthCalendar(); }
+                            if (view === 'today') { renderTodayView(); }
                         }
                     });
                 });
             }
 
+
+            // Desktop Month Calendar Rendering
+            function renderDesktopMonthCalendar() {
+                 const monthGrid = document.getElementById('month-calendar-grid');
+                if (!monthGrid) return;
+                const allEvents = Array.from(document.querySelectorAll('.event[data-date]'));
+                const eventsByDate = new Map();
+                allEvents.forEach(e => { const date = e.dataset.date; if (!eventsByDate.has(date)) { eventsByDate.set(date, []); } eventsByDate.get(date).push(e); });
+                const year = today.getFullYear(); const month = today.getMonth();
+                const todayDateOnly = new Date(year, month, today.getDate());
+                const firstDayOfMonth = new Date(year, month, 1); const daysInMonth = new Date(year, month + 1, 0).getDate(); const startingDay = firstDayOfMonth.getDay();
+                monthGrid.innerHTML = '';
+                ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach((day, index) => { const isWeekend = index === 5 || index === 6; monthGrid.innerHTML += `<div class="month-day-header ${isWeekend ? 'weekend' : ''}">${day}</div>`; });
+                for (let i = 0; i < startingDay; i++) { monthGrid.innerHTML += '<div class="month-day-cell other-month"></div>'; }
+                for (let day = 1; day <= daysInMonth; day++) { const date = new Date(year, month, day); const dayOfWeek = date.getDay(); const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; const isToday = day === today.getDate(); const isPast = date < todayDateOnly; const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; let cellClasses = 'month-day-cell'; if (isToday) cellClasses += ' today'; if (isPast) cellClasses += ' disabled-day'; if (isWeekend) cellClasses += ' weekend'; let cellHtml = `<div class="${cellClasses}" data-date="${dateStr}"><div class="month-day-number">${day}</div><div class="month-day-events">`; if (eventsByDate.has(dateStr)) { eventsByDate.get(dateStr).forEach(eventEl => { const isMilestone = eventEl.classList.contains('event-milestone'); cellHtml += `<div class="month-event-dot ${isMilestone ? 'milestone' : ''}"></div>`; }); } cellHtml += `</div></div>`; monthGrid.innerHTML += cellHtml; }
+                 monthGrid.querySelectorAll('.month-day-cell:not(.disabled-day, .other-month)').forEach(cell => { const dateStr = cell.dataset.date; cell.addEventListener('click', () => { if (eventsByDate.has(dateStr)) { const firstEvent = eventsByDate.get(dateStr)[0]; openEventModal(firstEvent.dataset.eventTitle, firstEvent.dataset.eventTime, firstEvent.dataset.eventDetails); } else { openDayActionModal(dateStr); } }); });
+            }
+
+            // Day Action Modal
+            function openDayActionModal(dateStr) {
+                 const date = new Date(dateStr + 'T00:00:00'); const titleEl = document.getElementById('day-action-title'); const pillsContainer = document.getElementById('day-action-pills'); const actionsContainer = document.querySelector('#dayActionModal .day-actions'); if (!titleEl || !pillsContainer || !actionsContainer) return;
+                titleEl.textContent = `Actions for ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`; pillsContainer.innerHTML = ''; document.querySelectorAll('.topic-card .topic-title').forEach(titleElement => { const pill = document.createElement('div'); pill.className = 'modal-topic-pill'; pill.textContent = titleElement.textContent; pill.dataset.topic = titleElement.textContent; pillsContainer.appendChild(pill); }); let selectedTopic = ''; pillsContainer.querySelectorAll('.modal-topic-pill').forEach(pill => { pill.addEventListener('click', () => { pillsContainer.querySelectorAll('.modal-topic-pill').forEach(p => p.classList.remove('active')); pill.classList.add('active'); selectedTopic = pill.dataset.topic; }); }); const newActionsContainer = actionsContainer.cloneNode(true); actionsContainer.parentNode.replaceChild(newActionsContainer, actionsContainer); newActionsContainer.querySelectorAll('button').forEach(button => { button.addEventListener('click', () => { if (!selectedTopic) { showMessageModal("Please select a focus area first."); return; } const action = button.dataset.action; let prompt = ''; const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }); switch(action) { case 'check': prompt = `Draft an email to check stakeholders' availability for a meeting on ${formattedDate} regarding "${selectedTopic}".`; break; case 'media': prompt = `Draft an email to the media team to coordinate potential media coverage for an initiative related to "${selectedTopic}" around ${formattedDate}.`; break; case 'consulting': prompt = `Draft an email to summon the consulting team for a high-priority meeting on ${formattedDate} to discuss "${selectedTopic}". Emphasize urgency.`; break; } if(prompt) { switchToAgentAndSendPrompt(prompt); } }); }); openModal(dayActionModal);
+            }
+
+            // Desktop Today View Rendering
+            function renderTodayView() {
+                 const todayList = document.getElementById('today-events-list'); const todayDateEl = document.querySelector('#today-view .today-date'); if (!todayList || !todayDateEl) return;
+                const todayStr = today.toISOString().split('T')[0]; todayDateEl.textContent = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); const todaysEvents = Array.from(document.querySelectorAll(`.event[data-date="${todayStr}"]`)); todayList.innerHTML = ''; if (todaysEvents.length > 0) { todaysEvents.forEach(eventEl => { const eventClone = eventEl.cloneNode(true); eventClone.addEventListener('click', () => { openEventModal(eventClone.dataset.eventTitle, eventClone.dataset.eventTime, eventClone.dataset.eventDetails); }); todayList.appendChild(eventClone); }); } else { todayList.innerHTML = '<p style="opacity: 0.7; text-align: center; padding: 20px;">No events scheduled for today.</p>'; }
+            }
+
+            // Mobile Calendar Logic
+            function initMobileCalendar() {
+                 const monthGrid = document.getElementById('mobile-month-grid'); const agendaEvents = document.getElementById('mobile-agenda-events'); if (!monthGrid || !agendaEvents) return;
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; let selectedDate = today; const allEvents = Array.from(document.querySelectorAll('.event[data-date]')); const eventDates = new Set(allEvents.map(e => e.dataset.date));
+                function renderCalendar() { monthGrid.innerHTML = ''; dayNames.forEach(day => { const dayNameEl = document.createElement('div'); dayNameEl.className = 'day-name'; dayNameEl.textContent = day; monthGrid.appendChild(dayNameEl); }); for (let day = 19; day <= 25; day++) { const dayCell = document.createElement('div'); dayCell.className = 'day-cell'; dayCell.textContent = day; const currentDayDate = new Date(today.getFullYear(), today.getMonth(), day); const dateStr = currentDayDate.toISOString().split('T')[0]; if (day === today.getDate()) { dayCell.classList.add('today'); } if (dateStr === selectedDate.toISOString().split('T')[0]) { dayCell.classList.add('selected'); } if (eventDates.has(dateStr)) { dayCell.classList.add('has-event'); } dayCell.addEventListener('click', () => { selectedDate = currentDayDate; renderCalendar(); renderEvents(dateStr); }); monthGrid.appendChild(dayCell); } }
+                function renderEvents(dateStr) { const dayEvents = allEvents.filter(e => e.dataset.date === dateStr); if (dayEvents.length === 0) { agendaEvents.innerHTML = '<p style="opacity: 0.7; text-align: center; padding: 20px;">No events scheduled for this day</p>'; return; } agendaEvents.innerHTML = ''; dayEvents.forEach(eventEl => { const eventDiv = document.createElement('div'); eventDiv.className = 'event'; if (eventEl.classList.contains('event-milestone')) { eventDiv.classList.add('event-milestone'); } eventDiv.innerHTML = `<div class="event-time">${eventEl.dataset.eventTime}</div> <div class="event-title">${eventEl.dataset.eventTitle}</div>`; eventDiv.addEventListener('click', () => { openEventModal(eventEl.dataset.eventTitle, eventEl.dataset.eventTime, eventEl.dataset.eventDetails); }); agendaEvents.appendChild(eventDiv); }); }
+                renderCalendar(); renderEvents(selectedDate.toISOString().split('T')[0]);
+            }
+
+            // --- Event Listeners & Initialization ---
+
+            // Modal close buttons
+            closeModalBtns.forEach(btn => { btn.addEventListener('click', () => { const modal = btn.closest('.modal'); if (modal) closeModal(modal); }); });
+            window.addEventListener('click', (event) => { if (event.target.classList.contains('modal')) { closeModal(event.target); } });
+            // Copy summary button
+            if (copySummaryBtn) { copySummaryBtn.addEventListener('click', () => { const contentToCopy = summaryContent ? summaryContent.innerText : ''; if (contentToCopy) { const textArea = document.createElement("textarea"); textArea.value = contentToCopy; textArea.style.position = "fixed"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); try { document.execCommand('copy'); showMessageModal('Agenda copied to clipboard!'); } catch (err) { console.error('Fallback copy failed', err); showMessageModal('Copying failed.'); } document.body.removeChild(textArea); } else { showMessageModal('Nothing to copy.'); } }); }
+            // Persona change button
+            if (changePersonaBtn) { changePersonaBtn.addEventListener('click', () => openModal(personaModal)); }
+            // Send button and Enter key
+            if (sendBtn) { sendBtn.addEventListener('click', handleSendMessage); }
+            if (chatInput) { chatInput.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSendMessage(); } }); }
+            // Topic card actions
+            document.querySelectorAll('.topic-action-btn').forEach(button => { button.addEventListener('click', () => { const action = button.dataset.action; const card = button.closest('.topic-card'); if (!card) return; const topicId = card.dataset.topicId; const topicTitleEl = card.querySelector('.topic-title'); if (!topicTitleEl) return; const topicTitle = topicTitleEl.textContent; if (action === 'meetings') { openMeetingsModal(topicId, topicTitle); } else if (action === 'deeper') { const prompt = `Can you dig deeper into the topic of "${topicTitle}" for me? Provide key details and current status.`; takeActionFromTopic(prompt); } else if (action === 'references') { const prompt = `Please pull up the latest references and documents from my team regarding "${topicTitle}".`; takeActionFromTopic(prompt); } }); });
+            // "Ask Agent" on text selection
+             document.addEventListener('mouseup', (e) => { if (!askAgentBtn) return; const targetElement = e.target; if (targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA' || targetElement.closest('.modal') || targetElement.closest('#ask-agent-btn')) { askAgentBtn.style.display = 'none'; return; } setTimeout(() => { const text = window.getSelection().toString().trim(); if (text.length > 1) { selectedText = text; const rect = window.getSelection().getRangeAt(0).getBoundingClientRect(); askAgentBtn.style.left = `${rect.right + window.scrollX + 5}px`; askAgentBtn.style.top = `${rect.bottom + window.scrollY + 5}px`; askAgentBtn.style.display = 'block'; } else { askAgentBtn.style.display = 'none'; } }, 10); });
+            document.addEventListener('mousedown', (e) => { if (askAgentBtn && e.target.id !== 'ask-agent-btn') { askAgentBtn.style.display = 'none'; } });
+            if (askAgentBtn) { askAgentBtn.addEventListener('click', (e) => { e.stopPropagation(); if (selectedText) { const prompt = `Please provide more details about the following text I selected: "${selectedText}"`; switchToAgentAndSendPrompt(prompt); selectedText = ''; } askAgentBtn.style.display = 'none'; }); }
+            // Mobile menu toggle
+            if (mobileMenuBtn) { mobileMenuBtn.addEventListener('click', () => { if (navTabsContainer) navTabsContainer.classList.toggle('active'); }); }
+            // Quick Actions
+            document.querySelectorAll('.quick-action-btn').forEach(btn => { btn.addEventListener('click', () => { const action = btn.dataset.action; let prompt = ''; switch(action) { case 'call': showMessageModal("Voice call feature not implemented in this demo."); return; case 'agenda': prompt = "Please provide a detailed overview of my agenda for today, including all scheduled meetings and key tasks."; break; } if (prompt && chatInput) { chatInput.value = prompt; handleSendMessage(); } }); });
+            // Chat "+" Action Button
+             chatActionBtn?.addEventListener('click', (e) => { e.stopPropagation(); const list = document.getElementById('meetings-modal-list'); const title = document.getElementById('meetings-modal-title'); if (!list || !title) { console.error("Meetings modal elements not found"); return; } openModal(meetingsModal); list.innerHTML = ''; title.textContent = `Discuss a Topic`; let content = '<div class="dropdown-header">Discuss a Focus Area</div><div class="modal-pills-container">'; document.querySelectorAll('.topic-card .topic-title').forEach(titleEl => { content += `<div class="modal-topic-pill chat-action-item" data-prompt="Let's discuss the focus area: ${titleEl.textContent}">${titleEl.textContent}</div>`; }); content += '</div>'; content += '<div class="dropdown-header">Discuss a Meeting</div>'; const events = document.querySelectorAll('.event[data-date]'); if (events.length > 0) { events.forEach(event => { const eventTitle = event.dataset.eventTitle || 'Unnamed Meeting'; const eventTime = event.dataset.eventTime || 'No time'; const eventDateStr = event.dataset.date; if(eventDateStr) { const eventDate = new Date(eventDateStr + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); content += `<div class="meeting-item chat-action-item" data-prompt="What should I know about the meeting: ${eventTitle}?"><div class="meeting-title">${eventTitle}</div><div class="meeting-time">${eventDate} - ${eventTime}</div></div>`; } }); } else { content += '<p>No meetings found.</p>'; } list.innerHTML = content; list.querySelectorAll('.chat-action-item').forEach(item => { item.addEventListener('click', (ev) => { ev.preventDefault(); if (chatInput && item.dataset.prompt) { chatInput.value = item.dataset.prompt; handleSendMessage(); } closeModal(meetingsModal); }); }); });
+
+             // --- Updated Tool Card Actions ---
+             document.querySelectorAll('.tool-action-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.dataset.toolAction;
+                    const card = button.closest('.tool-card');
+                    if (!card) return;
+                    const toolTitleEl = card.querySelector('.tool-title');
+                    if (!toolTitleEl) return;
+                    const toolTitle = toolTitleEl.textContent;
+
+                    let targetPersonaId = 'hakim'; // Default
+                    let prompt = `Tell me more about how I can use the "${toolTitle}" AI tool.`;
+
+                    // Assign persona and craft prompt based on the tool action
+                    switch(action) {
+                        case 'visualize':
+                        case 'predict':
+                        case 'sentiment':
+                            targetPersonaId = 'layla'; // Data Analyst
+                            prompt = `Please assist me with ${toolTitle}. What data do you need to get started?`;
+                            break;
+                        case 'summarize':
+                            targetPersonaId = 'hakim'; // Executive Agent
+                            prompt = `I need help using the ${toolTitle} tool. Can you guide me or perform a summarization task?`;
+                            break;
+                        case 'schedule':
+                            targetPersonaId = 'omar'; // Coordinator
+                            prompt = `I need to schedule a meeting using the ${toolTitle}. Please help me coordinate.`;
+                            break;
+                        case 'risk':
+                            targetPersonaId = 'hakim'; // Executive Agent (strategic risk)
+                            // Or potentially Layla if focused on data-driven risk: targetPersonaId = 'layla';
+                            prompt = `I need to use the ${toolTitle} tool. Can you help me assess risks related to [Specify Area/Project]?`;
+                            break;
+                        default:
+                             prompt = `Tell me more about the "${toolTitle}" tool.`;
+                    }
+
+                    // Switch persona (if needed) and send the prompt
+                    switchToAgentAndSendPrompt(prompt, targetPersonaId);
+                });
+            });
+
+
+             // --- Corrected Navigation Logic ---
+             if (navButtons && pages) {
+                 navButtons.forEach(button => {
+                     button.addEventListener('click', () => {
+                         const targetId = button.dataset.target;
+                         const targetPage = document.getElementById(targetId);
+
+                         // Hide all pages first
+                         pages.forEach(page => {
+                             if (page) page.classList.remove('active');
+                         });
+
+                         // Show the target page if found
+                         if (targetPage) {
+                             targetPage.classList.add('active');
+                         } else {
+                             console.error(`Target page with ID "${targetId}" not found.`);
+                         }
+
+                         // Update button active state
+                         navButtons.forEach(btn => btn.classList.remove('active'));
+                         button.classList.add('active');
+
+                         // Close mobile nav if open
+                         if (navTabsContainer && navTabsContainer.classList.contains('active')) {
+                             navTabsContainer.classList.remove('active');
+                         }
+                     });
+                 });
+             } else {
+                 console.error("Navigation buttons or page content elements not found.");
+             }
+
             // --- INITIALIZATION ---
-            updatePersonaUI('hakim');
-            updateAgentChips();
+            setViewportHeight();
+            setupCalendarToggles(); // Should be defined before call now
+            updatePersonaUI(currentPersonaId, true);
+            updateTodaysAgendaPanel();
+            setupAgendaInteractions();
+            initMobileCalendar();
+            renderDesktopMonthCalendar();
+            renderTodayView();
+
         });
     </script>
 </body>
 </html>
-
-
-
