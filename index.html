@@ -202,8 +202,7 @@
             padding: 20px;
             min-width: 0;
             min-height: 0;
-            max-height: none;
-            height: 100%;
+            max-height: calc(100vh - 220px);
             box-shadow: var(--shadow-lg);
         }
 
@@ -219,7 +218,7 @@
             box-shadow: var(--shadow-lg);
             backdrop-filter: blur(20px);
             min-height: 0;
-            height: 100%;
+            max-height: calc(100vh - 220px);
         }
 
         /* Removed old single persona image styles - now using multi-agent selection */
@@ -713,7 +712,6 @@
             flex-direction: column; 
             min-width: 0; 
             min-height: 0;
-            height: 100%;
             overflow: hidden;
         }
         .chat-messages { 
@@ -722,7 +720,6 @@
             overflow-x: hidden;
             padding-right: 10px; 
             min-height: 0;
-            height: 100%;
         }
         
         /* Custom scrollbar styling for chat messages */
@@ -943,7 +940,7 @@
             gap: 15px;
             min-width: 280px;
             min-height: 0;
-            height: 100%;
+            max-height: calc(100vh - 220px);
             box-shadow: var(--shadow-lg);
             overflow: hidden;
         }
@@ -960,7 +957,7 @@
             gap: 15px;
             min-width: 300px;
             min-height: 0;
-            height: 100%;
+            max-height: calc(100vh - 220px);
             box-shadow: var(--shadow-lg);
             overflow: hidden;
         }
