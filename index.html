@@ -247,8 +247,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 12px;
+            gap: 8px;
+            padding: 10px 12px;
             background: rgba(0, 169, 157, 0.1);
             border-radius: 12px;
             margin-bottom: 15px;
@@ -256,10 +256,12 @@
         }
         
         .mode-toggle-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: var(--text-light);
             opacity: 0.7;
+            transition: all 0.3s;
+            white-space: nowrap;
         }
         
         .mode-toggle-label.active {
@@ -270,8 +272,9 @@
         
         .mode-toggle-switch {
             position: relative;
-            width: 60px;
-            height: 30px;
+            width: 56px;
+            height: 28px;
+            flex-shrink: 0;
         }
         
         .mode-toggle-switch input {
@@ -376,18 +379,21 @@
         
         /* Agent Selector Button in Chat */
         #agentSelectorBtn {
-            background: var(--container-bg-light);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(0, 169, 157, 0.15), rgba(0, 169, 157, 0.25));
+            border: 2px solid var(--primary-blue);
             color: var(--text-light);
-            padding: 8px 12px;
-            border-radius: 10px;
+            padding: 6px 12px 6px 6px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: all 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
             display: none;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 169, 157, 0.3);
+            position: relative;
         }
         
         #agentSelectorBtn.active {
@@ -395,15 +401,33 @@
         }
         
         #agentSelectorBtn:hover {
-            background: rgba(0, 169, 157, 0.2);
-            border-color: var(--primary-blue);
+            background: linear-gradient(135deg, rgba(0, 169, 157, 0.25), rgba(0, 169, 157, 0.35));
+            border-color: #00bfae;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 169, 157, 0.4);
+        }
+        
+        #agentSelectorBtn:active {
+            transform: translateY(0);
         }
         
         #agentSelectorBtn img {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            border: 2px solid var(--border-color);
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 2px 6px rgba(0, 169, 157, 0.3);
+        }
+        
+        #agentSelectorBtn span {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        
+        #agentSelectorBtn i {
+            color: var(--primary-blue);
+            font-size: 0.7rem;
+            opacity: 0.8;
         }
         
         /* Agent Selection List - hide in single mode */
@@ -1705,27 +1729,36 @@
             
             /* Mode Toggle on Mobile */
             .mode-toggle-container {
-                padding: 8px;
-                margin-bottom: 10px;
+                padding: 6px 8px;
+                margin-bottom: 8px;
+                gap: 6px;
             }
             
             .mode-toggle-label {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
+                font-weight: 600;
             }
             
             .mode-toggle-switch {
-                width: 50px;
-                height: 26px;
+                width: 46px;
+                height: 24px;
+            }
+            
+            .mode-toggle-slider {
+                border-width: 2px;
             }
             
             .mode-toggle-slider:before {
-                height: 18px;
-                width: 18px;
-                font-size: 0.65rem;
+                height: 16px;
+                width: 16px;
+                font-size: 0.6rem;
+                left: 2px;
+                bottom: 2px;
             }
             
             .mode-toggle-switch input:checked + .mode-toggle-slider:before {
-                transform: translateX(24px);
+                transform: translateX(22px);
+                font-size: 0.7rem;
             }
             
             /* Single Agent Display on Mobile */
@@ -1796,13 +1829,27 @@
             
             /* Agent Selector Button on Mobile */
             #agentSelectorBtn {
-                padding: 6px 10px;
-                font-size: 0.75rem;
+                padding: 4px 8px 4px 4px;
+                font-size: 0.7rem;
+                gap: 5px;
+                border-width: 1.5px;
+                border-radius: 10px;
             }
             
             #agentSelectorBtn img {
-                width: 20px;
-                height: 20px;
+                width: 24px;
+                height: 24px;
+                border-width: 1.5px;
+            }
+            
+            #agentSelectorBtn i {
+                font-size: 0.6rem;
+            }
+            
+            #agentSelectorBtn span {
+                max-width: 50px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             
             .agent-selection-list {
@@ -1897,15 +1944,26 @@
                 padding: 20px 15px;
                 margin: 0 -1rem -1rem -1rem;
             }
-
+            
             #chatInput {
                 padding-top: 15px;
                 padding-bottom: 15px;
+                font-size: 0.95rem;
+            }
+            
+            .chat-input-controls {
+                flex-wrap: wrap;
+                gap: 6px;
             }
 
             .chat-input-controls button {
-                width: 44px;
-                height: 44px;
+                width: 40px;
+                height: 40px;
+                font-size: 0.85rem;
+            }
+            
+            .chat-input-controls button:not(#agentSelectorBtn):not(.send-btn) {
+                flex-shrink: 0;
             }
 
             .send-btn {
@@ -2902,57 +2960,87 @@
                 menu.id = 'agentSelectorMenu';
                 menu.style.cssText = `
                     position: absolute;
-                    bottom: 100%;
+                    bottom: calc(100% + 8px);
                     left: 0;
-                    margin-bottom: 5px;
                     background: var(--container-bg);
                     backdrop-filter: blur(30px);
-                    border: 1px solid var(--border-color);
-                    border-radius: 12px;
+                    border: 2px solid var(--primary-blue);
+                    border-radius: 14px;
                     padding: 8px;
-                    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 -8px 30px rgba(0, 169, 157, 0.4);
                     z-index: 1000;
-                    min-width: 200px;
+                    min-width: 220px;
+                    animation: slideUpFadeIn 0.3s ease;
                 `;
+                
+                // Add animation keyframes
+                if (!document.getElementById('agentMenuAnimation')) {
+                    const style = document.createElement('style');
+                    style.id = 'agentMenuAnimation';
+                    style.textContent = `
+                        @keyframes slideUpFadeIn {
+                            from {
+                                opacity: 0;
+                                transform: translateY(10px);
+                            }
+                            to {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
                 
                 personaData.forEach(agent => {
                     const item = document.createElement('div');
+                    const isSelected = agent.id === currentPersonaId;
                     item.style.cssText = `
                         display: flex;
                         align-items: center;
                         gap: 10px;
                         padding: 10px;
-                        border-radius: 8px;
+                        margin: 4px 0;
+                        border-radius: 10px;
                         cursor: pointer;
-                        transition: all 0.3s;
-                        ${agent.id === currentPersonaId ? 'background: rgba(0, 169, 157, 0.2); border: 1px solid var(--primary-blue);' : 'border: 1px solid transparent;'}
+                        transition: all 0.2s ease;
+                        ${isSelected ? 
+                            'background: linear-gradient(135deg, rgba(0, 169, 157, 0.25), rgba(0, 169, 157, 0.35)); border: 2px solid var(--primary-blue);' : 
+                            'border: 2px solid transparent; background: rgba(255, 255, 255, 0.05);'}
                     `;
                     
                     item.innerHTML = `
-                        <img src="${agent.smallImg}" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border-color);" alt="${agent.name}">
+                        <img src="${agent.smallImg}" 
+                             style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid ${isSelected ? 'var(--primary-blue)' : 'var(--border-color)'}; box-shadow: 0 2px 8px rgba(0, 169, 157, 0.3);" 
+                             alt="${agent.name}">
                         <div style="flex: 1;">
-                            <div style="font-weight: 600; font-size: 0.9rem;">${agent.name}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.7;">${agent.title}</div>
+                            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-dark);">${agent.name}</div>
+                            <div style="font-size: 0.75rem; opacity: 0.7; color: var(--text-light);">${agent.title}</div>
                         </div>
-                        ${agent.id === currentPersonaId ? '<i class="fas fa-check" style="color: var(--primary-blue);"></i>' : ''}
+                        ${isSelected ? '<i class="fas fa-check" style="color: var(--primary-blue); font-size: 1rem;"></i>' : ''}
                     `;
                     
                     item.addEventListener('mouseenter', () => {
                         if (agent.id !== currentPersonaId) {
-                            item.style.background = 'rgba(0, 169, 157, 0.1)';
+                            item.style.background = 'linear-gradient(135deg, rgba(0, 169, 157, 0.15), rgba(0, 169, 157, 0.25))';
+                            item.style.borderColor = 'rgba(0, 169, 157, 0.5)';
+                            item.style.transform = 'translateX(3px)';
                         }
                     });
                     
                     item.addEventListener('mouseleave', () => {
                         if (agent.id !== currentPersonaId) {
-                            item.style.background = 'transparent';
+                            item.style.background = 'rgba(255, 255, 255, 0.05)';
+                            item.style.borderColor = 'transparent';
+                            item.style.transform = 'translateX(0)';
                         }
                     });
                     
                     item.addEventListener('click', () => {
                         updatePersonaUI(agent.id);
                         updateSingleAgentDisplay(agent.id);
-                        menu.remove();
+                        menu.style.animation = 'slideUpFadeIn 0.2s ease reverse';
+                        setTimeout(() => menu.remove(), 200);
                     });
                     
                     menu.appendChild(item);
@@ -2967,8 +3055,9 @@
                 // Close menu when clicking outside
                 setTimeout(() => {
                     document.addEventListener('click', function closeMenu(e) {
-                        if (!menu.contains(e.target) && e.target.id !== 'agentSelectorBtn') {
-                            menu.remove();
+                        if (!menu.contains(e.target) && e.target.id !== 'agentSelectorBtn' && !e.target.closest('#agentSelectorBtn')) {
+                            menu.style.animation = 'slideUpFadeIn 0.2s ease reverse';
+                            setTimeout(() => menu.remove(), 200);
                             document.removeEventListener('click', closeMenu);
                         }
                     });
