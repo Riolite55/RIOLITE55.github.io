@@ -382,7 +382,7 @@
             background: linear-gradient(135deg, rgba(0, 169, 157, 0.15), rgba(0, 169, 157, 0.25));
             border: 2px solid var(--primary-blue);
             color: var(--text-light);
-            padding: 6px 12px 6px 6px;
+            padding: 6px;
             border-radius: 12px;
             cursor: pointer;
             font-size: 0.85rem;
@@ -390,10 +390,14 @@
             transition: all 0.3s ease;
             display: none;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 4px;
             white-space: nowrap;
             box-shadow: 0 2px 8px rgba(0, 169, 157, 0.3);
             position: relative;
+            width: 70px !important;
+            min-width: 70px;
+            flex-shrink: 0;
         }
         
         #agentSelectorBtn.active {
@@ -412,22 +416,21 @@
         }
         
         #agentSelectorBtn img {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 2px solid var(--primary-blue);
             box-shadow: 0 2px 6px rgba(0, 169, 157, 0.3);
         }
         
         #agentSelectorBtn span {
-            color: var(--text-dark);
-            font-weight: 600;
+            display: none; /* Hide name, only show avatar */
         }
         
         #agentSelectorBtn i {
             color: var(--primary-blue);
-            font-size: 0.7rem;
-            opacity: 0.8;
+            font-size: 0.75rem;
+            opacity: 0.9;
         }
         
         /* Agent Selection List - hide in single mode */
@@ -1829,27 +1832,20 @@
             
             /* Agent Selector Button on Mobile */
             #agentSelectorBtn {
-                padding: 4px 8px 4px 4px;
-                font-size: 0.7rem;
-                gap: 5px;
-                border-width: 1.5px;
-                border-radius: 10px;
+                padding: 5px;
+                width: 60px !important;
+                min-width: 60px;
+                gap: 3px;
             }
             
             #agentSelectorBtn img {
-                width: 24px;
-                height: 24px;
+                width: 28px;
+                height: 28px;
                 border-width: 1.5px;
             }
             
             #agentSelectorBtn i {
-                font-size: 0.6rem;
-            }
-            
-            #agentSelectorBtn span {
-                max-width: 50px;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                font-size: 0.65rem;
             }
             
             .agent-selection-list {
@@ -2448,7 +2444,6 @@
                         <div class="chat-input-controls">
                             <button id="agentSelectorBtn" class="active" title="Select Agent">
                                 <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent">
-                                <span>Hakim</span>
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
@@ -2939,12 +2934,13 @@
                 if (title) title.textContent = agent.title;
                 if (description) description.textContent = agent.description;
                 
-                // Update selector button
+                // Update selector button - only avatar and chevron, no name
                 if (selectorBtn) {
                     const btnImg = selectorBtn.querySelector('img');
-                    const btnSpan = selectorBtn.querySelector('span');
                     if (btnImg) btnImg.src = agent.smallImg;
-                    if (btnSpan) btnSpan.textContent = agent.name.split(' ')[0]; // First name only
+                    // Remove name span if exists, keep only img and chevron icon
+                    const spans = selectorBtn.querySelectorAll('span');
+                    spans.forEach(span => span.remove());
                 }
             }
             
@@ -3491,19 +3487,173 @@
                 chatInput.value = '';
                 
                 if (isMultiAgentMode) {
-                    // Multi-agent mode: send to all selected agents
-                    const agents = getSelectedAgentsInfo();
-                    for (let i = 0; i < agents.length; i++) {
-                        showTypingIndicator();
-                        if (i > 0) {
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                        }
-                        await sendMessageToAgent(userMessage, agents[i].id);
-                    }
+                    // Multi-agent mode: Hakim orchestrates and routes to appropriate agents
+                    await orchestrateMultiAgentResponse(userMessage);
                 } else {
                     // Single agent mode: send to current persona only
                     showTypingIndicator();
                     await sendMessageToAgent(userMessage, currentPersonaId);
+                }
+            }
+            
+            // Smart agent orchestration: Hakim analyzes prompt and routes to appropriate agents
+            async function orchestrateMultiAgentResponse(userMessage) {
+                const agents = getSelectedAgentsInfo();
+                
+                // If only one agent selected, just send to that agent
+                if (agents.length === 1) {
+                    showTypingIndicator();
+                    await sendMessageToAgent(userMessage, agents[0].id);
+                    return;
+                }
+                
+                // Multi-agent orchestration: Hakim decides who should respond
+                const orchestrationPrompt = `You are Hakim Nüruddin, the AI Executive Office Agent coordinating a team of specialists. Analyze this user request and determine which agents should respond:
+
+User Request: "${userMessage}"
+
+Available Agents:
+${agents.map(a => `- ${a.name} (${a.id}): ${a.title}`).join('\n')}
+
+Agent Specializations:
+- Hakim (hakim): Strategic insights, executive summaries, high-level decisions, leadership advice
+- Layla (layla): Data analysis, charts, statistics, metrics, trends, quantitative insights
+- Omar (omar): Operational coordination, task management, scheduling, workflow optimization
+
+Instructions:
+1. Analyze the user's request carefully
+2. Determine which agent(s) are MOST appropriate to answer
+3. Respond with ONLY a JSON object in this format:
+{
+  "agents": ["agent_id1", "agent_id2"],
+  "reasoning": "Brief explanation of why these agents"
+}
+
+Rules:
+- Include Hakim if the query needs strategic/executive perspective
+- Include Layla if the query needs data analysis, charts, or metrics
+- Include Omar if the query needs operational/task coordination
+- Can include 1, 2, or all 3 agents depending on the request
+- Choose agents that add unique value, not redundant perspectives
+
+RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
+
+                try {
+                    showTypingIndicator();
+                    
+                    // Send orchestration request to Hakim
+                    const orchestrationResponse = await sendOrchestrationRequest(orchestrationPrompt);
+                    removeTypingIndicator();
+                    
+                    if (!orchestrationResponse) {
+                        // Fallback: use all selected agents
+                        console.warn("Orchestration failed, using all selected agents");
+                        for (let i = 0; i < agents.length; i++) {
+                            showTypingIndicator();
+                            if (i > 0) await new Promise(resolve => setTimeout(resolve, 500));
+                            await sendMessageToAgent(userMessage, agents[i].id);
+                        }
+                        return;
+                    }
+                    
+                    // Parse orchestration response
+                    let routingDecision;
+                    try {
+                        let jsonText = orchestrationResponse.trim();
+                        // Remove markdown code blocks if present
+                        jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+                        routingDecision = JSON.parse(jsonText);
+                    } catch (e) {
+                        console.error("Failed to parse orchestration JSON:", e, orchestrationResponse);
+                        // Fallback: use all selected agents
+                        for (let i = 0; i < agents.length; i++) {
+                            showTypingIndicator();
+                            if (i > 0) await new Promise(resolve => setTimeout(resolve, 500));
+                            await sendMessageToAgent(userMessage, agents[i].id);
+                        }
+                        return;
+                    }
+                    
+                    // Show orchestration decision (optional - can be removed for cleaner UX)
+                    const orchestrationNote = document.createElement('div');
+                    orchestrationNote.className = 'agent-discussion-indicator';
+                    orchestrationNote.style.fontSize = '0.85rem';
+                    orchestrationNote.style.opacity = '0.8';
+                    orchestrationNote.innerHTML = `<i class="fas fa-route"></i> Hakim routing to: ${routingDecision.agents.map(id => {
+                        const agent = personaData.find(p => p.id === id);
+                        return agent ? agent.name.split(' ')[0] : id;
+                    }).join(', ')}`;
+                    if (chatMessages) {
+                        chatMessages.appendChild(orchestrationNote);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                    
+                    // Send to selected agents
+                    const selectedAgentIds = routingDecision.agents.filter(id => 
+                        agents.some(a => a.id === id)
+                    );
+                    
+                    if (selectedAgentIds.length === 0) {
+                        // Fallback if no valid agents selected
+                        selectedAgentIds.push(agents[0].id);
+                    }
+                    
+                    for (let i = 0; i < selectedAgentIds.length; i++) {
+                        showTypingIndicator();
+                        if (i > 0) await new Promise(resolve => setTimeout(resolve, 500));
+                        await sendMessageToAgent(userMessage, selectedAgentIds[i]);
+                    }
+                    
+                } catch (error) {
+                    console.error("Orchestration error:", error);
+                    removeTypingIndicator();
+                    // Fallback: send to all selected agents
+                    for (let i = 0; i < agents.length; i++) {
+                        showTypingIndicator();
+                        if (i > 0) await new Promise(resolve => setTimeout(resolve, 500));
+                        await sendMessageToAgent(userMessage, agents[i].id);
+                    }
+                }
+            }
+            
+            // Special function for orchestration requests (no display, just return response)
+            async function sendOrchestrationRequest(prompt, retries = 2) {
+                const apiKey = "AIzaSyAJGvnZX6uuTlAnf_m0hCQFJ3knsJRnGIU";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                    systemInstruction: {
+                        parts: [{ text: 'You are an AI orchestrator. Respond ONLY with valid JSON. No explanations, no markdown, no extra text.' }]
+                    },
+                    generationConfig: {
+                        maxOutputTokens: 512,
+                        temperature: 0.3, // Lower temperature for more deterministic routing
+                    }
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429 && retries > 0) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            return sendOrchestrationRequest(prompt, retries - 1);
+                        }
+                        throw new Error(`API error: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    return responseText || null;
+                    
+                } catch (error) {
+                    console.error("Orchestration request error:", error);
+                    return null;
                 }
             }
             
