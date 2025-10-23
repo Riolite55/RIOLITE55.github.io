@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <!-- saved from url=(0038)https://riolite55.github.io/index.html -->
-<html lang="en" style="--vh: 7.66px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en" style="--vh: 9.32px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HRSD AI Executive Office</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <link href="./HRSD AI Executive Office 0808_files/css2" rel="stylesheet">
+    <link rel="stylesheet" href="./HRSD AI Executive Office 0808_files/all.min.css">
+    <script src="./HRSD AI Executive Office 0808_files/marked.min.js.download"></script>
     <!-- Include Chart.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="./HRSD AI Executive Office 0808_files/chart.umd.min.js.download"></script>
     <style>
         :root {
             --primary-blue: #00A99D;
@@ -888,7 +888,23 @@
             transform: scale(1.1) !important;
         }
 
-        .summary-section, .placeholder-page, .agenda-container {
+        .summary-section {
+            flex: 0 0 280px;
+            background: var(--container-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 280px;
+            max-height: 80vh;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        
+        .placeholder-page, .agenda-container {
             flex: 1;
             background: var(--container-bg);
             border-radius: 20px;
@@ -2348,13 +2364,13 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <img src="https://www.hrsd.gov.sa/themes/custom/hrsd_saud/logo_en.svg" alt="HRSD Logo" class="hrsd-logo">
+            <img src="./HRSD AI Executive Office 0808_files/logo_en.svg" alt="HRSD Logo" class="hrsd-logo">
             <span>| AI Executive Office</span>
         </div>
         <div class="header-right">
             <div class="user-profile">
                 <span class="welcome-text">Welcome Ahmad</span>
-                <img src="https://placehold.co/40x40/00A99D/ffffff?text=U" alt="User Avatar">
+                <img src="./HRSD AI Executive Office 0808_files/ffffff" alt="User Avatar">
             </div>
             <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
         </div>
@@ -2381,28 +2397,26 @@
                 <div class="persona-display">
                     <!-- Mode Toggle -->
                     <div class="mode-toggle-container">
-                        <span class="mode-toggle-label active" id="singleModeLabel">Single Agent</span>
+                        <span class="mode-toggle-label" id="singleModeLabel">Single Agent</span>
                         <label class="mode-toggle-switch">
                             <input type="checkbox" id="modeToggle">
                             <span class="mode-toggle-slider"></span>
                         </label>
-                        <span class="mode-toggle-label" id="multiModeLabel">Multi-Agent</span>
+                        <span class="mode-toggle-label active" id="multiModeLabel">Multi-Agent</span>
                     </div>
                     
                     <!-- Single Agent Display (for single mode) -->
-                    <div class="single-agent-display active" id="singleAgentDisplay">
-                        <img id="singleAgentAvatar" src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="single-agent-avatar">
+                    <div class="single-agent-display" id="singleAgentDisplay">
+                        <img id="singleAgentAvatar" src="./HRSD AI Executive Office 0808_files/ai-voice-agent.png" alt="Agent Avatar" class="single-agent-avatar">
                         <div class="single-agent-info">
                             <div class="single-agent-name" id="singleAgentName">Hakim Nüruddin</div>
                             <div class="single-agent-title" id="singleAgentTitle">AI Executive Office Agent</div>
-                            <div class="single-agent-description" id="singleAgentDescription">
-                                As your strategic partner, I provide high-level summaries, executive advice, and focus on strategic alignment for your key decisions.
-                            </div>
+                            <div class="single-agent-description" id="singleAgentDescription">As your strategic partner, I provide high-level summaries, executive advice, and focus on strategic alignment for your key decisions.</div>
                         </div>
                     </div>
                     
                     <!-- Multi-Agent Content (for multi mode) -->
-                    <div class="multi-agent-content hidden" id="multiAgentContent">
+                    <div class="multi-agent-content" id="multiAgentContent">
                         <div class="multi-agent-header">
                             <h3 style="margin: 0 0 15px 0; color: var(--primary-blue);">
                                 Active Agents
@@ -2412,9 +2426,37 @@
                         </div>
                         
                         <!-- Agent Selection List -->
-                        <div id="agentSelectionList" class="agent-selection-list">
-                            <!-- Will be populated by JavaScript -->
+                        <div id="agentSelectionList" class="agent-selection-list"><div class="agent-select-item selected">
+                        <input type="checkbox" class="agent-checkbox" id="agent-toggle-hakim" data-agent-id="hakim" checked="">
+                        <label for="agent-toggle-hakim" class="agent-toggle">
+                            <span class="agent-toggle-slider"></span>
+                        </label>
+                        <img src="./HRSD AI Executive Office 0808_files/ai-voice-agent.png" alt="Hakim Nüruddin" class="agent-mini-avatar">
+                        <div class="agent-select-info">
+                            <div class="agent-select-name">Hakim Nüruddin</div>
+                            <div class="agent-select-title">AI Executive Office Agent</div>
                         </div>
+                    </div><div class="agent-select-item ">
+                        <input type="checkbox" class="agent-checkbox" id="agent-toggle-layla" data-agent-id="layla">
+                        <label for="agent-toggle-layla" class="agent-toggle">
+                            <span class="agent-toggle-slider"></span>
+                        </label>
+                        <img src="./HRSD AI Executive Office 0808_files/3f6fb035-158b-47f1-8c69-5fe9a407d4f2.png" alt="Layla Al-Farsi" class="agent-mini-avatar">
+                        <div class="agent-select-info">
+                            <div class="agent-select-name">Layla Al-Farsi</div>
+                            <div class="agent-select-title">Data Analytics Agent</div>
+                        </div>
+                    </div><div class="agent-select-item ">
+                        <input type="checkbox" class="agent-checkbox" id="agent-toggle-omar" data-agent-id="omar">
+                        <label for="agent-toggle-omar" class="agent-toggle">
+                            <span class="agent-toggle-slider"></span>
+                        </label>
+                        <img src="./HRSD AI Executive Office 0808_files/bd99faca-67c4-4cc3-895e-06bed59a08d2.png" alt="Omar Mansour" class="agent-mini-avatar">
+                        <div class="agent-select-info">
+                            <div class="agent-select-name">Omar Mansour</div>
+                            <div class="agent-select-title">AI Coordinator</div>
+                        </div>
+                    </div></div>
                         
                         <div class="quick-actions" style="margin-top: 20px;">
                             <h4>Multi-Agent Actions</h4>
@@ -2433,19 +2475,67 @@
                 <div class="chat-interaction-area">
                     <div class="chat-messages" id="chatMessages">
                         <div class="message-bubble agent">
-                            <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar="">
+                            <img src="./HRSD AI Executive Office 0808_files/ai-voice-agent.png" alt="Agent Avatar" class="avatar" data-persona-avatar="">
                             <div class="content">Welcome your Highness. As-salāmu 'alaykum. I am Hakim, your AI Executive Office Agent. How may I assist you today?</div>
                         </div>
-                    </div>
+                    <div class="message-bubble user"><img src="./HRSD AI Executive Office 0808_files/ffffff(1)" alt="user Avatar" class="avatar"><div class="content">Can you dig deeper into the topic of "Empowering Society &amp; Individuals" for me? Provide key details and current status.</div></div><div class="message-bubble agent"><img src="./HRSD AI Executive Office 0808_files/ai-voice-agent.png" alt="agent Avatar" class="avatar" data-persona-avatar=""><div class="content"><span class="agent-name-tag">Hakim Nüruddin</span><div><p><strong>To Your Highness,</strong></p>
+<p>The topic of "Empowering Society &amp; Individuals" is a central axis of the National Transformation Program and HRSD’s mandate. It moves beyond mere provision of services toward <em>sustainable enablement</em> and the cultivation of a productive, self-reliant citizenry.</p>
+<p>Here is a strategic summary detailing the key focus areas and current status as of Q4 2025.</p>
+<hr>
+<h3>STRATEGIC SUMMARY: EMPOWERING SOCIETY &amp; INDIVIDUALS</h3>
+<p><strong>Core Definition:</strong> Transitioning the population from reliance on social assistance to active economic participation, while ensuring a robust quality of life and strengthening community governance.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Strategic Pillar</th>
+<th align="left">Key Details &amp; Focus</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>1. Human Capital &amp; Skills</strong></td>
+<td align="left"><strong>Focus:</strong> Future-proofing the workforce and ensuring a higher Saudi participation rate. Emphasis is on targeted vocational training, linking education outcomes to market demand, and private sector job creation programs (e.g., Nitaqat optimization).</td>
+</tr>
+<tr>
+<td align="left"><strong>2. Social Safety Nets Transformation</strong></td>
+<td align="left"><strong>Focus:</strong> Shifting social security from unconditional assistance to empowering, conditional support. Programs are now focused on targeted intervention for the most vulnerable, coupling financial aid with mandatory upskilling and job placement assistance (The <strong>Enablement Approach</strong>).</td>
+</tr>
+<tr>
+<td align="left"><strong>3. Non-Profit Sector Efficiency</strong></td>
+<td align="left"><strong>Focus:</strong> Increasing the Third Sector’s contribution to GDP and improving governance. Driving the digital transformation of non-profits to enhance transparency, optimize donation streams, and increase localized service delivery capacity.</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>CURRENT STATUS &amp; METRICS (Q4 2025 Snapshot)</h3>
+<p>The focus this quarter has been on the integration of enablement tools and measuring the exit velocity from dependency programs.</p>
+<h4>1. Workforce Empowerment Metrics</h4>
+<ul>
+<li><strong>Nationalization Rate:</strong> The overarching Saudization rate is showing strong stability, with significant gains observed in high-value, specialized sectors (e.g., IT, Finance) due to targeted subsidies and training mandates. HRSD’s focus is now moving from quantity of jobs to <strong>quality and salary levels</strong>.</li>
+<li><strong>Unemployment:</strong> The national unemployment rate continues its downward trajectory, nearing pre-defined 2030 targets ahead of schedule. However, youth and female unemployment remain focus areas requiring bespoke, accelerated programs.</li>
+</ul>
+<h4>2. Social Program Integration</h4>
+<ul>
+<li><strong>Digital Profile Maturity:</strong> The unified digital platform for social benefits (linking data from the Ministry of Finance, HRSD, and other agencies) is highly operational. This integration is crucial for eliminating duplicate benefits and ensuring aid is strictly needs-based and conditional on participation in training/job search activities.</li>
+<li><strong>Exit Velocity:</strong> Early data models show an encouraging increase in the rate at which beneficiaries successfully transition off social security support and into stable employment (the <strong>"Enablement Quotient"</strong>). This validates the shift to conditional aid.</li>
+</ul>
+<h4>3. Community Resilience</h4>
+<ul>
+<li><strong>Non-Profit Governance:</strong> Governance maturity scores for large-scale national charities have significantly improved due to stricter regulatory oversight and mandatory digital reporting standards. This enhances public trust and attracts investment.</li>
+</ul>
+<hr>
+<h3>STRATEGIC INSIGHT</h3>
+<p>The next phase requires moving from <em>program implementation</em> to <em>holistic ecosystem measurement</em>.</p>
+<p>The primary risk is the potential for program overlap or lack of alignment between national training initiatives (Pillar 1) and social benefit conditioning (Pillar 2).</p>
+<p><strong>Recommendation:</strong> We must prioritize the development of a unified <strong>Individual Empowerment Index (IEI)</strong>. This index will move beyond simple employment figures to measure the sustained financial independence, quality of life, and civic contribution of individuals leaving assistance programs, ensuring true, long-term empowerment rather than temporary relief.</p>
+</div></div></div></div>
                     <div class="chat-input-area">
                         <input id="chatInput" type="text" placeholder="Ask me anything... Type or Talk">
                         <div class="chat-input-controls">
-                            <button id="agentSelectorBtn" class="active" title="Select Agent">
-                                <img src="https://hams.ai/images/ai-voice-agent.png" alt="Agent">
+                            <button id="agentSelectorBtn" class="" title="Select Agent">
+                                <img src="./HRSD AI Executive Office 0808_files/ai-voice-agent.png" alt="Agent">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
-                            <button id="changePersonaBtn" title="Change AI Persona"><i class="fa-solid fa-users"></i></button>
+                            <button id="changePersonaBtn" title="Change AI Persona" style="display: none;"><i class="fa-solid fa-users"></i></button>
                             <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
@@ -2691,7 +2781,7 @@
         </div>
     </div>
 
-    <div id="meetingsModal" class="modal">
+    <div id="meetingsModal" class="modal" style="display: none;">
         <div class="modal-content" id="focus-modal-content">
             <span class="close-button">×</span>
             <h2 id="meetings-modal-title">Discuss a Topic</h2>
@@ -4134,6 +4224,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
 
         });
     </script>
+
 
 
 </body></html>
