@@ -349,6 +349,7 @@
             box-shadow: 0 8px 30px rgba(0, 169, 157, 0.4);
             object-fit: cover;
             transition: all 0.3s;
+            cursor: pointer;
         }
         
         .single-agent-avatar:hover {
@@ -2566,7 +2567,6 @@
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <button id="chat-action-btn" title="Discuss a Topic"><i class="fas fa-plus"></i></button>
-                            <button id="changePersonaBtn" title="Change AI Persona" style="display: none;"><i class="fa-solid fa-users"></i></button>
                             <button id="send-btn" class="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
@@ -2876,7 +2876,6 @@
             const meetingsModal = document.getElementById("meetingsModal");
             const dayActionModal = document.getElementById("dayActionModal");
             const messageModal = document.getElementById("messageModal"); // New modal
-            const changePersonaBtn = document.getElementById('changePersonaBtn');
             const closeModalBtns = document.querySelectorAll('.close-button');
             const personaOptionsContainer = document.getElementById('personaOptions');
             const navButtons = document.querySelectorAll('.nav-tabs .nav-button'); // More specific selector
@@ -3014,7 +3013,6 @@
                 const agentSelectorBtn = document.getElementById('agentSelectorBtn');
                 const singleModeLabel = document.getElementById('singleModeLabel');
                 const multiModeLabel = document.getElementById('multiModeLabel');
-                const changePersonaBtn = document.getElementById('changePersonaBtn');
                 
                 if (isMultiAgentMode) {
                     // Multi-agent mode
@@ -3022,16 +3020,13 @@
                     if (multiAgentContent) multiAgentContent.classList.remove('hidden');
                     if (agentSelectorBtn) agentSelectorBtn.classList.remove('active');
                     if (singleModeLabel) singleModeLabel.classList.remove('active');
-                    if (multiModeLabel) multiModeLabel.classList.add('active');
-                    if (changePersonaBtn) changePersonaBtn.style.display = 'none'; // Hide change persona in multi mode
                 } else {
                     // Single agent mode
                     if (singleAgentDisplay) singleAgentDisplay.classList.add('active');
                     if (multiAgentContent) multiAgentContent.classList.add('hidden');
                     if (agentSelectorBtn) agentSelectorBtn.classList.add('active');
-                    if (singleModeLabel) singleModeLabel.classList.add('active');
                     if (multiModeLabel) multiModeLabel.classList.remove('active');
-                    if (changePersonaBtn) changePersonaBtn.style.display = 'block'; // Show change persona in single mode
+                    if (singleModeLabel) singleModeLabel.classList.add('active');
                     
                     // Update single agent display
                     updateSingleAgentDisplay(currentPersonaId);
@@ -4112,7 +4107,9 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
             // Copy summary button
             if (copySummaryBtn) { copySummaryBtn.addEventListener('click', () => { const contentToCopy = summaryContent ? summaryContent.innerText : ''; if (contentToCopy) { const textArea = document.createElement("textarea"); textArea.value = contentToCopy; textArea.style.position = "fixed"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); try { document.execCommand('copy'); showMessageModal('Agenda copied to clipboard!'); } catch (err) { console.error('Fallback copy failed', err); showMessageModal('Copying failed.'); } document.body.removeChild(textArea); } else { showMessageModal('Nothing to copy.'); } }); }
             // Persona change button
-            if (changePersonaBtn) { changePersonaBtn.addEventListener('click', () => openModal(personaModal)); }
+            // Single Agent Avatar click to change persona
+            const singleAgentAvatar = document.getElementById('singleAgentAvatar');
+            if (singleAgentAvatar) { singleAgentAvatar.addEventListener('click', () => openModal(personaModal)); }
             // Send button and Enter key
             if (sendBtn) { sendBtn.addEventListener('click', handleSendMessage); }
             if (chatInput) { chatInput.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSendMessage(); } }); }
